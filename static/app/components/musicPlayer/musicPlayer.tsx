@@ -65,6 +65,8 @@ export default function MusicPlayer() {
       onMouseLeave={() => setIsHovered(false)}
       onClick={() => setExpanded(!isExpanded)}
       isExpanded={showExpanded}
+      primaryColor={currentPlaylist?.theme?.primaryColor}
+      secondaryColor={currentPlaylist?.theme?.secondaryColor}
     >
       {showExpanded ? (
         <ExpandedPlayer>
@@ -76,26 +78,13 @@ export default function MusicPlayer() {
                   size: 'xs',
                   borderless: true,
                 }}
-                items={[
-                  // Current playlist at the top
-                  ...(currentPlaylist
-                    ? [
-                        {
-                          key: currentPlaylist.id,
-                          label: `${currentPlaylist.name} (current)`,
-                          onAction: () => selectPlaylist(currentPlaylist),
-                        },
-                      ]
-                    : []),
-                  // Other playlists
-                  ...playlists
-                    .filter(playlist => playlist.id !== currentPlaylist?.id)
-                    .map(playlist => ({
-                      key: playlist.id,
-                      label: playlist.name,
-                      onAction: () => selectPlaylist(playlist),
-                    })),
-                ]}
+                items={playlists
+                  .filter(playlist => playlist.id !== currentPlaylist?.id)
+                  .map(playlist => ({
+                    key: playlist.id,
+                    label: playlist.name,
+                    onAction: () => selectPlaylist(playlist),
+                  }))}
                 trigger={(triggerProps, _isOpen) => (
                   <PlaylistButton
                     {...triggerProps}
@@ -131,8 +120,19 @@ export default function MusicPlayer() {
                   <CurrentTime>{formatTime(currentTime)}</CurrentTime>
                   <ProgressBar>
                     <ProgressFill
+                      primaryColor={currentPlaylist?.theme?.primaryColor}
                       style={{
                         width: `${
+                          currentTrackDuration > 0
+                            ? (currentTime / currentTrackDuration) * 100
+                            : 0
+                        }%`,
+                      }}
+                    />
+                    <ProgressThumb
+                      primaryColor={currentPlaylist?.theme?.primaryColor}
+                      style={{
+                        left: `${
                           currentTrackDuration > 0
                             ? (currentTime / currentTrackDuration) * 100
                             : 0
@@ -169,6 +169,7 @@ export default function MusicPlayer() {
               disabled={isLoading || !currentTrack}
               aria-label={isPlaying ? t('Pause') : t('Play')}
               priority="primary"
+              primaryColor={currentPlaylist?.theme?.primaryColor}
             />
 
             <ControlButton
@@ -186,7 +187,7 @@ export default function MusicPlayer() {
             <ControlButton
               size="sm"
               borderless
-              icon={<IconShuffle />}
+              icon={<IconShuffle size="md" />}
               onClick={e => {
                 e.stopPropagation();
                 toggleShuffle();
@@ -194,7 +195,11 @@ export default function MusicPlayer() {
               aria-label={shuffle ? t('Disable shuffle') : t('Enable shuffle')}
               style={{
                 opacity: shuffle ? 1 : 0.6,
-                backgroundColor: shuffle ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
+                backgroundColor: 'transparent',
+                color:
+                  shuffle && currentPlaylist?.theme?.primaryColor
+                    ? currentPlaylist.theme.primaryColor
+                    : undefined,
               }}
             />
           </Controls>
@@ -211,6 +216,7 @@ export default function MusicPlayer() {
             disabled={isLoading || !currentTrack}
             aria-label={isPlaying ? t('Pause') : t('Play')}
             priority="primary"
+            primaryColor={currentPlaylist?.theme?.primaryColor}
           />
           {currentTrack && (
             <CompactTrackInfo>
@@ -226,17 +232,35 @@ export default function MusicPlayer() {
   );
 }
 
-const FloatingContainer = styled('div')<{isExpanded: boolean}>`
+const FloatingContainer = styled('div')<{
+  isExpanded: boolean;
+  primaryColor?: string;
+  secondaryColor?: string;
+}>`
   position: fixed;
   bottom: ${space(2)};
   right: ${space(2)};
-  background: ${p => p.theme.backgroundElevated};
   border: 1px solid ${p => p.theme.border};
   border-radius: ${p => p.theme.borderRadius};
   box-shadow: ${p => p.theme.dropShadowHeavy};
   z-index: 1000;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+
+  /* Solid gradient background using pastel playlist theme colors */
+  ${p =>
+    p.primaryColor && p.secondaryColor
+      ? `
+    background: linear-gradient(135deg,
+      color-mix(in srgb, ${p.primaryColor} 30%, white),
+      color-mix(in srgb, ${p.secondaryColor} 30%, white),
+      ${p.theme.backgroundElevated}
+    );
+    border-color: color-mix(in srgb, ${p.primaryColor} 40%, white);
+  `
+      : `
+    background: ${p.theme.backgroundElevated};
+  `}
 
   ${p =>
     p.isExpanded
@@ -276,14 +300,23 @@ const PlaylistDropdown = styled('div')`
 const PlaylistButton = styled(Button)`
   font-size: ${p => p.theme.fontSize.sm};
   font-weight: ${p => p.theme.fontWeight.bold};
-  color: ${p => p.theme.textColor};
+  color: ${p => p.theme.textColor} !important;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 
   &:hover:not(:disabled) {
-    color: ${p => p.theme.textColor};
+    color: ${p => p.theme.textColor} !important;
     text-decoration: underline;
+  }
+
+  &:focus:not(:disabled),
+  &:active:not(:disabled),
+  &:focus-visible:not(:disabled) {
+    color: ${p => p.theme.textColor} !important;
+    text-decoration: none;
+    background-color: transparent !important;
+    border-color: transparent !important;
   }
 `;
 
@@ -344,17 +377,31 @@ const TotalTime = styled('div')`
 const ProgressBar = styled('div')`
   flex: 1;
   height: 4px;
-  background-color: ${p => p.theme.border};
+  background-color: rgba(0, 0, 0, 0.2);
   border-radius: 2px;
-  overflow: hidden;
   position: relative;
+  margin: 4px 0; /* Add vertical margin to accommodate the thumb */
 `;
 
-const ProgressFill = styled('div')`
+const ProgressFill = styled('div')<{primaryColor?: string}>`
   height: 100%;
-  background-color: ${p => p.theme.purple300};
+  background-color: ${p => p.primaryColor || p.theme.purple300};
   border-radius: 2px;
   transition: width 0.1s ease;
+  overflow: hidden; /* Keep the fill properly rounded */
+`;
+
+const ProgressThumb = styled('div')<{primaryColor?: string}>`
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  background-color: ${p => p.primaryColor || p.theme.purple300};
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: left 0.1s ease;
+  pointer-events: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 `;
 
 const Controls = styled('div')`
@@ -374,8 +421,24 @@ const ControlButton = styled(Button)`
   }
 `;
 
-const PlayPauseButton = styled(Button)`
-  /* Primary button styling is handled by priority="primary" */
+const PlayPauseButton = styled(Button)<{primaryColor?: string}>`
+  /* Override primary button color with playlist theme */
+  ${p =>
+    p.primaryColor &&
+    `
+    background-color: ${p.primaryColor};
+    border-color: ${p.primaryColor};
+
+    &:hover:not(:disabled) {
+      background-color: ${p.primaryColor}dd; /* Slightly transparent on hover */
+      border-color: ${p.primaryColor}dd;
+    }
+
+    &:active:not(:disabled) {
+      background-color: ${p.primaryColor}bb; /* More transparent when pressed */
+      border-color: ${p.primaryColor}bb;
+    }
+  `}
 `;
 
 const CompactPlayer = styled('div')`
@@ -384,8 +447,26 @@ const CompactPlayer = styled('div')`
   gap: ${space(1)};
 `;
 
-const CompactPlayButton = styled(Button)`
+const CompactPlayButton = styled(Button)<{primaryColor?: string}>`
   flex-shrink: 0;
+
+  /* Override primary button color with playlist theme */
+  ${p =>
+    p.primaryColor &&
+    `
+    background-color: ${p.primaryColor};
+    border-color: ${p.primaryColor};
+
+    &:hover:not(:disabled) {
+      background-color: ${p.primaryColor}dd; /* Slightly transparent on hover */
+      border-color: ${p.primaryColor}dd;
+    }
+
+    &:active:not(:disabled) {
+      background-color: ${p.primaryColor}bb; /* More transparent when pressed */
+      border-color: ${p.primaryColor}bb;
+    }
+  `}
 `;
 
 const CompactTrackInfo = styled('div')`
