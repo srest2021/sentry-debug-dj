@@ -156,7 +156,8 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
   const [currentTrackDuration, setCurrentTrackDuration] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-  const [recentlyPlayed, setRecentlyPlayed] = useState<number[]>([]);
+  const [listeningHistory, setListeningHistory] = useState<number[]>([]);
+  const [historyPosition, setHistoryPosition] = useState(-1); // -1 means we're at the "current" position (not in history)
 
   // Load track when current track changes
   useEffect(() => {
@@ -211,68 +212,99 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
 
     if (shuffle) {
       // Avoid recently played tracks (last 3 tracks or half the playlist, whichever is smaller)
-      const maxRecentTracks = Math.min(3, Math.floor(currentPlaylist.tracks.length / 2));
-      const recentTracksToAvoid = [
+      const maxRecentTracksToAvoid = Math.min(
+        3,
+        Math.floor(currentPlaylist.tracks.length / 2)
+      );
+      const tracksToAvoid = [
         currentTrackIndex,
-        ...recentlyPlayed.slice(0, maxRecentTracks - 1),
+        ...listeningHistory.slice(0, maxRecentTracksToAvoid - 1),
       ];
 
       // If we've played most tracks recently, just avoid the current track
-      const tracksToAvoid =
-        recentTracksToAvoid.length >= currentPlaylist.tracks.length - 1
+      const finalTracksToAvoid =
+        tracksToAvoid.length >= currentPlaylist.tracks.length - 1
           ? [currentTrackIndex]
-          : recentTracksToAvoid;
+          : tracksToAvoid;
 
       let nextIndex: number;
       do {
         nextIndex = Math.floor(Math.random() * currentPlaylist.tracks.length);
-      } while (tracksToAvoid.includes(nextIndex) && currentPlaylist.tracks.length > 1);
+      } while (
+        finalTracksToAvoid.includes(nextIndex) &&
+        currentPlaylist.tracks.length > 1
+      );
 
       return nextIndex;
     }
 
     return (currentTrackIndex + 1) % currentPlaylist.tracks.length;
-  }, [currentPlaylist, currentTrackIndex, shuffle, recentlyPlayed]);
-
-  const getPreviousTrackIndex = useCallback(() => {
-    if (!currentPlaylist) return 0;
-
-    if (shuffle) {
-      let prevIndex: number;
-      do {
-        prevIndex = Math.floor(Math.random() * currentPlaylist.tracks.length);
-      } while (prevIndex === currentTrackIndex && currentPlaylist.tracks.length > 1);
-      return prevIndex;
-    }
-
-    return currentTrackIndex === 0
-      ? currentPlaylist.tracks.length - 1
-      : currentTrackIndex - 1;
-  }, [currentPlaylist, currentTrackIndex, shuffle]);
+  }, [currentPlaylist, currentTrackIndex, shuffle, listeningHistory]);
 
   const nextTrack = useCallback(() => {
     if (!currentPlaylist || !isEnabled) return;
 
+    // If we're in history, go forward toward current position
+    if (historyPosition > 0) {
+      const nextHistoryIndex = listeningHistory[historyPosition - 1]!;
+      const nextTrack_ = currentPlaylist.tracks[nextHistoryIndex] || null;
+
+      setHistoryPosition(prev => prev - 1); // Move toward current (-1)
+      setCurrentTrack(nextTrack_);
+      setCurrentTrackIndex(nextHistoryIndex);
+      return;
+    }
+
+    // If we're at position 0, go back to current track
+    if (historyPosition === 0) {
+      const currentTrack_ = currentPlaylist.tracks[currentTrackIndex] || null;
+
+      setHistoryPosition(-1);
+      setCurrentTrack(currentTrack_); // Load the current track
+      // currentTrackIndex stays the same
+      return;
+    }
+
+    // We're at current position (-1), get a new track
     const nextIndex = getNextTrackIndex();
     const nextTrack_ = currentPlaylist.tracks[nextIndex] || null;
 
-    // Update recently played history
-    setRecentlyPlayed(prev => [currentTrackIndex, ...prev.slice(0, 4)]); // Keep last 5
+    // Add current track to history and reset position
+    const maxHistoryLength = 10;
+    setListeningHistory(prev => [
+      currentTrackIndex,
+      ...prev.slice(0, maxHistoryLength - 1),
+    ]);
+    setHistoryPosition(-1); // Stay at "current" position
     setCurrentTrack(nextTrack_);
     setCurrentTrackIndex(nextIndex);
-  }, [currentPlaylist, getNextTrackIndex, isEnabled, currentTrackIndex]);
+  }, [
+    currentPlaylist,
+    getNextTrackIndex,
+    isEnabled,
+    currentTrackIndex,
+    historyPosition,
+    listeningHistory,
+  ]);
 
+  // Only works if we have listening history; otherwise, do nothing
   const previousTrack = useCallback(() => {
-    if (!currentPlaylist || !isEnabled || shuffle) return; // Disabled in shuffle mode
+    const nextHistoryPos = historyPosition + 1;
 
-    const prevIndex = getPreviousTrackIndex();
-    const prevTrack = currentPlaylist.tracks[prevIndex] || null;
+    if (
+      !currentPlaylist ||
+      !isEnabled ||
+      listeningHistory.length === 0 || // No history
+      nextHistoryPos >= listeningHistory.length // Already at the end of history
+    )
+      return;
 
-    // Update recently played history
-    setRecentlyPlayed(prev => [currentTrackIndex, ...prev.slice(0, 4)]); // Keep last 5
+    const prevHistoryIndex = listeningHistory[nextHistoryPos]!; // Safe: we checked length > 0 and nextHistoryPos < length
+    const prevTrack = currentPlaylist.tracks[prevHistoryIndex] || null;
+    setHistoryPosition(nextHistoryPos);
     setCurrentTrack(prevTrack);
-    setCurrentTrackIndex(prevIndex);
-  }, [currentPlaylist, getPreviousTrackIndex, isEnabled, currentTrackIndex, shuffle]);
+    setCurrentTrackIndex(prevHistoryIndex);
+  }, [currentPlaylist, isEnabled, historyPosition, listeningHistory]);
 
   const toggleShuffle = useCallback(() => {
     const newShuffle = !shuffle;
@@ -285,7 +317,8 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
       setCurrentPlaylist(playlist);
       setCurrentTrack(playlist.tracks[0] || null);
       setCurrentTrackIndex(0);
-      setRecentlyPlayed([]); // Clear history when changing playlists
+      setListeningHistory([]); // Clear history when changing playlists
+      setHistoryPosition(-1); // Reset to current position
       setPrefs({defaultPlaylistId: playlist.id});
     },
     [setPrefs]
