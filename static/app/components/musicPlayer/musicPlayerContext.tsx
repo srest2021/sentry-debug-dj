@@ -82,6 +82,18 @@ const DEFAULT_PLAYLISTS: Playlist[] = [
         artist: 'Pixel Prophet',
         src: 'https://www.soundjay.com/free-music/sounds/barn-beat-01.mp3',
       },
+      {
+        id: 'synth-3',
+        title: 'Neon Nights',
+        artist: 'Cyber Coder',
+        src: 'https://www.soundjay.com/free-music/sounds/cautious-path-01.mp3',
+      },
+      {
+        id: 'synth-4',
+        title: 'Data Stream',
+        artist: 'Binary Bot',
+        src: 'https://www.soundjay.com/free-music/sounds/heart-of-the-sea-01.mp3',
+      },
     ],
   },
   {
@@ -141,6 +153,7 @@ type Props = {
 export function MusicPlayerProvider({children, value = {}}: Props) {
   const [prefs, setPrefs] = useMusicPlayerPrefs();
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const wasPlayingRef = useRef(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [currentPlaylist, setCurrentPlaylist] = useState<Playlist | null>(null);
@@ -152,13 +165,41 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [listeningHistory, setListeningHistory] = useState<number[]>([]);
-  const [historyPosition, setHistoryPosition] = useState(-1); // -1 means we're at the "current" position (not in history)
+  const [historyPosition, setHistoryPosition] = useState(0); // 0 means we're at the most recent track
+
+  // Keep track of playing state for auto-resume
+  useEffect(() => {
+    wasPlayingRef.current = isPlaying;
+  }, [isPlaying]);
 
   // Load track when current track changes
   useEffect(() => {
     if (currentTrack && audioRef.current) {
+      // Reset state when loading new track
+      setCurrentTime(0);
+      setCurrentTrackDuration(0);
+
+      const wasPlaying = wasPlayingRef.current;
+      setIsPlaying(false);
+
       audioRef.current.src = currentTrack.src;
       audioRef.current.load();
+
+      // If we were playing, resume once the new track is ready
+      if (wasPlaying) {
+        const handleCanPlay = () => {
+          audioRef.current
+            ?.play()
+            .then(() => {
+              setIsPlaying(true);
+            })
+            .catch(() => {
+              setIsPlaying(false);
+            });
+          audioRef.current?.removeEventListener('canplay', handleCanPlay);
+        };
+        audioRef.current.addEventListener('canplay', handleCanPlay);
+      }
     }
   }, [currentTrack]);
 
@@ -178,6 +219,9 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     if (currentPlaylist && currentPlaylist.tracks.length > 0 && !currentTrack) {
       setCurrentTrack(currentPlaylist.tracks[0] || null);
       setCurrentTrackIndex(0);
+      // Add the initial track to history at position 0
+      setListeningHistory([0]);
+      setHistoryPosition(0);
     }
   }, [currentPlaylist, currentTrack]);
 
@@ -239,64 +283,43 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
   const nextTrack = useCallback(() => {
     if (!currentPlaylist || !isEnabled) return;
 
-    // If we're in history, go forward toward current position
+    // If we're not at the top of the stack (position 0), move forward toward it
     if (historyPosition > 0) {
       const nextHistoryIndex = listeningHistory[historyPosition - 1]!;
       const nextTrack_ = currentPlaylist.tracks[nextHistoryIndex] || null;
 
-      setHistoryPosition(prev => prev - 1); // Move toward current (-1)
+      setHistoryPosition(prev => prev - 1); // Move toward top of stack (0)
       setCurrentTrack(nextTrack_);
       setCurrentTrackIndex(nextHistoryIndex);
       return;
     }
 
-    // If we're at position 0, go back to current track
-    if (historyPosition === 0) {
-      const currentTrack_ = currentPlaylist.tracks[currentTrackIndex] || null;
-
-      setHistoryPosition(-1);
-      setCurrentTrack(currentTrack_); // Load the current track
-      // currentTrackIndex stays the same
-      return;
-    }
-
-    // We're at current position (-1), get a new track
+    // We're at the top of the stack (position 0), get a new track and add to stack
     const nextIndex = getNextTrackIndex();
     const nextTrack_ = currentPlaylist.tracks[nextIndex] || null;
 
-    // Add current track to history and reset position
+    // Push new track to top of stack, keep max 10 items
     const maxHistoryLength = 10;
-    setListeningHistory(prev => [
-      currentTrackIndex,
-      ...prev.slice(0, maxHistoryLength - 1),
-    ]);
-    setHistoryPosition(-1); // Stay at "current" position
+    setListeningHistory(prev => [nextIndex, ...prev.slice(0, maxHistoryLength - 1)]);
+    setHistoryPosition(0); // Stay at top of stack
     setCurrentTrack(nextTrack_);
     setCurrentTrackIndex(nextIndex);
-  }, [
-    currentPlaylist,
-    getNextTrackIndex,
-    isEnabled,
-    currentTrackIndex,
-    historyPosition,
-    listeningHistory,
-  ]);
+  }, [currentPlaylist, getNextTrackIndex, isEnabled, historyPosition, listeningHistory]);
 
-  // Only works if we have listening history; otherwise, do nothing
   const previousTrack = useCallback(() => {
+    if (!currentPlaylist || !isEnabled) return;
+
     const nextHistoryPos = historyPosition + 1;
 
-    if (
-      !currentPlaylist ||
-      !isEnabled ||
-      listeningHistory.length === 0 || // No history
-      nextHistoryPos >= listeningHistory.length // Already at the end of history
-    )
+    // Can't go back further if we're already at the bottom of the stack
+    if (nextHistoryPos >= listeningHistory.length) {
       return;
+    }
 
-    const prevHistoryIndex = listeningHistory[nextHistoryPos]!; // Safe: we checked length > 0 and nextHistoryPos < length
+    const prevHistoryIndex = listeningHistory[nextHistoryPos]!;
     const prevTrack = currentPlaylist.tracks[prevHistoryIndex] || null;
-    setHistoryPosition(nextHistoryPos);
+
+    setHistoryPosition(nextHistoryPos); // Move deeper into stack
     setCurrentTrack(prevTrack);
     setCurrentTrackIndex(prevHistoryIndex);
   }, [currentPlaylist, isEnabled, historyPosition, listeningHistory]);
@@ -312,8 +335,8 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
       setCurrentPlaylist(playlist);
       setCurrentTrack(playlist.tracks[0] || null);
       setCurrentTrackIndex(0);
-      setListeningHistory([]); // Clear history when changing playlists
-      setHistoryPosition(-1); // Reset to current position
+      setListeningHistory([0]); // Initialize history with first track
+      setHistoryPosition(0); // Start at top of stack
       setPrefs({defaultPlaylistId: playlist.id});
     },
     [setPrefs]
