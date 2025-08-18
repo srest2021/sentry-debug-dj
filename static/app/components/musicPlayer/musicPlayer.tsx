@@ -348,11 +348,11 @@ const FloatingContainer = styled('div')<{
     p.primaryColor && p.secondaryColor
       ? `
     background: linear-gradient(135deg,
-      color-mix(in srgb, ${p.primaryColor} 30%, white),
-      color-mix(in srgb, ${p.secondaryColor} 30%, white),
+      color-mix(in srgb, ${p.primaryColor} 20%, ${p.theme.backgroundElevated}),
+      color-mix(in srgb, ${p.secondaryColor} 20%, ${p.theme.backgroundElevated}),
       ${p.theme.backgroundElevated}
     );
-    border-color: color-mix(in srgb, ${p.primaryColor} 40%, white);
+    border-color: color-mix(in srgb, ${p.primaryColor} 50%, ${p.theme.backgroundElevated});
   `
       : `
     background: ${p.theme.backgroundElevated};
