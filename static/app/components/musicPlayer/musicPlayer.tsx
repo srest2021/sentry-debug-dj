@@ -581,6 +581,7 @@ const CompactTitle = styled('div')`
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  max-width: 120px; /* Force ellipsis for long titles */
 `;
 
 const CompactTime = styled('div')`

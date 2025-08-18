@@ -132,7 +132,8 @@ const DEFAULT_PLAYLISTS: Playlist[] = [
     tracks: [
       {
         id: 'minecraft-1',
-        title: 'Block by Block',
+        title:
+          'Block by Block by Block by Block by Block by Block by Block by Block by Block by Block by Block by Block',
         artist: 'Craft Master',
         src: 'https://www.soundjay.com/free-music/sounds/cautious-path-01.mp3',
       },
