@@ -6,21 +6,18 @@ export type MusicPlayerPrefs = {
   defaultPlaylistId: string;
   isEnabled: boolean;
   shuffle: boolean;
-  volume: number;
 };
 
 const DEFAULT_PREFS: MusicPlayerPrefs = {
   isEnabled: true,
   defaultPlaylistId: 'debugging-beats',
   shuffle: false,
-  volume: 0.7,
 };
 
 const DISABLED_PREFS: MusicPlayerPrefs = {
   isEnabled: false,
   defaultPlaylistId: 'debugging-beats',
   shuffle: false,
-  volume: 0.7,
 };
 
 export interface MusicPlayerPrefsStrategy {
