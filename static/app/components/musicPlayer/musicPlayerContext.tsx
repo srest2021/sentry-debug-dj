@@ -4,7 +4,6 @@ import {useMusicPlayerPrefs} from 'sentry/components/musicPlayer/musicPlayerPref
 
 export type Track = {
   artist: string;
-  duration: number;
   id: string;
   src: string;
   title: string;
@@ -75,15 +74,13 @@ const DEFAULT_PLAYLISTS: Playlist[] = [
         id: 'synth-1',
         title: 'Digital Dreams',
         artist: 'Code Runner',
-        src: '/static/music/debugging-beats/digital-dreams.mp3',
-        duration: 100,
+        src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
       },
       {
         id: 'synth-2',
         title: 'Binary Sunset',
         artist: 'Pixel Prophet',
-        src: '/static/music/debugging-beats/binary-sunset.mp3',
-        duration: 100,
+        src: 'https://www.soundjay.com/free-music/sounds/barn-beat-01.mp3',
       },
     ],
   },
@@ -99,15 +96,13 @@ const DEFAULT_PLAYLISTS: Playlist[] = [
         id: 'metal-1',
         title: 'Stack Overflow',
         artist: 'Exception Handler',
-        src: '/static/music/metal-mode/stack-overflow.mp3',
-        duration: 100,
+        src: 'https://www.soundjay.com/free-music/sounds/iron-man-01.mp3',
       },
       {
         id: 'metal-2',
         title: 'Memory Leak',
         artist: 'Segmentation Fault',
-        src: '/static/music/metal-mode/memory-leak.mp3',
-        duration: 100,
+        src: 'https://www.soundjay.com/free-music/sounds/destination-01.mp3',
       },
     ],
   },
@@ -123,15 +118,13 @@ const DEFAULT_PLAYLISTS: Playlist[] = [
         id: 'minecraft-1',
         title: 'Block by Block',
         artist: 'Craft Master',
-        src: '/static/music/minecraft-vibes/block-by-block.mp3',
-        duration: 100,
+        src: 'https://www.soundjay.com/free-music/sounds/cautious-path-01.mp3',
       },
       {
         id: 'minecraft-2',
         title: 'Redstone Circuit',
         artist: 'Pixel Builder',
-        src: '/static/music/minecraft-vibes/redstone-circuit.mp3',
-        duration: 100,
+        src: 'https://www.soundjay.com/free-music/sounds/heart-of-the-sea-01.mp3',
       },
     ],
   },

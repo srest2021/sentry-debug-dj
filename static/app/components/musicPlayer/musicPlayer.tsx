@@ -5,15 +5,25 @@ import {Button} from 'sentry/components/core/button';
 import {DropdownMenu} from 'sentry/components/dropdownMenu';
 import {useMusicPlayer} from 'sentry/components/musicPlayer/musicPlayerContext';
 import {
+  IconClose,
   IconNext,
   IconPause,
   IconPlay,
   IconPrevious,
-  IconRefresh,
-  IconSound,
+  IconShuffle,
 } from 'sentry/icons';
 import {t} from 'sentry/locale';
 import {space} from 'sentry/styles/space';
+
+// Helper function to format time in MM:SS format
+function formatTime(seconds: number): string {
+  if (!isFinite(seconds) || isNaN(seconds)) {
+    return '0:00';
+  }
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+}
 
 export default function MusicPlayer() {
   const {
@@ -26,6 +36,8 @@ export default function MusicPlayer() {
     isExpanded,
     playlists,
     listeningHistory,
+    currentTime,
+    currentTrackDuration,
     togglePlayPause,
     nextTrack,
     previousTrack,
@@ -74,7 +86,7 @@ export default function MusicPlayer() {
             <CloseButton
               size="xs"
               borderless
-              icon={<IconSound />}
+              icon={<IconClose />}
               onClick={e => {
                 e.stopPropagation();
                 setEnabled(false);
@@ -87,6 +99,9 @@ export default function MusicPlayer() {
             <TrackInfo>
               <TrackTitle>{currentTrack.title}</TrackTitle>
               <TrackArtist>{currentTrack.artist}</TrackArtist>
+              <TimeDisplay>
+                {formatTime(currentTime)} / {formatTime(currentTrackDuration)}
+              </TimeDisplay>
             </TrackInfo>
           )}
 
@@ -130,7 +145,7 @@ export default function MusicPlayer() {
             <ControlButton
               size="sm"
               borderless
-              icon={<IconRefresh />}
+              icon={<IconShuffle />}
               onClick={e => {
                 e.stopPropagation();
                 toggleShuffle();
@@ -159,6 +174,9 @@ export default function MusicPlayer() {
           {currentTrack && (
             <CompactTrackInfo>
               <CompactTitle>{currentTrack.title}</CompactTitle>
+              <CompactTime>
+                {formatTime(currentTime)} / {formatTime(currentTrackDuration)}
+              </CompactTime>
             </CompactTrackInfo>
           )}
         </CompactPlayer>
@@ -253,6 +271,13 @@ const TrackArtist = styled('div')`
   white-space: nowrap;
 `;
 
+const TimeDisplay = styled('div')`
+  font-size: ${p => p.theme.fontSize.xs};
+  color: ${p => p.theme.subText};
+  margin-top: ${space(0.25)};
+  text-align: center;
+`;
+
 const Controls = styled('div')`
   display: flex;
   justify-content: center;
@@ -296,4 +321,10 @@ const CompactTitle = styled('div')`
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+`;
+
+const CompactTime = styled('div')`
+  font-size: ${p => p.theme.fontSize.xs};
+  color: ${p => p.theme.subText};
+  margin-top: ${space(0.25)};
 `;

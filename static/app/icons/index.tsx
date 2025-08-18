@@ -104,6 +104,7 @@ export {IconSentry} from './iconSentry';
 export {IconSentryPrideLogo} from './iconSentryPrideLogo';
 export {IconSettings} from './iconSettings';
 export {IconShow} from './iconShow';
+export {IconShuffle} from './iconShuffle';
 export {IconSiren} from './iconSiren';
 export {IconSliders} from './iconSliders';
 export {IconSlow} from './iconSlow';

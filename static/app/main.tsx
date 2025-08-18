@@ -4,6 +4,7 @@ import {wrapCreateBrowserRouterV6} from '@sentry/react';
 import {ReactQueryDevtools} from '@tanstack/react-query-devtools';
 
 import {AppQueryClientProvider} from 'sentry/appQueryClient';
+import MusicPlayerWrapper from 'sentry/components/musicPlayer/musicPlayerWrapper';
 import {OnboardingContextProvider} from 'sentry/components/onboarding/onboardingContext';
 import {ThemeAndStyleProvider} from 'sentry/components/themeAndStyleProvider';
 import {USE_REACT_QUERY_DEVTOOL} from 'sentry/constants';
@@ -25,14 +26,16 @@ function Main() {
   return (
     <AppQueryClientProvider>
       <ThemeAndStyleProvider>
-        <OnboardingContextProvider>
-          <SentryTrackingProvider>
-            <RouterProvider router={router} />
-          </SentryTrackingProvider>
-        </OnboardingContextProvider>
-        {USE_REACT_QUERY_DEVTOOL && (
-          <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
-        )}
+        <MusicPlayerWrapper>
+          <OnboardingContextProvider>
+            <SentryTrackingProvider>
+              <RouterProvider router={router} />
+            </SentryTrackingProvider>
+          </OnboardingContextProvider>
+          {USE_REACT_QUERY_DEVTOOL && (
+            <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
+          )}
+        </MusicPlayerWrapper>
       </ThemeAndStyleProvider>
     </AppQueryClientProvider>
   );
