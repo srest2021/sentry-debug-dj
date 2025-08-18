@@ -33,6 +33,7 @@ interface MusicPlayerContextProps {
   nextTrack: () => void;
   playlists: Playlist[];
   previousTrack: () => void;
+  seek: (time: number) => void;
   selectPlaylist: (playlist: Playlist) => void;
   setEnabled: (enabled: boolean) => void;
   setExpanded: (expanded: boolean) => void;
@@ -57,6 +58,7 @@ const MusicPlayerContext = createContext<MusicPlayerContextProps>({
   togglePlayPause: () => {},
   nextTrack: () => {},
   previousTrack: () => {},
+  seek: () => {},
   toggleShuffle: () => {},
   selectPlaylist: () => {},
   setEnabled: () => {},
@@ -333,6 +335,18 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     setPrefs({shuffle: newShuffle});
   }, [shuffle, setPrefs]);
 
+  const seek = useCallback(
+    (time: number) => {
+      if (!audioRef.current || !currentTrackDuration) return;
+
+      // Clamp time to valid range
+      const clampedTime = Math.max(0, Math.min(time, currentTrackDuration));
+      audioRef.current.currentTime = clampedTime;
+      setCurrentTime(clampedTime);
+    },
+    [currentTrackDuration]
+  );
+
   const selectPlaylist = useCallback(
     (playlist: Playlist) => {
       setCurrentPlaylist(playlist);
@@ -409,6 +423,7 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     togglePlayPause,
     nextTrack,
     previousTrack,
+    seek,
     toggleShuffle,
     selectPlaylist,
     setEnabled: (enabled: boolean) => {

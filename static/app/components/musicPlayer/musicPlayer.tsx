@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import styled from '@emotion/styled';
 
 import {Button} from 'sentry/components/core/button';
@@ -43,6 +43,7 @@ export default function MusicPlayer() {
     togglePlayPause,
     nextTrack,
     previousTrack,
+    seek,
     toggleShuffle,
     selectPlaylist,
     setEnabled,
@@ -50,12 +51,75 @@ export default function MusicPlayer() {
   } = useMusicPlayer();
 
   const [isHovered, setIsHovered] = useState(false);
+  const [isScrubbing, setIsScrubbing] = useState(false);
+  const [justFinishedScrubbing, setJustFinishedScrubbing] = useState(false);
+  const progressBarRef = useRef<HTMLDivElement>(null);
+
+  const calculateTimeFromMouseEvent = useCallback(
+    (clientX: number) => {
+      if (!progressBarRef.current || !currentTrackDuration) return null;
+
+      const rect = progressBarRef.current.getBoundingClientRect();
+      const relativeX = clientX - rect.left;
+      const percentage = Math.max(0, Math.min(1, relativeX / rect.width));
+      return percentage * currentTrackDuration;
+    },
+    [currentTrackDuration]
+  );
+
+  const handleProgressBarClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!currentTrackDuration) return;
+
+    e.stopPropagation(); // Prevent triggering the FloatingContainer onClick
+
+    const newTime = calculateTimeFromMouseEvent(e.clientX);
+    if (newTime !== null) {
+      seek(newTime);
+    }
+  };
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault(); // Prevent text selection
+    e.stopPropagation(); // Prevent triggering the FloatingContainer onClick
+    setIsScrubbing(true);
+    handleProgressBarClick(e);
+  };
+
+  // Global mouse move handler for scrubbing
+  useEffect(() => {
+    if (isScrubbing) {
+      const handleGlobalMouseMove = (e: MouseEvent) => {
+        e.preventDefault(); // Prevent text selection during drag
+        const newTime = calculateTimeFromMouseEvent(e.clientX);
+        if (newTime !== null) {
+          seek(newTime);
+        }
+      };
+
+      const handleGlobalMouseUp = () => {
+        setIsScrubbing(false);
+        setJustFinishedScrubbing(true);
+        // Clear the flag after a short delay to prevent onClick from toggling
+        setTimeout(() => setJustFinishedScrubbing(false), 100);
+      };
+
+      document.addEventListener('mousemove', handleGlobalMouseMove);
+      document.addEventListener('mouseup', handleGlobalMouseUp);
+
+      return () => {
+        document.removeEventListener('mousemove', handleGlobalMouseMove);
+        document.removeEventListener('mouseup', handleGlobalMouseUp);
+      };
+    }
+
+    return undefined;
+  }, [isScrubbing, currentTrackDuration, seek, calculateTimeFromMouseEvent]);
 
   if (!isEnabled) {
     return null;
   }
 
-  const showExpanded = isExpanded || isHovered;
+  const showExpanded = isExpanded || isHovered || isScrubbing;
   // Can go back if we're not at the bottom of the stack
   const canGoBack = historyPosition + 1 < listeningHistory.length;
 
@@ -63,10 +127,15 @@ export default function MusicPlayer() {
     <FloatingContainer
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={() => setExpanded(!isExpanded)}
+      onClick={() => {
+        if (!justFinishedScrubbing) {
+          setExpanded(!isExpanded);
+        }
+      }}
       isExpanded={showExpanded}
       primaryColor={currentPlaylist?.theme?.primaryColor}
       secondaryColor={currentPlaylist?.theme?.secondaryColor}
+      isScrubbing={isScrubbing}
     >
       {showExpanded ? (
         <ExpandedPlayer>
@@ -99,6 +168,7 @@ export default function MusicPlayer() {
                         size="xs"
                         style={{
                           transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)',
+                          transition: 'transform 0.15s ease',
                         }}
                       />
                     }
@@ -127,7 +197,12 @@ export default function MusicPlayer() {
               <ProgressBarContainer>
                 <ProgressBarRow>
                   <CurrentTime>{formatTime(currentTime)}</CurrentTime>
-                  <ProgressBar>
+                  <ProgressBar
+                    ref={progressBarRef}
+                    onClick={handleProgressBarClick}
+                    onMouseDown={handleMouseDown}
+                    style={{cursor: 'pointer'}}
+                  >
                     <ProgressFill
                       primaryColor={currentPlaylist?.theme?.primaryColor}
                       style={{
@@ -140,6 +215,7 @@ export default function MusicPlayer() {
                     />
                     <ProgressThumb
                       primaryColor={currentPlaylist?.theme?.primaryColor}
+                      isScrubbing={isScrubbing}
                       style={{
                         left: `${
                           currentTrackDuration > 0
@@ -243,6 +319,7 @@ export default function MusicPlayer() {
 
 const FloatingContainer = styled('div')<{
   isExpanded: boolean;
+  isScrubbing?: boolean;
   primaryColor?: string;
   secondaryColor?: string;
 }>`
@@ -255,6 +332,16 @@ const FloatingContainer = styled('div')<{
   z-index: 1000;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+
+  /* Disable text selection when scrubbing */
+  ${p =>
+    p.isScrubbing &&
+    `
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  `}
 
   /* Solid gradient background using pastel playlist theme colors */
   ${p =>
@@ -400,17 +487,21 @@ const ProgressFill = styled('div')<{primaryColor?: string}>`
   overflow: hidden; /* Keep the fill properly rounded */
 `;
 
-const ProgressThumb = styled('div')<{primaryColor?: string}>`
+const ProgressThumb = styled('div')<{isScrubbing?: boolean; primaryColor?: string}>`
   position: absolute;
   top: 50%;
-  width: 12px;
-  height: 12px;
+  width: ${p => (p.isScrubbing ? '16px' : '12px')};
+  height: ${p => (p.isScrubbing ? '16px' : '12px')};
   background-color: ${p => p.primaryColor || p.theme.purple300};
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  transition: left 0.1s ease;
+  transition: ${p =>
+    p.isScrubbing
+      ? 'width 0.1s ease, height 0.1s ease'
+      : 'left 0.1s ease, width 0.1s ease, height 0.1s ease'};
   pointer-events: none;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 `;
 
 const Controls = styled('div')`
