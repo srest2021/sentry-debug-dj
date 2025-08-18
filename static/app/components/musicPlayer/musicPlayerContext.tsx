@@ -205,7 +205,7 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     }
   }, [currentTrack]);
 
-  // Initialize default playlist from preferences
+  // Initialize default playlist from preferences (only once on mount)
   useEffect(() => {
     if (!currentPlaylist) {
       const defaultPlaylist =
@@ -214,7 +214,8 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
         null;
       setCurrentPlaylist(defaultPlaylist);
     }
-  }, [prefs.defaultPlaylistId, currentPlaylist]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPlaylist]); // Only run when currentPlaylist changes, read prefs.defaultPlaylistId once
 
   // Set initial track from playlist
   useEffect(() => {
@@ -346,9 +347,8 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
       setCurrentTrackIndex(startIndex);
       setListeningHistory([startIndex]); // Initialize history with starting track
       setHistoryPosition(0); // Start at top of stack
-      setPrefs({defaultPlaylistId: playlist.id});
     },
-    [setPrefs, shuffle]
+    [shuffle]
   );
 
   // Initialize audio element
