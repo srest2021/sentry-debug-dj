@@ -73,6 +73,7 @@ export default function MusicPlayer() {
           <PlayerHeader>
             <PlaylistDropdown>
               <DropdownMenu
+                size="xs"
                 triggerProps={{
                   'aria-label': t('Select playlist'),
                   size: 'xs',
@@ -85,14 +86,22 @@ export default function MusicPlayer() {
                     label: playlist.name,
                     onAction: () => selectPlaylist(playlist),
                   }))}
-                trigger={(triggerProps, _isOpen) => (
+                trigger={(triggerProps, isOpen) => (
                   <PlaylistButton
                     {...triggerProps}
                     size="xs"
                     borderless
                     priority="link"
                     aria-label={t('Select playlist')}
-                    icon={<IconChevron direction="down" size="xs" />}
+                    icon={
+                      <IconChevron
+                        direction="down"
+                        size="xs"
+                        style={{
+                          transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)',
+                        }}
+                      />
+                    }
                   >
                     {currentPlaylist?.name || t('No Playlist')}
                   </PlaylistButton>
