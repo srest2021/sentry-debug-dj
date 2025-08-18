@@ -36,6 +36,7 @@ export default function MusicPlayer() {
     isExpanded,
     playlists,
     listeningHistory,
+    historyPosition,
     currentTime,
     currentTrackDuration,
     togglePlayPause,
@@ -54,7 +55,8 @@ export default function MusicPlayer() {
   }
 
   const showExpanded = isExpanded || isHovered;
-  const canGoBack = listeningHistory.length > 0;
+  // Can go back if we're not at the bottom of the stack
+  const canGoBack = historyPosition + 1 < listeningHistory.length;
 
   return (
     <FloatingContainer

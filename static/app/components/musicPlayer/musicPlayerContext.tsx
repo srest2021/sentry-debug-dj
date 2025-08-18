@@ -24,6 +24,7 @@ interface MusicPlayerContextProps {
   currentTime: number;
   currentTrack: Track | null;
   currentTrackDuration: number;
+  historyPosition: number;
   isEnabled: boolean;
   isExpanded: boolean; // expands on hover
   isLoading: boolean;
@@ -50,6 +51,7 @@ const MusicPlayerContext = createContext<MusicPlayerContextProps>({
   currentTime: 0,
   currentTrackDuration: 0,
   isExpanded: false,
+  historyPosition: 0,
   listeningHistory: [],
   playlists: [],
   togglePlayPause: () => {},
@@ -394,6 +396,7 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     currentTime,
     currentTrackDuration,
     isExpanded,
+    historyPosition,
     listeningHistory,
     playlists: DEFAULT_PLAYLISTS,
     togglePlayPause,
