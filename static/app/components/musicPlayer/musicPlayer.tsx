@@ -101,9 +101,23 @@ export default function MusicPlayer() {
             <TrackInfo>
               <TrackTitle>{currentTrack.title}</TrackTitle>
               <TrackArtist>{currentTrack.artist}</TrackArtist>
-              <TimeDisplay>
-                {formatTime(currentTime)} / {formatTime(currentTrackDuration)}
-              </TimeDisplay>
+              <ProgressBarContainer>
+                <ProgressBarRow>
+                  <CurrentTime>{formatTime(currentTime)}</CurrentTime>
+                  <ProgressBar>
+                    <ProgressFill
+                      style={{
+                        width: `${
+                          currentTrackDuration > 0
+                            ? (currentTime / currentTrackDuration) * 100
+                            : 0
+                        }%`,
+                      }}
+                    />
+                  </ProgressBar>
+                  <TotalTime>{formatTime(currentTrackDuration)}</TotalTime>
+                </ProgressBarRow>
+              </ProgressBarContainer>
             </TrackInfo>
           )}
 
@@ -273,11 +287,44 @@ const TrackArtist = styled('div')`
   white-space: nowrap;
 `;
 
-const TimeDisplay = styled('div')`
+const ProgressBarContainer = styled('div')`
+  margin-top: ${space(0.5)};
+`;
+
+const ProgressBarRow = styled('div')`
+  display: flex;
+  align-items: center;
+  gap: ${space(1)};
+`;
+
+const CurrentTime = styled('div')`
   font-size: ${p => p.theme.fontSize.xs};
   color: ${p => p.theme.subText};
-  margin-top: ${space(0.25)};
-  text-align: center;
+  min-width: 32px;
+  text-align: left;
+`;
+
+const TotalTime = styled('div')`
+  font-size: ${p => p.theme.fontSize.xs};
+  color: ${p => p.theme.subText};
+  min-width: 32px;
+  text-align: right;
+`;
+
+const ProgressBar = styled('div')`
+  flex: 1;
+  height: 4px;
+  background-color: ${p => p.theme.border};
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+`;
+
+const ProgressFill = styled('div')`
+  height: 100%;
+  background-color: ${p => p.theme.purple300};
+  border-radius: 2px;
+  transition: width 0.1s ease;
 `;
 
 const Controls = styled('div')`
