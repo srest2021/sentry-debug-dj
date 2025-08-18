@@ -335,13 +335,20 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
   const selectPlaylist = useCallback(
     (playlist: Playlist) => {
       setCurrentPlaylist(playlist);
-      setCurrentTrack(playlist.tracks[0] || null);
-      setCurrentTrackIndex(0);
-      setListeningHistory([0]); // Initialize history with first track
+
+      // If shuffle is on, start with a random track; otherwise start with first track
+      const startIndex =
+        shuffle && playlist.tracks.length > 0
+          ? Math.floor(Math.random() * playlist.tracks.length)
+          : 0;
+
+      setCurrentTrack(playlist.tracks[startIndex] || null);
+      setCurrentTrackIndex(startIndex);
+      setListeningHistory([startIndex]); // Initialize history with starting track
       setHistoryPosition(0); // Start at top of stack
       setPrefs({defaultPlaylistId: playlist.id});
     },
-    [setPrefs]
+    [setPrefs, shuffle]
   );
 
   // Initialize audio element

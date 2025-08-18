@@ -5,6 +5,7 @@ import {Button} from 'sentry/components/core/button';
 import {DropdownMenu} from 'sentry/components/dropdownMenu';
 import {useMusicPlayer} from 'sentry/components/musicPlayer/musicPlayerContext';
 import {
+  IconChevron,
   IconClose,
   IconNext,
   IconPause,
@@ -75,13 +76,37 @@ export default function MusicPlayer() {
                   size: 'xs',
                   borderless: true,
                 }}
-                items={playlists.map(playlist => ({
-                  key: playlist.id,
-                  label: playlist.name,
-                  onAction: () => selectPlaylist(playlist),
-                }))}
-                trigger={() => (
-                  <PlaylistName>{currentPlaylist?.name || t('No Playlist')}</PlaylistName>
+                items={[
+                  // Current playlist at the top
+                  ...(currentPlaylist
+                    ? [
+                        {
+                          key: currentPlaylist.id,
+                          label: `${currentPlaylist.name} (current)`,
+                          onAction: () => selectPlaylist(currentPlaylist),
+                        },
+                      ]
+                    : []),
+                  // Other playlists
+                  ...playlists
+                    .filter(playlist => playlist.id !== currentPlaylist?.id)
+                    .map(playlist => ({
+                      key: playlist.id,
+                      label: playlist.name,
+                      onAction: () => selectPlaylist(playlist),
+                    })),
+                ]}
+                trigger={(triggerProps, _isOpen) => (
+                  <PlaylistButton
+                    {...triggerProps}
+                    size="xs"
+                    borderless
+                    priority="link"
+                    aria-label={t('Select playlist')}
+                    icon={<IconChevron direction="down" size="xs" />}
+                  >
+                    {currentPlaylist?.name || t('No Playlist')}
+                  </PlaylistButton>
                 )}
               />
             </PlaylistDropdown>
@@ -248,13 +273,18 @@ const PlaylistDropdown = styled('div')`
   flex: 1;
 `;
 
-const PlaylistName = styled('span')`
+const PlaylistButton = styled(Button)`
   font-size: ${p => p.theme.fontSize.sm};
   font-weight: ${p => p.theme.fontWeight.bold};
   color: ${p => p.theme.textColor};
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+
+  &:hover:not(:disabled) {
+    color: ${p => p.theme.textColor};
+    text-decoration: underline;
+  }
 `;
 
 const CloseButton = styled(Button)`
