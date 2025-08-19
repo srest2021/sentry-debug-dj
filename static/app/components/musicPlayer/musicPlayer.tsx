@@ -188,17 +188,17 @@ export default function MusicPlayer() {
                   </PlaylistButton>
                 )}
               />
+              <CloseButton
+                size="xs"
+                borderless
+                icon={<IconClose />}
+                onClick={e => {
+                  e.stopPropagation();
+                  setEnabled(false);
+                }}
+                aria-label={t('Disable music player')}
+              />
             </PlaylistDropdown>
-            <CloseButton
-              size="xs"
-              borderless
-              icon={<IconClose />}
-              onClick={e => {
-                e.stopPropagation();
-                setEnabled(false);
-              }}
-              aria-label={t('Disable music player')}
-            />
           </PlayerHeader>
 
           {currentTrack && (
@@ -312,12 +312,6 @@ export default function MusicPlayer() {
             primaryColor={theme?.primaryColor}
           />
           <CompactTrackInfo>
-            {currentProduct?.name && (
-              <CompactProductInfo>
-                <CompactProductIcon>{currentProduct.icon}</CompactProductIcon>
-                <CompactProductName>{currentProduct.name}</CompactProductName>
-              </CompactProductInfo>
-            )}
             {currentTrack && (
               <React.Fragment>
                 <CompactTitle>{currentTrack.title}</CompactTitle>
@@ -632,26 +626,4 @@ const CompactTime = styled('div')`
   font-size: ${p => p.theme.fontSize.xs};
   color: ${p => p.theme.subText};
   margin-top: ${space(0.25)};
-`;
-
-const CompactProductInfo = styled('div')`
-  display: flex;
-  align-items: center;
-  gap: ${space(0.5)};
-  margin-bottom: ${space(0.5)};
-`;
-
-const CompactProductIcon = styled('div')`
-  font-size: ${p => p.theme.fontSize.md};
-  color: ${p => p.theme.textColor};
-`;
-
-const CompactProductName = styled('div')`
-  font-size: ${p => p.theme.fontSize.sm};
-  font-weight: ${p => p.theme.fontWeight.normal};
-  color: ${p => p.theme.textColor};
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  max-width: 120px; /* Force ellipsis for long titles */
 `;
