@@ -147,49 +147,50 @@ export default function MusicPlayer() {
       {showExpanded ? (
         <ExpandedPlayer>
           <PlayerHeader>
-            {currentProduct?.name && (
-              <ProductInfo>
-                <ProductIcon>{currentProduct.icon}</ProductIcon>
-                <ProductName>{currentProduct.name}</ProductName>
-              </ProductInfo>
-            )}
             <PlaylistDropdown>
-              <DropdownMenu
-                size="xs"
-                triggerProps={{
-                  'aria-label': t('Select playlist'),
-                  size: 'xs',
-                  borderless: true,
-                }}
-                items={playlists
-                  .filter(playlist => playlist.id !== currentPlaylist?.id)
-                  .map(playlist => ({
-                    key: playlist.id,
-                    label: playlist.name,
-                    onAction: () => selectPlaylist(playlist),
-                  }))}
-                trigger={(triggerProps, isOpen) => (
-                  <PlaylistButton
-                    {...triggerProps}
-                    size="xs"
-                    borderless
-                    priority="link"
-                    aria-label={t('Select playlist')}
-                    icon={
-                      <IconChevron
-                        direction="down"
-                        size="xs"
-                        style={{
-                          transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)',
-                          transition: 'transform 0.15s ease',
-                        }}
-                      />
-                    }
-                  >
-                    {currentPlaylist?.name || t('No Playlist')}
-                  </PlaylistButton>
+              <PlaylistInfo>
+                <DropdownMenu
+                  size="xs"
+                  triggerProps={{
+                    'aria-label': t('Select playlist'),
+                    size: 'xs',
+                    borderless: true,
+                  }}
+                  items={playlists
+                    .filter(playlist => playlist.id !== currentPlaylist?.id)
+                    .map(playlist => ({
+                      key: playlist.id,
+                      label: playlist.name,
+                      onAction: () => selectPlaylist(playlist),
+                    }))}
+                  trigger={(triggerProps, isOpen) => (
+                    <PlaylistButton
+                      {...triggerProps}
+                      size="xs"
+                      borderless
+                      priority="link"
+                      aria-label={t('Select playlist')}
+                      icon={
+                        <IconChevron
+                          direction="down"
+                          size="xs"
+                          style={{
+                            transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)',
+                            transition: 'transform 0.15s ease',
+                          }}
+                        />
+                      }
+                    >
+                      {currentPlaylist?.name || t('No Playlist')}
+                    </PlaylistButton>
+                  )}
+                />
+                {currentProduct?.name && (
+                  <PlaylistProductLabel>
+                    on {currentProduct.icon} {currentProduct.name}
+                  </PlaylistProductLabel>
                 )}
-              />
+              </PlaylistInfo>
               <CloseButton
                 size="xs"
                 borderless
@@ -385,33 +386,24 @@ const PlayerHeader = styled('div')`
   margin-bottom: ${space(0.5)};
 `;
 
-const ProductInfo = styled('div')`
-  display: flex;
-  align-items: center;
-  gap: ${space(0.5)};
-  justify-content: center;
-  padding: ${space(0.5)} 0;
-  border-bottom: 1px solid ${p => p.theme.border};
-`;
-
-const ProductIcon = styled('div')`
-  font-size: ${p => p.theme.fontSize.lg};
-  color: ${p => p.theme.textColor};
-`;
-
-const ProductName = styled('div')`
-  font-size: ${p => p.theme.fontSize.md};
-  font-weight: ${p => p.theme.fontWeight.bold};
-  color: ${p => p.theme.textColor};
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-`;
-
 const PlaylistDropdown = styled('div')`
   display: flex;
   justify-content: space-between;
   align-items: center;
+`;
+
+const PlaylistInfo = styled('div')`
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0; /* Allow text to shrink */
+`;
+
+const PlaylistProductLabel = styled('span')`
+  font-size: ${p => p.theme.fontSize.sm};
+  color: ${p => p.theme.subText};
+  margin-left: ${space(0.5)};
+  white-space: nowrap;
 `;
 
 const PlaylistButton = styled(Button)`
