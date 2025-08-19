@@ -122,11 +122,15 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
   }, [currentProduct?.id]);
 
   // Add a track to listening history and reset historyPosition to 0
+  // Skip adding if it's the same as the most recent track
   const addToListeningHistory = useCallback((track: Track) => {
-    setListeningHistory(prev => [
-      track,
-      ...prev.slice(0, MAX_LISTENING_HISTORY_LENGTH - 1),
-    ]);
+    setListeningHistory(prev => {
+      // Don't add if the track is the same as the most recent one
+      if (prev.length > 0 && prev[0]?.id === track.id) {
+        return prev;
+      }
+      return [track, ...prev.slice(0, MAX_LISTENING_HISTORY_LENGTH - 1)];
+    });
     setHistoryPosition(0);
   }, []);
 
@@ -234,7 +238,15 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
       setCurrentTrack(nextTrack_);
 
       // Insert product track into history at current position
+      // Skip inserting if it's the same as the track at the current position
       setListeningHistory(prev => {
+        // Don't insert if the track is the same as the one at the current position
+        if (
+          prev.length > historyPosition &&
+          prev[historyPosition]?.id === nextTrack_!.id
+        ) {
+          return prev;
+        }
         const newHistory = [...prev];
         newHistory.splice(historyPosition, 0, nextTrack_!);
         return newHistory.slice(0, MAX_LISTENING_HISTORY_LENGTH);
