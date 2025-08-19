@@ -11,7 +11,6 @@ import {
   IconPause,
   IconPlay,
   IconPrevious,
-  IconShuffle,
 } from 'sentry/icons';
 import {t} from 'sentry/locale';
 import {space} from 'sentry/styles/space';
@@ -32,7 +31,6 @@ export default function MusicPlayer() {
     currentTrack,
     currentPlaylist,
     currentProduct,
-    shuffle,
     isEnabled,
     isLoading,
     isExpanded,
@@ -41,11 +39,11 @@ export default function MusicPlayer() {
     historyPosition,
     currentTime,
     currentTrackDuration,
+    productQueue,
     togglePlayPause,
     nextTrack,
     previousTrack,
     seek,
-    toggleShuffle,
     selectPlaylist,
     setEnabled,
     setExpanded,
@@ -121,8 +119,12 @@ export default function MusicPlayer() {
   }
 
   const showExpanded = isExpanded || isHovered || isScrubbing;
-  // Can go back if we're not at the bottom of the stack
-  const canGoBack = historyPosition + 1 < listeningHistory.length;
+  // Can go back if we're not at the bottom of the stack OR if we're on a queue track (can always go back to playlist)
+  const canGoBack =
+    historyPosition + 1 < listeningHistory.length || currentTrack?.isQueueTrack === true;
+  // Can go forward if there are tracks in the queue or if playlist has more than 1 track
+  const canGoForward =
+    productQueue.length > 0 || (currentPlaylist?.tracks.length || 0) > 1;
 
   // Use product theme if available, otherwise fall back to playlist theme
   // Handle cases where currentProduct might be null due to router context issues
@@ -188,17 +190,17 @@ export default function MusicPlayer() {
                   </PlaylistButton>
                 )}
               />
+              <CloseButton
+                size="xs"
+                borderless
+                icon={<IconClose />}
+                onClick={e => {
+                  e.stopPropagation();
+                  setEnabled(false);
+                }}
+                aria-label={t('Disable music player')}
+              />
             </PlaylistDropdown>
-            <CloseButton
-              size="xs"
-              borderless
-              icon={<IconClose />}
-              onClick={e => {
-                e.stopPropagation();
-                setEnabled(false);
-              }}
-              aria-label={t('Disable music player')}
-            />
           </PlayerHeader>
 
           {currentTrack && (
@@ -276,24 +278,8 @@ export default function MusicPlayer() {
                 e.stopPropagation();
                 nextTrack();
               }}
-              disabled={!currentTrack}
+              disabled={!currentTrack || !canGoForward}
               aria-label={t('Next track')}
-            />
-
-            <ControlButton
-              size="sm"
-              borderless
-              icon={<IconShuffle size="md" />}
-              onClick={e => {
-                e.stopPropagation();
-                toggleShuffle();
-              }}
-              aria-label={shuffle ? t('Disable shuffle') : t('Enable shuffle')}
-              style={{
-                opacity: shuffle ? 1 : 0.6,
-                backgroundColor: 'transparent',
-                color: shuffle && theme?.primaryColor ? theme.primaryColor : undefined,
-              }}
             />
           </Controls>
         </ExpandedPlayer>
@@ -312,12 +298,6 @@ export default function MusicPlayer() {
             primaryColor={theme?.primaryColor}
           />
           <CompactTrackInfo>
-            {currentProduct?.name && (
-              <CompactProductInfo>
-                <CompactProductIcon>{currentProduct.icon}</CompactProductIcon>
-                <CompactProductName>{currentProduct.name}</CompactProductName>
-              </CompactProductInfo>
-            )}
             {currentTrack && (
               <React.Fragment>
                 <CompactTitle>{currentTrack.title}</CompactTitle>
@@ -632,26 +612,4 @@ const CompactTime = styled('div')`
   font-size: ${p => p.theme.fontSize.xs};
   color: ${p => p.theme.subText};
   margin-top: ${space(0.25)};
-`;
-
-const CompactProductInfo = styled('div')`
-  display: flex;
-  align-items: center;
-  gap: ${space(0.5)};
-  margin-bottom: ${space(0.5)};
-`;
-
-const CompactProductIcon = styled('div')`
-  font-size: ${p => p.theme.fontSize.md};
-  color: ${p => p.theme.textColor};
-`;
-
-const CompactProductName = styled('div')`
-  font-size: ${p => p.theme.fontSize.sm};
-  font-weight: ${p => p.theme.fontWeight.normal};
-  color: ${p => p.theme.textColor};
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  max-width: 120px; /* Force ellipsis for long titles */
 `;

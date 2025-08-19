@@ -1,6 +1,8 @@
 import {createContext, useCallback, useContext, useEffect, useRef, useState} from 'react';
 
+import {DEFAULT_PLAYLISTS} from 'sentry/components/musicPlayer/defaultPlaylists';
 import {useMusicPlayerPrefs} from 'sentry/components/musicPlayer/musicPlayerPreferencesContext';
+import {getTracksForProduct} from 'sentry/components/musicPlayer/productTracks';
 import {
   useCurrentProduct,
   type Product,
@@ -11,6 +13,7 @@ export type Track = {
   id: string;
   src: string;
   title: string;
+  isQueueTrack?: boolean; // Optional field to mark tracks from product queue
 };
 
 export type Playlist = {
@@ -38,13 +41,12 @@ interface MusicPlayerContextProps {
   nextTrack: () => void;
   playlists: Playlist[];
   previousTrack: () => void;
+  productQueue: Track[]; // Queue of product-specific tracks to play before playlist tracks
   seek: (time: number) => void;
   selectPlaylist: (playlist: Playlist) => void;
   setEnabled: (enabled: boolean) => void;
   setExpanded: (expanded: boolean) => void;
-  shuffle: boolean;
   togglePlayPause: () => void;
-  toggleShuffle: () => void;
 }
 
 const MusicPlayerContext = createContext<MusicPlayerContextProps>({
@@ -52,7 +54,6 @@ const MusicPlayerContext = createContext<MusicPlayerContextProps>({
   currentTrack: null,
   currentPlaylist: null,
   currentProduct: null,
-  shuffle: false,
   isEnabled: true,
   isLoading: false,
   currentTime: 0,
@@ -61,98 +62,15 @@ const MusicPlayerContext = createContext<MusicPlayerContextProps>({
   historyPosition: 0,
   listeningHistory: [],
   playlists: [],
+  productQueue: [],
   togglePlayPause: () => {},
   nextTrack: () => {},
   previousTrack: () => {},
   seek: () => {},
-  toggleShuffle: () => {},
   selectPlaylist: () => {},
   setEnabled: () => {},
   setExpanded: () => {},
 });
-
-const DEFAULT_PLAYLISTS: Playlist[] = [
-  {
-    // Sentry-themed playlist
-    id: 'sentaur-setlist',
-    name: 'Sentaur Setlist',
-    theme: {
-      primaryColor: '#6366f1',
-      secondaryColor: '#8b5cf6',
-    },
-    tracks: [
-      {
-        id: 'error-code-blues',
-        title: 'Error Code Blues',
-        artist: 'Sentaur',
-        src: 'https://files.catbox.moe/dy3bzy.mp3',
-      },
-      {
-        id: 'feedback-symphony',
-        title: 'Feedback Symphony',
-        artist: 'Sentaur',
-        src: '/_static/dist/sentry/assets/songs/feedback-symphony.mp3',
-      },
-    ],
-  },
-  {
-    id: 'metal-mode',
-    name: 'Metal Mode',
-    theme: {
-      primaryColor: '#dc2626',
-      secondaryColor: '#ea580c',
-    },
-    tracks: [
-      {
-        id: 'synth-1',
-        title: 'Digital Dreams',
-        artist: 'Code Runner',
-        src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
-      },
-      {
-        id: 'synth-2',
-        title: 'Binary Sunset',
-        artist: 'Pixel Prophet',
-        src: 'https://www.soundjay.com/free-music/sounds/barn-beat-01.mp3',
-      },
-      {
-        id: 'synth-3',
-        title: 'Neon Nights',
-        artist: 'Cyber Coder',
-        src: 'https://www.soundjay.com/free-music/sounds/cautious-path-01.mp3',
-      },
-      {
-        id: 'synth-4',
-        title: 'Data Stream',
-        artist: 'Binary Bot',
-        src: 'https://www.soundjay.com/free-music/sounds/heart-of-the-sea-01.mp3',
-      },
-    ],
-  },
-  {
-    id: 'minecraft-vibes',
-    name: 'Minecraft Vibes',
-    theme: {
-      primaryColor: '#22c55e',
-      secondaryColor: '#84cc16',
-    },
-    tracks: [
-      {
-        id: 'minecraft-1',
-        title:
-          'Block by Block by Block by Block by Block by Block by Block by Block by Block by Block by Block by Block',
-        artist: 'Craft Master',
-        src: 'https://www.soundjay.com/free-music/sounds/cautious-path-01.mp3',
-      },
-      {
-        id: 'minecraft-2',
-        title: 'Redstone Circuit',
-        artist: 'Pixel Builder',
-        src: 'https://www.soundjay.com/free-music/sounds/heart-of-the-sea-01.mp3',
-      },
-    ],
-  },
-];
 
 type Props = {
   children: React.ReactNode;
@@ -170,7 +88,6 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [currentPlaylist, setCurrentPlaylist] = useState<Playlist | null>(null);
-  const [shuffle, setShuffle] = useState(prefs.shuffle);
   const [isEnabled, setIsEnabled] = useState(prefs.isEnabled);
   const [isLoading, setIsLoading] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -179,11 +96,26 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [listeningHistory, setListeningHistory] = useState<number[]>([]);
   const [historyPosition, setHistoryPosition] = useState(0); // 0 means we're at the most recent track
+  const [productQueue, setProductQueue] = useState<Track[]>([]); // Queue of product-specific tracks
 
   // Keep track of playing state for auto-resume
   useEffect(() => {
     wasPlayingRef.current = isPlaying;
   }, [isPlaying]);
+
+  // Handle product changes - update queue when product changes
+  useEffect(() => {
+    if (currentProduct?.id) {
+      // Clear queue and add tracks for the new product, marking them as queue tracks
+      const productTracks = getTracksForProduct(currentProduct.id);
+      const queueTracks = productTracks.map(track => ({...track, isQueueTrack: true}));
+      const shuffledTracks = [...queueTracks].sort(() => Math.random() - 0.5);
+      setProductQueue(shuffledTracks);
+    } else {
+      // Clear queue if no product
+      setProductQueue([]);
+    }
+  }, [currentProduct?.id]);
 
   // Load track when current track changes
   useEffect(() => {
@@ -262,37 +194,8 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
 
   const getNextTrackIndex = useCallback(() => {
     if (!currentPlaylist) return 0;
-
-    if (shuffle) {
-      // Avoid recently played tracks (last 3 tracks or half the playlist, whichever is smaller)
-      const maxRecentTracksToAvoid = Math.min(
-        3,
-        Math.floor(currentPlaylist.tracks.length / 2)
-      );
-      const tracksToAvoid = [
-        currentTrackIndex,
-        ...listeningHistory.slice(0, maxRecentTracksToAvoid - 1),
-      ];
-
-      // If we've played most tracks recently, just avoid the current track
-      const finalTracksToAvoid =
-        tracksToAvoid.length >= currentPlaylist.tracks.length - 1
-          ? [currentTrackIndex]
-          : tracksToAvoid;
-
-      let nextIndex: number;
-      do {
-        nextIndex = Math.floor(Math.random() * currentPlaylist.tracks.length);
-      } while (
-        finalTracksToAvoid.includes(nextIndex) &&
-        currentPlaylist.tracks.length > 1
-      );
-
-      return nextIndex;
-    }
-
     return (currentTrackIndex + 1) % currentPlaylist.tracks.length;
-  }, [currentPlaylist, currentTrackIndex, shuffle, listeningHistory]);
+  }, [currentPlaylist, currentTrackIndex]);
 
   const nextTrack = useCallback(() => {
     if (!currentPlaylist || !isEnabled) return;
@@ -308,7 +211,16 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
       return;
     }
 
-    // We're at the top of the stack (position 0), get a new track and add to stack
+    // Check if there are tracks in the product queue first
+    if (productQueue.length > 0) {
+      const nextQueueTrack = productQueue[0]!; // Get first track from queue (already marked as isQueueTrack: true)
+      setProductQueue(prev => prev.slice(1)); // Remove the track from queue (pop from front)
+      setCurrentTrack(nextQueueTrack);
+      // Note: We don't update currentTrackIndex or history for queue tracks since they're not part of the playlist
+      return;
+    }
+
+    // We're at the top of the stack (position 0) and no queue tracks, get a new track from playlist
     const nextIndex = getNextTrackIndex();
     const nextTrack_ = currentPlaylist.tracks[nextIndex] || null;
 
@@ -318,10 +230,28 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     setHistoryPosition(0); // Stay at top of stack
     setCurrentTrack(nextTrack_);
     setCurrentTrackIndex(nextIndex);
-  }, [currentPlaylist, getNextTrackIndex, isEnabled, historyPosition, listeningHistory]);
+  }, [
+    currentPlaylist,
+    getNextTrackIndex,
+    isEnabled,
+    historyPosition,
+    listeningHistory,
+    productQueue,
+  ]);
 
   const previousTrack = useCallback(() => {
     if (!currentPlaylist || !isEnabled) return;
+
+    // If we're currently on a queue track, go back to the last playlist track
+    if (currentTrack?.isQueueTrack && listeningHistory.length > 0) {
+      const lastPlaylistIndex = listeningHistory[historyPosition]!;
+      const lastPlaylistTrack = currentPlaylist.tracks[lastPlaylistIndex] || null;
+
+      setCurrentTrack(lastPlaylistTrack);
+      setCurrentTrackIndex(lastPlaylistIndex);
+      // Don't change historyPosition since we're going back to where we were
+      return;
+    }
 
     const nextHistoryPos = historyPosition + 1;
 
@@ -336,13 +266,7 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     setHistoryPosition(nextHistoryPos); // Move deeper into stack
     setCurrentTrack(prevTrack);
     setCurrentTrackIndex(prevHistoryIndex);
-  }, [currentPlaylist, isEnabled, historyPosition, listeningHistory]);
-
-  const toggleShuffle = useCallback(() => {
-    const newShuffle = !shuffle;
-    setShuffle(newShuffle);
-    setPrefs({shuffle: newShuffle});
-  }, [shuffle, setPrefs]);
+  }, [currentPlaylist, isEnabled, historyPosition, listeningHistory, currentTrack]);
 
   const seek = useCallback(
     (time: number) => {
@@ -356,23 +280,17 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     [currentTrackDuration]
   );
 
-  const selectPlaylist = useCallback(
-    (playlist: Playlist) => {
-      setCurrentPlaylist(playlist);
+  const selectPlaylist = useCallback((playlist: Playlist) => {
+    setCurrentPlaylist(playlist);
 
-      // If shuffle is on, start with a random track; otherwise start with first track
-      const startIndex =
-        shuffle && playlist.tracks.length > 0
-          ? Math.floor(Math.random() * playlist.tracks.length)
-          : 0;
+    // Always start with the first track
+    const startIndex = 0;
 
-      setCurrentTrack(playlist.tracks[startIndex] || null);
-      setCurrentTrackIndex(startIndex);
-      setListeningHistory([startIndex]); // Initialize history with starting track
-      setHistoryPosition(0); // Start at top of stack
-    },
-    [shuffle]
-  );
+    setCurrentTrack(playlist.tracks[startIndex] || null);
+    setCurrentTrackIndex(startIndex);
+    setListeningHistory([startIndex]); // Initialize history with starting track
+    setHistoryPosition(0); // Start at top of stack
+  }, []);
 
   // Initialize audio element
   useEffect(() => {
@@ -421,7 +339,6 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     currentTrack,
     currentPlaylist,
     currentProduct,
-    shuffle,
     isEnabled,
     isLoading,
     currentTime,
@@ -430,11 +347,11 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     historyPosition,
     listeningHistory,
     playlists: DEFAULT_PLAYLISTS,
+    productQueue,
     togglePlayPause,
     nextTrack,
     previousTrack,
     seek,
-    toggleShuffle,
     selectPlaylist,
     setEnabled: (enabled: boolean) => {
       setIsEnabled(enabled);
