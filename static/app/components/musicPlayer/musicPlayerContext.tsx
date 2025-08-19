@@ -1,6 +1,10 @@
 import {createContext, useCallback, useContext, useEffect, useRef, useState} from 'react';
 
 import {useMusicPlayerPrefs} from 'sentry/components/musicPlayer/musicPlayerPreferencesContext';
+import {
+  useCurrentProduct,
+  type Product,
+} from 'sentry/components/musicPlayer/useCurrentProduct';
 
 export type Track = {
   artist: string;
@@ -21,6 +25,7 @@ export type Playlist = {
 
 interface MusicPlayerContextProps {
   currentPlaylist: Playlist | null;
+  currentProduct: Product | null;
   currentTime: number;
   currentTrack: Track | null;
   currentTrackDuration: number;
@@ -46,6 +51,7 @@ const MusicPlayerContext = createContext<MusicPlayerContextProps>({
   isPlaying: false,
   currentTrack: null,
   currentPlaylist: null,
+  currentProduct: null,
   shuffle: false,
   isEnabled: true,
   isLoading: false,
@@ -152,6 +158,7 @@ type Props = {
 
 export function MusicPlayerProvider({children, value = {}}: Props) {
   const [prefs, setPrefs] = useMusicPlayerPrefs();
+  const currentProduct = useCurrentProduct();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const wasPlayingRef = useRef(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -407,6 +414,7 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     isPlaying,
     currentTrack,
     currentPlaylist,
+    currentProduct,
     shuffle,
     isEnabled,
     isLoading,

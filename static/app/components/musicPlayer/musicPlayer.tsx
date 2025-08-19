@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import styled from '@emotion/styled';
 
 import {Button} from 'sentry/components/core/button';
@@ -31,6 +31,7 @@ export default function MusicPlayer() {
     isPlaying,
     currentTrack,
     currentPlaylist,
+    currentProduct,
     shuffle,
     isEnabled,
     isLoading,
@@ -123,6 +124,10 @@ export default function MusicPlayer() {
   // Can go back if we're not at the bottom of the stack
   const canGoBack = historyPosition + 1 < listeningHistory.length;
 
+  // Use product theme if available, otherwise fall back to playlist theme
+  // Handle cases where currentProduct might be null due to router context issues
+  const theme = currentProduct?.theme || currentPlaylist?.theme;
+
   return (
     <FloatingContainer
       onMouseEnter={() => setIsHovered(true)}
@@ -133,13 +138,19 @@ export default function MusicPlayer() {
         }
       }}
       isExpanded={showExpanded}
-      primaryColor={currentPlaylist?.theme?.primaryColor}
-      secondaryColor={currentPlaylist?.theme?.secondaryColor}
+      primaryColor={theme?.primaryColor}
+      secondaryColor={theme?.secondaryColor}
       isScrubbing={isScrubbing}
     >
       {showExpanded ? (
         <ExpandedPlayer>
           <PlayerHeader>
+            {currentProduct?.name && (
+              <ProductInfo>
+                <ProductIcon>{currentProduct.icon}</ProductIcon>
+                <ProductName>{currentProduct.name}</ProductName>
+              </ProductInfo>
+            )}
             <PlaylistDropdown>
               <DropdownMenu
                 size="xs"
@@ -204,7 +215,7 @@ export default function MusicPlayer() {
                     style={{cursor: 'pointer'}}
                   >
                     <ProgressFill
-                      primaryColor={currentPlaylist?.theme?.primaryColor}
+                      primaryColor={theme?.primaryColor}
                       style={{
                         width: `${
                           currentTrackDuration > 0
@@ -214,7 +225,7 @@ export default function MusicPlayer() {
                       }}
                     />
                     <ProgressThumb
-                      primaryColor={currentPlaylist?.theme?.primaryColor}
+                      primaryColor={theme?.primaryColor}
                       isScrubbing={isScrubbing}
                       style={{
                         left: `${
@@ -254,7 +265,7 @@ export default function MusicPlayer() {
               disabled={isLoading || !currentTrack}
               aria-label={isPlaying ? t('Pause') : t('Play')}
               priority="primary"
-              primaryColor={currentPlaylist?.theme?.primaryColor}
+              primaryColor={theme?.primaryColor}
             />
 
             <ControlButton
@@ -281,10 +292,7 @@ export default function MusicPlayer() {
               style={{
                 opacity: shuffle ? 1 : 0.6,
                 backgroundColor: 'transparent',
-                color:
-                  shuffle && currentPlaylist?.theme?.primaryColor
-                    ? currentPlaylist.theme.primaryColor
-                    : undefined,
+                color: shuffle && theme?.primaryColor ? theme.primaryColor : undefined,
               }}
             />
           </Controls>
@@ -301,16 +309,24 @@ export default function MusicPlayer() {
             disabled={isLoading || !currentTrack}
             aria-label={isPlaying ? t('Pause') : t('Play')}
             priority="primary"
-            primaryColor={currentPlaylist?.theme?.primaryColor}
+            primaryColor={theme?.primaryColor}
           />
-          {currentTrack && (
-            <CompactTrackInfo>
-              <CompactTitle>{currentTrack.title}</CompactTitle>
-              <CompactTime>
-                {formatTime(currentTime)} / {formatTime(currentTrackDuration)}
-              </CompactTime>
-            </CompactTrackInfo>
-          )}
+          <CompactTrackInfo>
+            {currentProduct?.name && (
+              <CompactProductInfo>
+                <CompactProductIcon>{currentProduct.icon}</CompactProductIcon>
+                <CompactProductName>{currentProduct.name}</CompactProductName>
+              </CompactProductInfo>
+            )}
+            {currentTrack && (
+              <React.Fragment>
+                <CompactTitle>{currentTrack.title}</CompactTitle>
+                <CompactTime>
+                  {formatTime(currentTime)} / {formatTime(currentTrackDuration)}
+                </CompactTime>
+              </React.Fragment>
+            )}
+          </CompactTrackInfo>
         </CompactPlayer>
       )}
     </FloatingContainer>
@@ -384,13 +400,38 @@ const ExpandedPlayer = styled('div')`
 
 const PlayerHeader = styled('div')`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: ${space(0.5)};
   margin-bottom: ${space(0.5)};
 `;
 
+const ProductInfo = styled('div')`
+  display: flex;
+  align-items: center;
+  gap: ${space(0.5)};
+  justify-content: center;
+  padding: ${space(0.5)} 0;
+  border-bottom: 1px solid ${p => p.theme.border};
+`;
+
+const ProductIcon = styled('div')`
+  font-size: ${p => p.theme.fontSize.lg};
+  color: ${p => p.theme.textColor};
+`;
+
+const ProductName = styled('div')`
+  font-size: ${p => p.theme.fontSize.md};
+  font-weight: ${p => p.theme.fontWeight.bold};
+  color: ${p => p.theme.textColor};
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+`;
+
 const PlaylistDropdown = styled('div')`
-  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const PlaylistButton = styled(Button)`
@@ -572,6 +613,9 @@ const CompactPlayButton = styled(Button)<{primaryColor?: string}>`
 const CompactTrackInfo = styled('div')`
   flex: 1;
   min-width: 0; /* Allow text to shrink */
+  display: flex;
+  flex-direction: column;
+  gap: ${space(0.25)};
 `;
 
 const CompactTitle = styled('div')`
@@ -588,4 +632,26 @@ const CompactTime = styled('div')`
   font-size: ${p => p.theme.fontSize.xs};
   color: ${p => p.theme.subText};
   margin-top: ${space(0.25)};
+`;
+
+const CompactProductInfo = styled('div')`
+  display: flex;
+  align-items: center;
+  gap: ${space(0.5)};
+  margin-bottom: ${space(0.5)};
+`;
+
+const CompactProductIcon = styled('div')`
+  font-size: ${p => p.theme.fontSize.md};
+  color: ${p => p.theme.textColor};
+`;
+
+const CompactProductName = styled('div')`
+  font-size: ${p => p.theme.fontSize.sm};
+  font-weight: ${p => p.theme.fontWeight.normal};
+  color: ${p => p.theme.textColor};
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 120px; /* Force ellipsis for long titles */
 `;
