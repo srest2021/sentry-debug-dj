@@ -4,7 +4,7 @@ import {LocalStorageMusicPlayerPreferences} from 'sentry/components/musicPlayer/
 import {MusicPlayerPreferencesContextProvider} from 'sentry/components/musicPlayer/musicPlayerPreferencesContext';
 
 type Props = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 };
 
 export default function MusicPlayerWrapper({children}: Props) {
@@ -13,7 +13,7 @@ export default function MusicPlayerWrapper({children}: Props) {
       prefsStrategy={LocalStorageMusicPlayerPreferences}
     >
       <MusicPlayerProvider>
-        {children}
+        {children && children}
         <MusicPlayer />
       </MusicPlayerProvider>
     </MusicPlayerPreferencesContextProvider>

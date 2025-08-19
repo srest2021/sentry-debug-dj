@@ -14,6 +14,7 @@ import GlobalModal from 'sentry/components/globalModal';
 import {useGlobalModal} from 'sentry/components/globalModal/useGlobalModal';
 import Hook from 'sentry/components/hook';
 import Indicators from 'sentry/components/indicators';
+import MusicPlayerWrapper from 'sentry/components/musicPlayer/musicPlayerWrapper';
 import {UserTimezoneProvider} from 'sentry/components/timezoneProvider';
 import {DEPLOY_PREVIEW_CONFIG, EXPERIMENTAL_SPA} from 'sentry/constants';
 import AlertStore from 'sentry/stores/alertStore';
@@ -278,6 +279,7 @@ function App({children, params}: Props) {
                       <ErrorBoundary>{renderBody()}</ErrorBoundary>
                     </DemoToursProvider>
                   </MainContainer>
+                  <MusicPlayerWrapper />
                 </GlobalFeedbackForm>
               </AsyncSDKIntegrationContextProvider>
             )}
