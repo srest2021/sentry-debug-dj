@@ -358,7 +358,8 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
   }, []);
 
   const handleEnded = useCallback(() => {
-    setIsPlaying(false);
+    // Don't set isPlaying to false here - let nextTrack handle it
+    // Keep wasPlayingRef as true so the next track auto-plays
     nextTrack();
   }, [nextTrack]);
 
