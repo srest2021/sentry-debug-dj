@@ -14,7 +14,7 @@ const BASE_PLAYLISTS: Playlist[] = [
         id: 'error-code-blues',
         title: 'Error Code Blues',
         artist: 'Sentaur',
-        src: 'https://files.catbox.moe/dy3bzy.mp3',
+        src: '/_static/dist/sentry/assets/songs/error_code_blues.mp3',
       },
     ],
   },
