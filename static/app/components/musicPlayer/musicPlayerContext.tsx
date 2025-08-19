@@ -335,7 +335,39 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     [addToListeningHistory, productQueue]
   );
 
-  // Initialize audio element
+  // Audio event handlers - memoized to prevent recreation
+  const handleLoadStart = useCallback(() => {
+    setIsLoading(true);
+  }, []);
+
+  const handleCanPlay = useCallback(() => {
+    setIsLoading(false);
+  }, []);
+
+  const handleLoadedMetadata = useCallback(() => {
+    if (audioRef.current) {
+      setCurrentTrackDuration(audioRef.current.duration);
+      // Note: setIsLoading(false) is handled by handleCanPlay
+    }
+  }, []);
+
+  const handleTimeUpdate = useCallback(() => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime);
+    }
+  }, []);
+
+  const handleEnded = useCallback(() => {
+    setIsPlaying(false);
+    nextTrack();
+  }, [nextTrack]);
+
+  const handleError = useCallback(() => {
+    setIsLoading(false);
+    setIsPlaying(false);
+  }, []);
+
+  // Initialize audio element and attach event listeners
   useEffect(() => {
     if (!audioRef.current) {
       audioRef.current = new Audio();
@@ -343,22 +375,6 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     }
 
     const audio = audioRef.current;
-
-    const handleLoadStart = () => setIsLoading(true);
-    const handleCanPlay = () => setIsLoading(false);
-    const handleLoadedMetadata = () => {
-      setCurrentTrackDuration(audio.duration);
-      setIsLoading(false);
-    };
-    const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
-    const handleEnded = () => {
-      setIsPlaying(false);
-      nextTrack();
-    };
-    const handleError = () => {
-      setIsLoading(false);
-      setIsPlaying(false);
-    };
 
     audio.addEventListener('loadstart', handleLoadStart);
     audio.addEventListener('canplay', handleCanPlay);
@@ -375,7 +391,14 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
       audio.removeEventListener('ended', handleEnded);
       audio.removeEventListener('error', handleError);
     };
-  }, [nextTrack]);
+  }, [
+    handleLoadStart,
+    handleCanPlay,
+    handleLoadedMetadata,
+    handleTimeUpdate,
+    handleEnded,
+    handleError,
+  ]);
 
   const contextValue: MusicPlayerContextProps = {
     isPlaying,
