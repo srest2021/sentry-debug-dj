@@ -87,6 +87,12 @@ const DEFAULT_PLAYLISTS: Playlist[] = [
         artist: 'Sentaur',
         src: 'https://files.catbox.moe/dy3bzy.mp3',
       },
+      {
+        id: 'feedback-symphony',
+        title: 'Feedback Symphony',
+        artist: 'Sentaur',
+        src: '/_static/dist/sentry/assets/songs/feedback-symphony.mp3',
+      },
     ],
   },
   {

@@ -455,6 +455,12 @@ const appConfig: Configuration = {
           to: 'entrypoints/logo-sentry.svg',
           toType: 'file',
         },
+        // Copy the feedback symphony song to dist
+        {
+          from: path.join(staticPrefix, 'songs'),
+          to: 'assets/songs',
+          toType: 'dir',
+        },
         // Add robots.txt when deploying in preview mode so public previews do
         // not get indexed by bots.
         ...(IS_DEPLOY_PREVIEW
