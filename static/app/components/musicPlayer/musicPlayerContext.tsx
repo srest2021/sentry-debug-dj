@@ -1,5 +1,6 @@
 import {createContext, useCallback, useContext, useEffect, useRef, useState} from 'react';
 
+import {MAX_LISTENING_HISTORY_LENGTH} from 'sentry/components/musicPlayer/constants';
 import {DEFAULT_PLAYLISTS} from 'sentry/components/musicPlayer/defaultPlaylists';
 import {useMusicPlayerPrefs} from 'sentry/components/musicPlayer/musicPlayerPreferencesContext';
 import {getTracksForProduct} from 'sentry/components/musicPlayer/productTracks';
@@ -119,10 +120,41 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     }
   }, [currentProduct?.id]);
 
+  // Helper function to get the next track to play (product queue → playlist fallback)
+  const getNextTrackToPlay = useCallback(
+    (playlist?: Playlist | null): Track | null => {
+      // Priority 1: Check product queue first (these already have isQueueTrack: true)
+      if (productQueue.length > 0) {
+        return productQueue[0]!;
+      }
+      // Priority 2: Fall back to first track from playlist
+      const targetPlaylist = playlist || currentPlaylist;
+      if (targetPlaylist?.tracks && targetPlaylist.tracks.length > 0) {
+        return targetPlaylist.tracks[0]!;
+      }
+      return null;
+    },
+    [productQueue, currentPlaylist]
+  );
+
+  // Helper function to populate regular queue with shuffled playlist tracks
+  const populateRegularQueue = useCallback(
+    (playlist?: Playlist | null) => {
+      const targetPlaylist = playlist || currentPlaylist;
+      if (targetPlaylist?.tracks && targetPlaylist.tracks.length > 0) {
+        const shuffled = [...targetPlaylist.tracks].sort(() => Math.random() - 0.5);
+        setRegularQueue(shuffled);
+      }
+    },
+    [currentPlaylist]
+  );
+
   // Helper function to add track to listening history
   const addToListeningHistory = useCallback((track: Track) => {
-    const maxHistoryLength = 10;
-    setListeningHistory(prev => [track, ...prev.slice(0, maxHistoryLength - 1)]);
+    setListeningHistory(prev => [
+      track,
+      ...prev.slice(0, MAX_LISTENING_HISTORY_LENGTH - 1),
+    ]);
     setHistoryPosition(0);
   }, []);
 
@@ -172,24 +204,28 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
   // Set initial track from playlist - prioritize product queue
   useEffect(() => {
     if (currentPlaylist && currentPlaylist.tracks.length > 0 && !currentTrack) {
-      let initialTrack: Track | null = null;
+      // Populate regular queue with shuffled playlist tracks
+      populateRegularQueue();
 
-      // Priority 1: Check product queue first
-      if (productQueue.length > 0) {
-        initialTrack = productQueue[0]!;
-        setProductQueue(prev => prev.slice(1)); // Remove from queue
-      }
-      // Priority 2: Fall back to first track from playlist
-      else {
-        initialTrack = currentPlaylist.tracks[0] || null;
-      }
+      const initialTrack = getNextTrackToPlay();
 
       if (initialTrack) {
         setCurrentTrack(initialTrack);
         addToListeningHistory(initialTrack);
+
+        // Remove from product queue if it came from there
+        if (initialTrack.isQueueTrack) {
+          setProductQueue(prev => prev.slice(1));
+        }
       }
     }
-  }, [currentPlaylist, currentTrack, productQueue, addToListeningHistory]);
+  }, [
+    currentPlaylist,
+    currentTrack,
+    getNextTrackToPlay,
+    addToListeningHistory,
+    populateRegularQueue,
+  ]);
 
   const togglePlayPause = useCallback(() => {
     if (!audioRef.current || !currentTrack || !isEnabled) {
@@ -227,7 +263,7 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
       setListeningHistory(prev => {
         const newHistory = [...prev];
         newHistory.splice(historyPosition, 0, nextTrack_!);
-        return newHistory.slice(0, 10); // Keep max 10 items
+        return newHistory.slice(0, MAX_LISTENING_HISTORY_LENGTH);
       });
 
       // Keep historyPosition unchanged - we stay where we were
@@ -251,7 +287,7 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     else if (currentPlaylist.tracks.length > 0) {
       const shuffled = [...currentPlaylist.tracks].sort(() => Math.random() - 0.5);
       nextTrack_ = shuffled[0]!;
-      setRegularQueue(shuffled.slice(1));
+      setRegularQueue(shuffled.slice(1)); // Set the remaining tracks as the new queue
     }
 
     if (nextTrack_) {
@@ -308,30 +344,23 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     (playlist: Playlist) => {
       setCurrentPlaylist(playlist);
 
-      // Clear regular queue and history on playlist change (keep product queue)
-      setRegularQueue([]);
-      setListeningHistory([]);
-      setHistoryPosition(0);
+      // Populate regular queue with new playlist tracks
+      populateRegularQueue(playlist);
 
       // Start with first track - prioritize product queue
-      let startTrack: Track | null = null;
-
-      // Priority 1: Check product queue first
-      if (productQueue.length > 0) {
-        startTrack = productQueue[0]!;
-        setProductQueue(prev => prev.slice(1)); // Remove from queue
-      }
-      // Priority 2: Fall back to first track from playlist
-      else {
-        startTrack = playlist.tracks[0] || null;
-      }
+      const startTrack = getNextTrackToPlay(playlist);
 
       if (startTrack) {
         setCurrentTrack(startTrack);
         addToListeningHistory(startTrack);
+
+        // Remove from product queue if it came from there
+        if (startTrack.isQueueTrack) {
+          setProductQueue(prev => prev.slice(1));
+        }
       }
     },
-    [addToListeningHistory, productQueue]
+    [addToListeningHistory, getNextTrackToPlay, populateRegularQueue]
   );
 
   // Initialize audio element

@@ -3,6 +3,18 @@ import styled from '@emotion/styled';
 
 import {Button} from 'sentry/components/core/button';
 import {DropdownMenu} from 'sentry/components/dropdownMenu';
+import {
+  ACTIVE_OPACITY,
+  HOVER_OPACITY,
+  PLAYER_MIN_WIDTH_COMPACT,
+  PLAYER_WIDTH_EXPANDED,
+  PROGRESS_THUMB_SIZE_DEFAULT,
+  PROGRESS_THUMB_SIZE_SCRUBBING,
+  PROGRESS_TRANSITION_DURATION,
+  SCRUBBING_FINISHED_TIMEOUT,
+  THEME_BACKGROUND_OPACITY,
+  TIME_DISPLAY_MIN_WIDTH,
+} from 'sentry/components/musicPlayer/constants';
 import {useMusicPlayer} from 'sentry/components/musicPlayer/musicPlayerContext';
 import {
   IconChevron,
@@ -55,6 +67,11 @@ export default function MusicPlayer() {
   const [justFinishedScrubbing, setJustFinishedScrubbing] = useState(false);
   const progressBarRef = useRef<HTMLDivElement>(null);
 
+  // Helper function to calculate progress percentage
+  const getProgressPercentage = useCallback(() => {
+    return currentTrackDuration > 0 ? (currentTime / currentTrackDuration) * 100 : 0;
+  }, [currentTime, currentTrackDuration]);
+
   const calculateTimeFromMouseEvent = useCallback(
     (clientX: number) => {
       if (!progressBarRef.current || !currentTrackDuration) return null;
@@ -100,7 +117,7 @@ export default function MusicPlayer() {
         setIsScrubbing(false);
         setJustFinishedScrubbing(true);
         // Clear the flag after a short delay to prevent onClick from toggling
-        setTimeout(() => setJustFinishedScrubbing(false), 100);
+        setTimeout(() => setJustFinishedScrubbing(false), SCRUBBING_FINISHED_TIMEOUT);
       };
 
       document.addEventListener('mousemove', handleGlobalMouseMove);
@@ -121,8 +138,7 @@ export default function MusicPlayer() {
 
   const showExpanded = isExpanded || isHovered || isScrubbing;
   // Can go back if we're not at the bottom of the stack OR if we're on a queue track (can always go back to playlist)
-  const canGoBack =
-    historyPosition + 1 < listeningHistory.length || currentTrack?.isQueueTrack === true;
+  const canGoBack = historyPosition + 1 < listeningHistory.length;
   // Can go forward if there are tracks in either queue, if we're in history, or if playlist has tracks to shuffle
   const canGoForward =
     productQueue.length > 0 ||
@@ -180,7 +196,7 @@ export default function MusicPlayer() {
                           size="xs"
                           style={{
                             transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)',
-                            transition: 'transform 0.15s ease',
+                            transition: `transform 0.15s ease`,
                           }}
                         />
                       }
@@ -224,22 +240,14 @@ export default function MusicPlayer() {
                     <ProgressFill
                       primaryColor={theme?.primaryColor}
                       style={{
-                        width: `${
-                          currentTrackDuration > 0
-                            ? (currentTime / currentTrackDuration) * 100
-                            : 0
-                        }%`,
+                        width: `${getProgressPercentage()}%`,
                       }}
                     />
                     <ProgressThumb
                       primaryColor={theme?.primaryColor}
                       isScrubbing={isScrubbing}
                       style={{
-                        left: `${
-                          currentTrackDuration > 0
-                            ? (currentTime / currentTrackDuration) * 100
-                            : 0
-                        }%`,
+                        left: `${getProgressPercentage()}%`,
                       }}
                     />
                   </ProgressBar>
@@ -349,8 +357,8 @@ const FloatingContainer = styled('div')<{
     p.primaryColor && p.secondaryColor
       ? `
     background: linear-gradient(135deg,
-      color-mix(in srgb, ${p.primaryColor} 20%, ${p.theme.backgroundElevated}),
-      color-mix(in srgb, ${p.secondaryColor} 20%, ${p.theme.backgroundElevated}),
+      color-mix(in srgb, ${p.primaryColor} ${THEME_BACKGROUND_OPACITY}, ${p.theme.backgroundElevated}),
+      color-mix(in srgb, ${p.secondaryColor} ${THEME_BACKGROUND_OPACITY}, ${p.theme.backgroundElevated}),
       ${p.theme.backgroundElevated}
     );
     border-color: color-mix(in srgb, ${p.primaryColor} 50%, ${p.theme.backgroundElevated});
@@ -362,12 +370,12 @@ const FloatingContainer = styled('div')<{
   ${p =>
     p.isExpanded
       ? `
-    width: 280px;
+    width: ${PLAYER_WIDTH_EXPANDED}px;
     padding: ${space(1.5)};
   `
       : `
     width: auto;
-    min-width: 200px;
+    min-width: ${PLAYER_MIN_WIDTH_COMPACT}px;
     padding: ${space(1)};
   `}
 
@@ -476,20 +484,20 @@ const ProgressBarRow = styled('div')`
 const CurrentTime = styled('div')`
   font-size: ${p => p.theme.fontSize.xs};
   color: ${p => p.theme.subText};
-  min-width: 32px;
+  min-width: ${TIME_DISPLAY_MIN_WIDTH}px;
   text-align: left;
 `;
 
 const TotalTime = styled('div')`
   font-size: ${p => p.theme.fontSize.xs};
   color: ${p => p.theme.subText};
-  min-width: 32px;
+  min-width: ${TIME_DISPLAY_MIN_WIDTH}px;
   text-align: right;
 `;
 
 const ProgressBar = styled('div')`
   flex: 1;
-  height: 4px;
+  height: 10px;
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 2px;
   position: relative;
@@ -500,22 +508,28 @@ const ProgressFill = styled('div')<{primaryColor?: string}>`
   height: 100%;
   background-color: ${p => p.primaryColor || p.theme.purple300};
   border-radius: 2px;
-  transition: width 0.1s ease;
+  transition: width ${PROGRESS_TRANSITION_DURATION} ease;
   overflow: hidden; /* Keep the fill properly rounded */
 `;
 
 const ProgressThumb = styled('div')<{isScrubbing?: boolean; primaryColor?: string}>`
   position: absolute;
   top: 50%;
-  width: ${p => (p.isScrubbing ? '16px' : '12px')};
-  height: ${p => (p.isScrubbing ? '16px' : '12px')};
+  width: ${p =>
+    p.isScrubbing
+      ? `${PROGRESS_THUMB_SIZE_SCRUBBING}px`
+      : `${PROGRESS_THUMB_SIZE_DEFAULT}px`};
+  height: ${p =>
+    p.isScrubbing
+      ? `${PROGRESS_THUMB_SIZE_SCRUBBING}px`
+      : `${PROGRESS_THUMB_SIZE_DEFAULT}px`};
   background-color: ${p => p.primaryColor || p.theme.purple300};
   border-radius: 50%;
   transform: translate(-50%, -50%);
   transition: ${p =>
     p.isScrubbing
-      ? 'width 0.1s ease, height 0.1s ease'
-      : 'left 0.1s ease, width 0.1s ease, height 0.1s ease'};
+      ? `width ${PROGRESS_TRANSITION_DURATION} ease, height ${PROGRESS_TRANSITION_DURATION} ease`
+      : `left ${PROGRESS_TRANSITION_DURATION} ease, width ${PROGRESS_TRANSITION_DURATION} ease, height ${PROGRESS_TRANSITION_DURATION} ease`};
   pointer-events: none;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   cursor: pointer;
@@ -547,13 +561,13 @@ const PlayPauseButton = styled(Button)<{primaryColor?: string}>`
     border-color: ${p.primaryColor};
 
     &:hover:not(:disabled) {
-      background-color: ${p.primaryColor}dd; /* Slightly transparent on hover */
-      border-color: ${p.primaryColor}dd;
+      background-color: ${p.primaryColor}${HOVER_OPACITY}; /* Slightly transparent on hover */
+      border-color: ${p.primaryColor}${HOVER_OPACITY};
     }
 
     &:active:not(:disabled) {
-      background-color: ${p.primaryColor}bb; /* More transparent when pressed */
-      border-color: ${p.primaryColor}bb;
+      background-color: ${p.primaryColor}${ACTIVE_OPACITY}; /* More transparent when pressed */
+      border-color: ${p.primaryColor}${ACTIVE_OPACITY};
     }
   `}
 `;
@@ -575,13 +589,13 @@ const CompactPlayButton = styled(Button)<{primaryColor?: string}>`
     border-color: ${p.primaryColor};
 
     &:hover:not(:disabled) {
-      background-color: ${p.primaryColor}dd; /* Slightly transparent on hover */
-      border-color: ${p.primaryColor}dd;
+      background-color: ${p.primaryColor}${HOVER_OPACITY}; /* Slightly transparent on hover */
+      border-color: ${p.primaryColor}${HOVER_OPACITY};
     }
 
     &:active:not(:disabled) {
-      background-color: ${p.primaryColor}bb; /* More transparent when pressed */
-      border-color: ${p.primaryColor}bb;
+      background-color: ${p.primaryColor}${ACTIVE_OPACITY}; /* More transparent when pressed */
+      border-color: ${p.primaryColor}${ACTIVE_OPACITY};
     }
   `}
 `;
