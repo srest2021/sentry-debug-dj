@@ -71,7 +71,7 @@ const MusicPlayerContext = createContext<MusicPlayerContextProps>({
   setExpanded: () => {},
 });
 
-const DEFAULT_PLAYLISTS: Playlist[] = [
+const BASE_PLAYLISTS: Playlist[] = [
   {
     // Sentry-themed playlist
     id: 'sentaur-setlist',
@@ -148,6 +148,12 @@ const DEFAULT_PLAYLISTS: Playlist[] = [
   },
 ];
 
+// Shuffle tracks within each playlist once on module load, then keep them in that order for the session
+const DEFAULT_PLAYLISTS: Playlist[] = BASE_PLAYLISTS.map(playlist => ({
+  ...playlist,
+  tracks: [...playlist.tracks].sort(() => Math.random() - 0.5),
+}));
+
 type Props = {
   children: React.ReactNode;
   /**
@@ -185,7 +191,8 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
       // Clear queue and add tracks for the new product, marking them as queue tracks
       const productTracks = getTracksForProduct(currentProduct.id);
       const queueTracks = productTracks.map(track => ({...track, isQueueTrack: true}));
-      setProductQueue(queueTracks);
+      const shuffledTracks = [...queueTracks].sort(() => Math.random() - 0.5);
+      setProductQueue(shuffledTracks);
     } else {
       // Clear queue if no product
       setProductQueue([]);
