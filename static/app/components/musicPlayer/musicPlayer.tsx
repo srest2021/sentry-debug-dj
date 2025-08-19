@@ -40,6 +40,7 @@ export default function MusicPlayer() {
     currentTime,
     currentTrackDuration,
     productQueue,
+    regularQueue,
     togglePlayPause,
     nextTrack,
     previousTrack,
@@ -122,9 +123,12 @@ export default function MusicPlayer() {
   // Can go back if we're not at the bottom of the stack OR if we're on a queue track (can always go back to playlist)
   const canGoBack =
     historyPosition + 1 < listeningHistory.length || currentTrack?.isQueueTrack === true;
-  // Can go forward if there are tracks in the queue or if playlist has more than 1 track
+  // Can go forward if there are tracks in either queue, if we're in history, or if playlist has tracks to shuffle
   const canGoForward =
-    productQueue.length > 0 || (currentPlaylist?.tracks.length || 0) > 1;
+    productQueue.length > 0 ||
+    regularQueue.length > 0 ||
+    historyPosition > 0 ||
+    (currentPlaylist?.tracks.length || 0) > 0;
 
   // Use product theme if available, otherwise fall back to playlist theme
   // Handle cases where currentProduct might be null due to router context issues

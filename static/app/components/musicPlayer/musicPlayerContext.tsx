@@ -37,11 +37,12 @@ interface MusicPlayerContextProps {
   isExpanded: boolean; // expands on hover
   isLoading: boolean;
   isPlaying: boolean;
-  listeningHistory: number[];
+  listeningHistory: Track[];
   nextTrack: () => void;
   playlists: Playlist[];
   previousTrack: () => void;
   productQueue: Track[]; // Queue of product-specific tracks to play before playlist tracks
+  regularQueue: Track[]; // Queue of regular playlist tracks
   seek: (time: number) => void;
   selectPlaylist: (playlist: Playlist) => void;
   setEnabled: (enabled: boolean) => void;
@@ -63,6 +64,7 @@ const MusicPlayerContext = createContext<MusicPlayerContextProps>({
   listeningHistory: [],
   playlists: [],
   productQueue: [],
+  regularQueue: [],
   togglePlayPause: () => {},
   nextTrack: () => {},
   previousTrack: () => {},
@@ -93,9 +95,9 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
   const [currentTime, setCurrentTime] = useState(0);
   const [currentTrackDuration, setCurrentTrackDuration] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-  const [listeningHistory, setListeningHistory] = useState<number[]>([]);
+  const [listeningHistory, setListeningHistory] = useState<Track[]>([]);
   const [historyPosition, setHistoryPosition] = useState(0); // 0 means we're at the most recent track
+  const [regularQueue, setRegularQueue] = useState<Track[]>([]);
   const [productQueue, setProductQueue] = useState<Track[]>([]); // Queue of product-specific tracks
 
   // Keep track of playing state for auto-resume
@@ -116,6 +118,13 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
       setProductQueue([]);
     }
   }, [currentProduct?.id]);
+
+  // Helper function to add track to listening history
+  const addToListeningHistory = useCallback((track: Track) => {
+    const maxHistoryLength = 10;
+    setListeningHistory(prev => [track, ...prev.slice(0, maxHistoryLength - 1)]);
+    setHistoryPosition(0);
+  }, []);
 
   // Load track when current track changes
   useEffect(() => {
@@ -160,16 +169,27 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPlaylist]); // Only run when currentPlaylist changes, read prefs.defaultPlaylistId once
 
-  // Set initial track from playlist
+  // Set initial track from playlist - prioritize product queue
   useEffect(() => {
     if (currentPlaylist && currentPlaylist.tracks.length > 0 && !currentTrack) {
-      setCurrentTrack(currentPlaylist.tracks[0] || null);
-      setCurrentTrackIndex(0);
-      // Add the initial track to history at position 0
-      setListeningHistory([0]);
-      setHistoryPosition(0);
+      let initialTrack: Track | null = null;
+
+      // Priority 1: Check product queue first
+      if (productQueue.length > 0) {
+        initialTrack = productQueue[0]!;
+        setProductQueue(prev => prev.slice(1)); // Remove from queue
+      }
+      // Priority 2: Fall back to first track from playlist
+      else {
+        initialTrack = currentPlaylist.tracks[0] || null;
+      }
+
+      if (initialTrack) {
+        setCurrentTrack(initialTrack);
+        addToListeningHistory(initialTrack);
+      }
     }
-  }, [currentPlaylist, currentTrack]);
+  }, [currentPlaylist, currentTrack, productQueue, addToListeningHistory]);
 
   const togglePlayPause = useCallback(() => {
     if (!audioRef.current || !currentTrack || !isEnabled) {
@@ -192,80 +212,84 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     }
   }, [isPlaying, currentTrack, isEnabled]);
 
-  const getNextTrackIndex = useCallback(() => {
-    if (!currentPlaylist) return 0;
-    return (currentTrackIndex + 1) % currentPlaylist.tracks.length;
-  }, [currentPlaylist, currentTrackIndex]);
-
   const nextTrack = useCallback(() => {
     if (!currentPlaylist || !isEnabled) return;
 
-    // If we're not at the top of the stack (position 0), move forward toward it
-    if (historyPosition > 0) {
-      const nextHistoryIndex = listeningHistory[historyPosition - 1]!;
-      const nextTrack_ = currentPlaylist.tracks[nextHistoryIndex] || null;
+    let nextTrack_: Track | null = null;
 
-      setHistoryPosition(prev => prev - 1); // Move toward top of stack (0)
-      setCurrentTrack(nextTrack_);
-      setCurrentTrackIndex(nextHistoryIndex);
-      return;
-    }
-
-    // Check if there are tracks in the product queue first
+    // PRIORITY 1: Always check product queue first
     if (productQueue.length > 0) {
-      const nextQueueTrack = productQueue[0]!; // Get first track from queue (already marked as isQueueTrack: true)
-      setProductQueue(prev => prev.slice(1)); // Remove the track from queue (pop from front)
-      setCurrentTrack(nextQueueTrack);
-      // Note: We don't update currentTrackIndex or history for queue tracks since they're not part of the playlist
+      nextTrack_ = productQueue[0]!;
+      setProductQueue(prev => prev.slice(1));
+      setCurrentTrack(nextTrack_);
+
+      // Insert product track into history at current position
+      setListeningHistory(prev => {
+        const newHistory = [...prev];
+        newHistory.splice(historyPosition, 0, nextTrack_!);
+        return newHistory.slice(0, 10); // Keep max 10 items
+      });
+
+      // Keep historyPosition unchanged - we stay where we were
       return;
     }
 
-    // We're at the top of the stack (position 0) and no queue tracks, get a new track from playlist
-    const nextIndex = getNextTrackIndex();
-    const nextTrack_ = currentPlaylist.tracks[nextIndex] || null;
+    // PRIORITY 2: Navigate through existing history
+    if (historyPosition > 0) {
+      nextTrack_ = listeningHistory[historyPosition - 1] || null;
+      setHistoryPosition(prev => prev - 1);
+      setCurrentTrack(nextTrack_);
+      return;
+    }
 
-    // Push new track to top of stack, keep max 10 items
-    const maxHistoryLength = 10;
-    setListeningHistory(prev => [nextIndex, ...prev.slice(0, maxHistoryLength - 1)]);
-    setHistoryPosition(0); // Stay at top of stack
-    setCurrentTrack(nextTrack_);
-    setCurrentTrackIndex(nextIndex);
+    // PRIORITY 3: We're at top of history, get new track from regular queue
+    if (regularQueue.length > 0) {
+      nextTrack_ = regularQueue[0]!;
+      setRegularQueue(prev => prev.slice(1));
+    }
+    // PRIORITY 4: Regular queue empty, refill with shuffled playlist
+    else if (currentPlaylist.tracks.length > 0) {
+      const shuffled = [...currentPlaylist.tracks].sort(() => Math.random() - 0.5);
+      nextTrack_ = shuffled[0]!;
+      setRegularQueue(shuffled.slice(1));
+    }
+
+    if (nextTrack_) {
+      setCurrentTrack(nextTrack_);
+      addToListeningHistory(nextTrack_); // Add new tracks to front of history
+    }
   }, [
     currentPlaylist,
-    getNextTrackIndex,
     isEnabled,
     historyPosition,
     listeningHistory,
     productQueue,
+    regularQueue,
+    addToListeningHistory,
   ]);
 
   const previousTrack = useCallback(() => {
-    if (!currentPlaylist || !isEnabled) return;
+    if (!currentPlaylist || !isEnabled || listeningHistory.length === 0) return;
 
-    // If we're currently on a queue track, go back to the last playlist track
-    if (currentTrack?.isQueueTrack && listeningHistory.length > 0) {
-      const lastPlaylistIndex = listeningHistory[historyPosition]!;
-      const lastPlaylistTrack = currentPlaylist.tracks[lastPlaylistIndex] || null;
+    // If we're on a product queue track, go back to the track that was playing before
+    if (currentTrack?.isQueueTrack) {
+      // The track we want to go back to is at historyPosition + 1 (since product track was injected at historyPosition)
+      const nextHistoryPos = historyPosition + 1;
+      if (nextHistoryPos >= listeningHistory.length) return;
 
-      setCurrentTrack(lastPlaylistTrack);
-      setCurrentTrackIndex(lastPlaylistIndex);
-      // Don't change historyPosition since we're going back to where we were
+      const prevTrack = listeningHistory[nextHistoryPos] || null;
+      setHistoryPosition(nextHistoryPos);
+      setCurrentTrack(prevTrack);
       return;
     }
 
+    // Regular history navigation
     const nextHistoryPos = historyPosition + 1;
+    if (nextHistoryPos >= listeningHistory.length) return;
 
-    // Can't go back further if we're already at the bottom of the stack
-    if (nextHistoryPos >= listeningHistory.length) {
-      return;
-    }
-
-    const prevHistoryIndex = listeningHistory[nextHistoryPos]!;
-    const prevTrack = currentPlaylist.tracks[prevHistoryIndex] || null;
-
-    setHistoryPosition(nextHistoryPos); // Move deeper into stack
+    const prevTrack = listeningHistory[nextHistoryPos] || null;
+    setHistoryPosition(nextHistoryPos);
     setCurrentTrack(prevTrack);
-    setCurrentTrackIndex(prevHistoryIndex);
   }, [currentPlaylist, isEnabled, historyPosition, listeningHistory, currentTrack]);
 
   const seek = useCallback(
@@ -280,17 +304,35 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     [currentTrackDuration]
   );
 
-  const selectPlaylist = useCallback((playlist: Playlist) => {
-    setCurrentPlaylist(playlist);
+  const selectPlaylist = useCallback(
+    (playlist: Playlist) => {
+      setCurrentPlaylist(playlist);
 
-    // Always start with the first track
-    const startIndex = 0;
+      // Clear regular queue and history on playlist change (keep product queue)
+      setRegularQueue([]);
+      setListeningHistory([]);
+      setHistoryPosition(0);
 
-    setCurrentTrack(playlist.tracks[startIndex] || null);
-    setCurrentTrackIndex(startIndex);
-    setListeningHistory([startIndex]); // Initialize history with starting track
-    setHistoryPosition(0); // Start at top of stack
-  }, []);
+      // Start with first track - prioritize product queue
+      let startTrack: Track | null = null;
+
+      // Priority 1: Check product queue first
+      if (productQueue.length > 0) {
+        startTrack = productQueue[0]!;
+        setProductQueue(prev => prev.slice(1)); // Remove from queue
+      }
+      // Priority 2: Fall back to first track from playlist
+      else {
+        startTrack = playlist.tracks[0] || null;
+      }
+
+      if (startTrack) {
+        setCurrentTrack(startTrack);
+        addToListeningHistory(startTrack);
+      }
+    },
+    [addToListeningHistory, productQueue]
+  );
 
   // Initialize audio element
   useEffect(() => {
@@ -348,6 +390,7 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     listeningHistory,
     playlists: DEFAULT_PLAYLISTS,
     productQueue,
+    regularQueue,
     togglePlayPause,
     nextTrack,
     previousTrack,
