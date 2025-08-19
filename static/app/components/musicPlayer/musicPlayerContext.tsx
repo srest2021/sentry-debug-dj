@@ -67,11 +67,28 @@ const MusicPlayerContext = createContext<MusicPlayerContextProps>({
 
 const DEFAULT_PLAYLISTS: Playlist[] = [
   {
-    id: 'debugging-beats',
-    name: 'Debugging Beats',
+    // Sentry-themed playlist
+    id: 'sentaur-setlist',
+    name: 'Sentaur Setlist',
     theme: {
       primaryColor: '#6366f1',
       secondaryColor: '#8b5cf6',
+    },
+    tracks: [
+      {
+        id: 'error-code-blues',
+        title: 'Error Code Blues',
+        artist: 'Sentaur',
+        src: 'https://files.catbox.moe/dy3bzy.mp3',
+      },
+    ],
+  },
+  {
+    id: 'metal-mode',
+    name: 'Metal Mode',
+    theme: {
+      primaryColor: '#dc2626',
+      secondaryColor: '#ea580c',
     },
     tracks: [
       {
@@ -97,28 +114,6 @@ const DEFAULT_PLAYLISTS: Playlist[] = [
         title: 'Data Stream',
         artist: 'Binary Bot',
         src: 'https://www.soundjay.com/free-music/sounds/heart-of-the-sea-01.mp3',
-      },
-    ],
-  },
-  {
-    id: 'metal-mode',
-    name: 'Metal Mode',
-    theme: {
-      primaryColor: '#dc2626',
-      secondaryColor: '#ea580c',
-    },
-    tracks: [
-      {
-        id: 'metal-1',
-        title: 'Stack Overflow',
-        artist: 'Exception Handler',
-        src: 'https://www.soundjay.com/free-music/sounds/iron-man-01.mp3',
-      },
-      {
-        id: 'metal-2',
-        title: 'Memory Leak',
-        artist: 'Segmentation Fault',
-        src: 'https://www.soundjay.com/free-music/sounds/destination-01.mp3',
       },
     ],
   },
