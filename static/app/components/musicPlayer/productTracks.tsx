@@ -8,7 +8,7 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       id: 'issues-placeholder',
       title: 'lBug Hunt Blues',
       artist: 'Debug Detective',
-      src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
+      src: '/_static/dist/sentry/assets/songs/issues1.mp3',
     },
   ],
   replays: [
@@ -16,7 +16,7 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       id: 'replays-placeholder',
       title: 'lRewind & Replay',
       artist: 'Session Detective',
-      src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
+      src: '/_static/dist/sentry/assets/songs/replay1.mp3',
     },
   ],
   performance: [
@@ -32,7 +32,7 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       id: 'feedback-placeholder',
       title: 'lUser Voice',
       artist: 'Feedback Loop',
-      src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
+      src: '/_static/dist/sentry/assets/songs/feedback1.mp3',
     },
   ],
   discover: [
@@ -48,7 +48,7 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       id: 'insights-placeholder',
       title: 'lMind Reader',
       artist: 'Analytics Wizard',
-      src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
+      src: '/_static/dist/sentry/assets/songs/insights1.mp3',
     },
   ],
   alerts: [
@@ -56,7 +56,7 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       id: 'alerts-placeholder',
       title: 'lWake Up Call',
       artist: 'Alert Manager',
-      src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
+      src: '/_static/dist/sentry/assets/songs/alerts1.mp3',
     },
   ],
   dashboards: [
@@ -64,7 +64,7 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       id: 'dashboards-placeholder',
       title: 'lChart Topper',
       artist: 'Data Visualizer',
-      src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
+      src: '/_static/dist/sentry/assets/songs/dashboards.mp3',
     },
   ],
   projects: [
@@ -112,7 +112,7 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       id: 'releases-placeholder',
       title: 'lShip It',
       artist: 'Release Captain',
-      src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
+      src: '/_static/dist/sentry/assets/songs/releases1.mp3',
     },
   ],
   settings: [
@@ -120,7 +120,7 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       id: 'settings-placeholder',
       title: 'lConfiguration Station',
       artist: 'Settings Master',
-      src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
+      src: '/_static/dist/sentry/assets/songs/settings1.mp3',
     },
   ],
 
@@ -130,7 +130,7 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       id: 'crons-placeholder',
       title: 'lTick Tock Clock',
       artist: 'Cron Commander',
-      src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
+      src: '/_static/dist/sentry/assets/songs/cron1.mp3',
     },
   ],
   uptime: [
@@ -146,7 +146,7 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       id: 'frontend-placeholder',
       title: 'lUI Symphony',
       artist: 'Frontend Maestro',
-      src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
+      src: '/_static/dist/sentry/assets/songs/insights1.mp3',
     },
   ],
   backend: [
@@ -154,7 +154,7 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       id: 'backend-placeholder',
       title: 'lServer Side Story',
       artist: 'Backend Boss',
-      src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
+      src: '/_static/dist/sentry/assets/songs/insights1.mp3',
     },
   ],
   mobile: [
@@ -162,7 +162,7 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       id: 'mobile-placeholder',
       title: 'lPocket Symphony',
       artist: 'Mobile Maestro',
-      src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
+      src: '/_static/dist/sentry/assets/songs/insights1.mp3',
     },
   ],
   'ai-agents': [
@@ -170,7 +170,7 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       id: 'ai-agents-placeholder',
       title: 'lRobot Rock',
       artist: 'AI Assistant',
-      src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
+      src: '/_static/dist/sentry/assets/songs/insights1.mp3',
     },
   ],
   // Note: 'agents' maps to the same as 'ai-agents' in insightsMap
@@ -179,7 +179,7 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       id: 'agents-placeholder',
       title: 'lRobot Rock',
       artist: 'AI Assistant',
-      src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
+      src: '/_static/dist/sentry/assets/songs/insights1.mp3',
     },
   ],
 };
