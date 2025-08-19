@@ -39,6 +39,7 @@ export default function MusicPlayer() {
     historyPosition,
     currentTime,
     currentTrackDuration,
+    productQueue,
     togglePlayPause,
     nextTrack,
     previousTrack,
@@ -118,8 +119,12 @@ export default function MusicPlayer() {
   }
 
   const showExpanded = isExpanded || isHovered || isScrubbing;
-  // Can go back if we're not at the bottom of the stack
-  const canGoBack = historyPosition + 1 < listeningHistory.length;
+  // Can go back if we're not at the bottom of the stack OR if we're on a queue track (can always go back to playlist)
+  const canGoBack =
+    historyPosition + 1 < listeningHistory.length || currentTrack?.isQueueTrack === true;
+  // Can go forward if there are tracks in the queue or if playlist has more than 1 track
+  const canGoForward =
+    productQueue.length > 0 || (currentPlaylist?.tracks.length || 0) > 1;
 
   // Use product theme if available, otherwise fall back to playlist theme
   // Handle cases where currentProduct might be null due to router context issues
@@ -273,7 +278,7 @@ export default function MusicPlayer() {
                 e.stopPropagation();
                 nextTrack();
               }}
-              disabled={!currentTrack || (currentPlaylist?.tracks.length || 0) <= 1}
+              disabled={!currentTrack || !canGoForward}
               aria-label={t('Next track')}
             />
           </Controls>

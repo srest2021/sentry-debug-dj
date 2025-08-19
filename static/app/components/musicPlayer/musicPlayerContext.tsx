@@ -1,6 +1,7 @@
 import {createContext, useCallback, useContext, useEffect, useRef, useState} from 'react';
 
 import {useMusicPlayerPrefs} from 'sentry/components/musicPlayer/musicPlayerPreferencesContext';
+import {getTracksForProduct} from 'sentry/components/musicPlayer/productTracks';
 import {
   useCurrentProduct,
   type Product,
@@ -11,6 +12,7 @@ export type Track = {
   id: string;
   src: string;
   title: string;
+  isQueueTrack?: boolean; // Optional field to mark tracks from product queue
 };
 
 export type Playlist = {
@@ -38,6 +40,7 @@ interface MusicPlayerContextProps {
   nextTrack: () => void;
   playlists: Playlist[];
   previousTrack: () => void;
+  productQueue: Track[]; // Queue of product-specific tracks to play before playlist tracks
   seek: (time: number) => void;
   selectPlaylist: (playlist: Playlist) => void;
   setEnabled: (enabled: boolean) => void;
@@ -58,6 +61,7 @@ const MusicPlayerContext = createContext<MusicPlayerContextProps>({
   historyPosition: 0,
   listeningHistory: [],
   playlists: [],
+  productQueue: [],
   togglePlayPause: () => {},
   nextTrack: () => {},
   previousTrack: () => {},
@@ -168,11 +172,25 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [listeningHistory, setListeningHistory] = useState<number[]>([]);
   const [historyPosition, setHistoryPosition] = useState(0); // 0 means we're at the most recent track
+  const [productQueue, setProductQueue] = useState<Track[]>([]); // Queue of product-specific tracks
 
   // Keep track of playing state for auto-resume
   useEffect(() => {
     wasPlayingRef.current = isPlaying;
   }, [isPlaying]);
+
+  // Handle product changes - update queue when product changes
+  useEffect(() => {
+    if (currentProduct?.id) {
+      // Clear queue and add tracks for the new product, marking them as queue tracks
+      const productTracks = getTracksForProduct(currentProduct.id);
+      const queueTracks = productTracks.map(track => ({...track, isQueueTrack: true}));
+      setProductQueue(queueTracks);
+    } else {
+      // Clear queue if no product
+      setProductQueue([]);
+    }
+  }, [currentProduct?.id]);
 
   // Load track when current track changes
   useEffect(() => {
@@ -268,7 +286,16 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
       return;
     }
 
-    // We're at the top of the stack (position 0), get a new track and add to stack
+    // Check if there are tracks in the product queue first
+    if (productQueue.length > 0) {
+      const nextQueueTrack = productQueue[0]!; // Get first track from queue (already marked as isQueueTrack: true)
+      setProductQueue(prev => prev.slice(1)); // Remove the track from queue (pop from front)
+      setCurrentTrack(nextQueueTrack);
+      // Note: We don't update currentTrackIndex or history for queue tracks since they're not part of the playlist
+      return;
+    }
+
+    // We're at the top of the stack (position 0) and no queue tracks, get a new track from playlist
     const nextIndex = getNextTrackIndex();
     const nextTrack_ = currentPlaylist.tracks[nextIndex] || null;
 
@@ -278,10 +305,28 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     setHistoryPosition(0); // Stay at top of stack
     setCurrentTrack(nextTrack_);
     setCurrentTrackIndex(nextIndex);
-  }, [currentPlaylist, getNextTrackIndex, isEnabled, historyPosition, listeningHistory]);
+  }, [
+    currentPlaylist,
+    getNextTrackIndex,
+    isEnabled,
+    historyPosition,
+    listeningHistory,
+    productQueue,
+  ]);
 
   const previousTrack = useCallback(() => {
     if (!currentPlaylist || !isEnabled) return;
+
+    // If we're currently on a queue track, go back to the last playlist track
+    if (currentTrack?.isQueueTrack && listeningHistory.length > 0) {
+      const lastPlaylistIndex = listeningHistory[historyPosition]!;
+      const lastPlaylistTrack = currentPlaylist.tracks[lastPlaylistIndex] || null;
+
+      setCurrentTrack(lastPlaylistTrack);
+      setCurrentTrackIndex(lastPlaylistIndex);
+      // Don't change historyPosition since we're going back to where we were
+      return;
+    }
 
     const nextHistoryPos = historyPosition + 1;
 
@@ -296,7 +341,7 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     setHistoryPosition(nextHistoryPos); // Move deeper into stack
     setCurrentTrack(prevTrack);
     setCurrentTrackIndex(prevHistoryIndex);
-  }, [currentPlaylist, isEnabled, historyPosition, listeningHistory]);
+  }, [currentPlaylist, isEnabled, historyPosition, listeningHistory, currentTrack]);
 
   const seek = useCallback(
     (time: number) => {
@@ -377,6 +422,7 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     historyPosition,
     listeningHistory,
     playlists: DEFAULT_PLAYLISTS,
+    productQueue,
     togglePlayPause,
     nextTrack,
     previousTrack,
