@@ -535,6 +535,24 @@ const ProgressThumb = styled('div')<{isScrubbing?: boolean; primaryColor?: strin
   cursor: pointer;
 `;
 
+// Shared styling for buttons with primary color theming
+const primaryColorButtonStyles = (primaryColor?: string) =>
+  primaryColor &&
+  `
+    background-color: ${primaryColor};
+    border-color: ${primaryColor};
+
+    &:hover:not(:disabled) {
+      background-color: ${primaryColor}${HOVER_OPACITY}; /* Slightly transparent on hover */
+      border-color: ${primaryColor}${HOVER_OPACITY};
+    }
+
+    &:active:not(:disabled) {
+      background-color: ${primaryColor}${ACTIVE_OPACITY}; /* More transparent when pressed */
+      border-color: ${primaryColor}${ACTIVE_OPACITY};
+    }
+  `;
+
 const Controls = styled('div')`
   display: flex;
   justify-content: center;
@@ -554,22 +572,7 @@ const ControlButton = styled(Button)`
 
 const PlayPauseButton = styled(Button)<{primaryColor?: string}>`
   /* Override primary button color with playlist theme */
-  ${p =>
-    p.primaryColor &&
-    `
-    background-color: ${p.primaryColor};
-    border-color: ${p.primaryColor};
-
-    &:hover:not(:disabled) {
-      background-color: ${p.primaryColor}${HOVER_OPACITY}; /* Slightly transparent on hover */
-      border-color: ${p.primaryColor}${HOVER_OPACITY};
-    }
-
-    &:active:not(:disabled) {
-      background-color: ${p.primaryColor}${ACTIVE_OPACITY}; /* More transparent when pressed */
-      border-color: ${p.primaryColor}${ACTIVE_OPACITY};
-    }
-  `}
+  ${p => primaryColorButtonStyles(p.primaryColor)}
 `;
 
 const CompactPlayer = styled('div')`
@@ -582,22 +585,7 @@ const CompactPlayButton = styled(Button)<{primaryColor?: string}>`
   flex-shrink: 0;
 
   /* Override primary button color with playlist theme */
-  ${p =>
-    p.primaryColor &&
-    `
-    background-color: ${p.primaryColor};
-    border-color: ${p.primaryColor};
-
-    &:hover:not(:disabled) {
-      background-color: ${p.primaryColor}${HOVER_OPACITY}; /* Slightly transparent on hover */
-      border-color: ${p.primaryColor}${HOVER_OPACITY};
-    }
-
-    &:active:not(:disabled) {
-      background-color: ${p.primaryColor}${ACTIVE_OPACITY}; /* More transparent when pressed */
-      border-color: ${p.primaryColor}${ACTIVE_OPACITY};
-    }
-  `}
+  ${p => primaryColorButtonStyles(p.primaryColor)}
 `;
 
 const CompactTrackInfo = styled('div')`
