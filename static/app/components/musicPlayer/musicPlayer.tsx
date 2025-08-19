@@ -11,7 +11,6 @@ import {
   IconPause,
   IconPlay,
   IconPrevious,
-  IconShuffle,
 } from 'sentry/icons';
 import {t} from 'sentry/locale';
 import {space} from 'sentry/styles/space';
@@ -32,7 +31,6 @@ export default function MusicPlayer() {
     currentTrack,
     currentPlaylist,
     currentProduct,
-    shuffle,
     isEnabled,
     isLoading,
     isExpanded,
@@ -45,7 +43,6 @@ export default function MusicPlayer() {
     nextTrack,
     previousTrack,
     seek,
-    toggleShuffle,
     selectPlaylist,
     setEnabled,
     setExpanded,
@@ -276,24 +273,8 @@ export default function MusicPlayer() {
                 e.stopPropagation();
                 nextTrack();
               }}
-              disabled={!currentTrack}
+              disabled={!currentTrack || (currentPlaylist?.tracks.length || 0) <= 1}
               aria-label={t('Next track')}
-            />
-
-            <ControlButton
-              size="sm"
-              borderless
-              icon={<IconShuffle size="md" />}
-              onClick={e => {
-                e.stopPropagation();
-                toggleShuffle();
-              }}
-              aria-label={shuffle ? t('Disable shuffle') : t('Enable shuffle')}
-              style={{
-                opacity: shuffle ? 1 : 0.6,
-                backgroundColor: 'transparent',
-                color: shuffle && theme?.primaryColor ? theme.primaryColor : undefined,
-              }}
             />
           </Controls>
         </ExpandedPlayer>

@@ -42,9 +42,7 @@ interface MusicPlayerContextProps {
   selectPlaylist: (playlist: Playlist) => void;
   setEnabled: (enabled: boolean) => void;
   setExpanded: (expanded: boolean) => void;
-  shuffle: boolean;
   togglePlayPause: () => void;
-  toggleShuffle: () => void;
 }
 
 const MusicPlayerContext = createContext<MusicPlayerContextProps>({
@@ -52,7 +50,6 @@ const MusicPlayerContext = createContext<MusicPlayerContextProps>({
   currentTrack: null,
   currentPlaylist: null,
   currentProduct: null,
-  shuffle: false,
   isEnabled: true,
   isLoading: false,
   currentTime: 0,
@@ -65,7 +62,6 @@ const MusicPlayerContext = createContext<MusicPlayerContextProps>({
   nextTrack: () => {},
   previousTrack: () => {},
   seek: () => {},
-  toggleShuffle: () => {},
   selectPlaylist: () => {},
   setEnabled: () => {},
   setExpanded: () => {},
@@ -164,7 +160,6 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [currentPlaylist, setCurrentPlaylist] = useState<Playlist | null>(null);
-  const [shuffle, setShuffle] = useState(prefs.shuffle);
   const [isEnabled, setIsEnabled] = useState(prefs.isEnabled);
   const [isLoading, setIsLoading] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -256,37 +251,8 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
 
   const getNextTrackIndex = useCallback(() => {
     if (!currentPlaylist) return 0;
-
-    if (shuffle) {
-      // Avoid recently played tracks (last 3 tracks or half the playlist, whichever is smaller)
-      const maxRecentTracksToAvoid = Math.min(
-        3,
-        Math.floor(currentPlaylist.tracks.length / 2)
-      );
-      const tracksToAvoid = [
-        currentTrackIndex,
-        ...listeningHistory.slice(0, maxRecentTracksToAvoid - 1),
-      ];
-
-      // If we've played most tracks recently, just avoid the current track
-      const finalTracksToAvoid =
-        tracksToAvoid.length >= currentPlaylist.tracks.length - 1
-          ? [currentTrackIndex]
-          : tracksToAvoid;
-
-      let nextIndex: number;
-      do {
-        nextIndex = Math.floor(Math.random() * currentPlaylist.tracks.length);
-      } while (
-        finalTracksToAvoid.includes(nextIndex) &&
-        currentPlaylist.tracks.length > 1
-      );
-
-      return nextIndex;
-    }
-
     return (currentTrackIndex + 1) % currentPlaylist.tracks.length;
-  }, [currentPlaylist, currentTrackIndex, shuffle, listeningHistory]);
+  }, [currentPlaylist, currentTrackIndex]);
 
   const nextTrack = useCallback(() => {
     if (!currentPlaylist || !isEnabled) return;
@@ -332,12 +298,6 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     setCurrentTrackIndex(prevHistoryIndex);
   }, [currentPlaylist, isEnabled, historyPosition, listeningHistory]);
 
-  const toggleShuffle = useCallback(() => {
-    const newShuffle = !shuffle;
-    setShuffle(newShuffle);
-    setPrefs({shuffle: newShuffle});
-  }, [shuffle, setPrefs]);
-
   const seek = useCallback(
     (time: number) => {
       if (!audioRef.current || !currentTrackDuration) return;
@@ -350,23 +310,17 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     [currentTrackDuration]
   );
 
-  const selectPlaylist = useCallback(
-    (playlist: Playlist) => {
-      setCurrentPlaylist(playlist);
+  const selectPlaylist = useCallback((playlist: Playlist) => {
+    setCurrentPlaylist(playlist);
 
-      // If shuffle is on, start with a random track; otherwise start with first track
-      const startIndex =
-        shuffle && playlist.tracks.length > 0
-          ? Math.floor(Math.random() * playlist.tracks.length)
-          : 0;
+    // Always start with the first track
+    const startIndex = 0;
 
-      setCurrentTrack(playlist.tracks[startIndex] || null);
-      setCurrentTrackIndex(startIndex);
-      setListeningHistory([startIndex]); // Initialize history with starting track
-      setHistoryPosition(0); // Start at top of stack
-    },
-    [shuffle]
-  );
+    setCurrentTrack(playlist.tracks[startIndex] || null);
+    setCurrentTrackIndex(startIndex);
+    setListeningHistory([startIndex]); // Initialize history with starting track
+    setHistoryPosition(0); // Start at top of stack
+  }, []);
 
   // Initialize audio element
   useEffect(() => {
@@ -415,7 +369,6 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     currentTrack,
     currentPlaylist,
     currentProduct,
-    shuffle,
     isEnabled,
     isLoading,
     currentTime,
@@ -428,7 +381,6 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     nextTrack,
     previousTrack,
     seek,
-    toggleShuffle,
     selectPlaylist,
     setEnabled: (enabled: boolean) => {
       setIsEnabled(enabled);

@@ -5,19 +5,16 @@ const LOCAL_STORAGE_KEY = 'music-player-config';
 export type MusicPlayerPrefs = {
   defaultPlaylistId: string;
   isEnabled: boolean;
-  shuffle: boolean;
 };
 
 const DEFAULT_PREFS: MusicPlayerPrefs = {
   isEnabled: true,
   defaultPlaylistId: 'debugging-beats',
-  shuffle: false,
 };
 
 const DISABLED_PREFS: MusicPlayerPrefs = {
   isEnabled: false,
   defaultPlaylistId: 'debugging-beats',
-  shuffle: false,
 };
 
 export interface MusicPlayerPrefsStrategy {
