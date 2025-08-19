@@ -227,7 +227,7 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
 
     let nextTrack_: Track | null = null;
 
-    // PRIORITY 1: Always check product queue first
+    // 1. Check productQueue
     if (productQueue.length > 0) {
       nextTrack_ = productQueue[0]!;
       setProductQueue(prev => prev.slice(1));
@@ -243,7 +243,7 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
       return;
     }
 
-    // PRIORITY 2: Navigate through existing history
+    // 2. Navigate through existing history
     if (historyPosition > 0) {
       nextTrack_ = listeningHistory[historyPosition - 1] || null;
       setHistoryPosition(prev => prev - 1);
@@ -251,7 +251,7 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
       return;
     }
 
-    // PRIORITY 3: We're at top of history, get new track from regular queue or playlist
+    // 3. We're at the top of history, so check regularQueue and playlist
     if (regularQueue.length > 0) {
       nextTrack_ = regularQueue[0]!;
       setRegularQueue(prev => prev.slice(1));
@@ -260,7 +260,6 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
       nextTrack_ = shuffled[0]!;
       setRegularQueue(shuffled.slice(1));
     }
-
     if (nextTrack_) {
       setCurrentTrack(nextTrack_);
       addToListeningHistory(nextTrack_); // Add new tracks to front of history
@@ -302,8 +301,6 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
   const seek = useCallback(
     (time: number) => {
       if (!audioRef.current || !currentTrackDuration) return;
-
-      // Clamp time to valid range
       const clampedTime = Math.max(0, Math.min(time, currentTrackDuration));
       audioRef.current.currentTime = clampedTime;
       setCurrentTime(clampedTime);
