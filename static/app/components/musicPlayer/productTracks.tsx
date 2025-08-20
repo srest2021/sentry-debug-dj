@@ -10,6 +10,12 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       artist: 'Debug Detective',
       src: '/_static/dist/sentry/assets/songs/issues1.mp3',
     },
+    {
+      id: 'issues-2',
+      title: 'Error Stack Hype',
+      artist: 'Debug Detective',
+      src: '/_static/dist/sentry/assets/songs/error_stack_hype.mp3',
+    },
   ],
   replays: [
     {
@@ -17,6 +23,12 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       title: 'Rewind & Replay',
       artist: 'Session Detective',
       src: '/_static/dist/sentry/assets/songs/replay1.mp3',
+    },
+    {
+      id: 'replays-2',
+      title: 'Agatha Christie Mystery',
+      artist: 'Session Detective',
+      src: '/_static/dist/sentry/assets/songs/session_shadows.mp3',
     },
   ],
   performance: [
@@ -30,7 +42,7 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
   'issues/feedback': [
     {
       id: 'feedback-1',
-      title: 'User Voice',
+      title: 'User Voice from the Depths',
       artist: 'Feedback Loop',
       src: '/_static/dist/sentry/assets/songs/feedback1.mp3',
     },
@@ -43,10 +55,10 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
   ],
   discover: [
     {
-      id: 'discover-placeholder',
-      title: 'lData Explorer',
-      artist: 'Query Master',
-      src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
+      id: 'discover-1',
+      title: 'Queries in the Dark',
+      artist: 'Query Carrie',
+      src: '/_static/dist/sentry/assets/songs/queries_in_the_dark.mp3',
     },
   ],
   insights: [
@@ -63,6 +75,12 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       title: 'Wake Up Call',
       artist: 'Incident Captain',
       src: '/_static/dist/sentry/assets/songs/alerts1.mp3',
+    },
+    {
+      id: 'alerts-2',
+      title: 'Replay Count Failure',
+      artist: 'Incident Captain',
+      src: '/_static/dist/sentry/assets/songs/replay_count_failure.mp3',
     },
   ],
   dashboards: [
