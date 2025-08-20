@@ -61,7 +61,7 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
     {
       id: 'alerts-1',
       title: 'Wake Up Call',
-      artist: 'Alert Manager',
+      artist: 'Incident Captain',
       src: '/_static/dist/sentry/assets/songs/alerts1.mp3',
     },
   ],
@@ -73,14 +73,14 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       src: '/_static/dist/sentry/assets/songs/dashboards.mp3',
     },
   ],
-  projects: [
-    {
-      id: 'projects-placeholder',
-      title: 'lProject Anthem',
-      artist: 'Team Builder',
-      src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
-    },
-  ],
+  // projects: [
+  //   {
+  //     id: 'projects-placeholder',
+  //     title: 'lProject Anthem',
+  //     artist: 'Team Builder',
+  //     src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
+  //   },
+  // ],
   traces: [
     {
       id: 'traces-placeholder',
@@ -97,7 +97,7 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
     },
   ],
-  profiling: [
+  profiles: [
     {
       id: 'profiling-placeholder',
       title: 'lProfile Picture',
@@ -130,7 +130,7 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
     },
   ],
 
-  // Insights sub-products from insightsMap
+  // Insights sub-products
   crons: [
     {
       id: 'crons-1',
