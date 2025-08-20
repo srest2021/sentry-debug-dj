@@ -109,18 +109,6 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     wasPlayingRef.current = isPlaying;
   }, [isPlaying]);
 
-  // Update productQueue when currentProduct changes
-  useEffect(() => {
-    if (currentProduct?.id) {
-      // Set productQueue to new product tracks
-      const productTracks = getTracksForProduct(currentProduct.id);
-      const queueTracks = productTracks.map(track => ({...track, isProductTrack: true}));
-      setProductQueue(shufflePlaylistTracks(queueTracks));
-    } else {
-      setProductQueue([]);
-    }
-  }, [currentProduct?.id]);
-
   // Add a track to listening history and reset historyPosition to 0
   // Skip adding if it's the same as the most recent track
   const addToListeningHistory = useCallback((track: Track) => {
@@ -133,6 +121,28 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     });
     setHistoryPosition(0);
   }, []);
+
+  // Update productQueue when currentProduct changes
+  useEffect(() => {
+    if (currentProduct?.id) {
+      // Set productQueue to new product tracks
+      const productTracks = getTracksForProduct(currentProduct.id);
+      const queueTracks = productTracks.map(track => ({...track, isProductTrack: true}));
+      setProductQueue(shufflePlaylistTracks(queueTracks));
+
+      // Immediately switch to the new product track if we have one
+      if (queueTracks.length > 0) {
+        const newProductTrack = queueTracks[0]!;
+        setCurrentTrack(newProductTrack);
+        addToListeningHistory(newProductTrack);
+
+        // Remove the track from the queue since we're playing it now
+        setProductQueue(prev => prev.slice(1));
+      }
+    } else {
+      setProductQueue([]);
+    }
+  }, [currentProduct?.id, addToListeningHistory]);
 
   // Load track when current track changes
   useEffect(() => {

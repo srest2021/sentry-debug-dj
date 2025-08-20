@@ -38,7 +38,7 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       id: 'feedback-2',
       title: 'Feedback Symphony',
       artist: 'Tired Developer',
-      src: '/_static/dist/sentry/assets/songs/feedback2.mp3',
+      src: '/_static/dist/sentry/assets/songs/feedback_symphony.mp3',
     },
   ],
   discover: [
