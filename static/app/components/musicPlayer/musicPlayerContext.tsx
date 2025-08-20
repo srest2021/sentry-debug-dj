@@ -346,6 +346,16 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
       setCurrentPlaylist(playlist);
       setRegularQueue([]);
 
+      // If we're currently playing a product song, don't switch tracks yet
+      if (currentTrack?.isProductTrack) {
+        // Just update the regular queue for when the product song ends
+        if (playlist.tracks && playlist.tracks.length > 0) {
+          const shuffled = shufflePlaylistTracks(playlist.tracks);
+          setRegularQueue(shuffled);
+        }
+        return;
+      }
+
       let startTrack: Track | null = null;
 
       // Check product queue first
@@ -365,7 +375,7 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
         addToListeningHistory(startTrack);
       }
     },
-    [addToListeningHistory, productQueue]
+    [addToListeningHistory, productQueue, currentTrack]
   );
 
   // Audio event handlers - memoized to prevent recreation

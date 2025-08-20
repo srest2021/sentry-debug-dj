@@ -15,10 +15,12 @@ import {
   THEME_BACKGROUND_OPACITY,
   TIME_DISPLAY_MIN_WIDTH,
 } from 'sentry/components/musicPlayer/constants';
+import LyricsModal from 'sentry/components/musicPlayer/lyricsModal';
 import {useMusicPlayer} from 'sentry/components/musicPlayer/musicPlayerContext';
 import {
   IconChevron,
   IconClose,
+  IconMarkdown,
   IconNext,
   IconPause,
   IconPlay,
@@ -65,6 +67,7 @@ export default function MusicPlayer() {
   const [isHovered, setIsHovered] = useState(false);
   const [isScrubbing, setIsScrubbing] = useState(false);
   const [justFinishedScrubbing, setJustFinishedScrubbing] = useState(false);
+  const [showLyrics, setShowLyrics] = useState(false);
   const progressBarRef = useRef<HTMLDivElement>(null);
 
   // Helper function to calculate progress percentage
@@ -136,7 +139,7 @@ export default function MusicPlayer() {
     return null;
   }
 
-  const showExpanded = isExpanded || isHovered || isScrubbing;
+  const showExpanded = isExpanded || isHovered || isScrubbing || showLyrics;
   // Can go back if we're not at the bottom of the stack OR if we're on a queue track (can always go back to playlist)
   const canGoBack = historyPosition + 1 < listeningHistory.length;
   // Can go forward if there are tracks in either queue, if we're in history, or if playlist has tracks to shuffle
@@ -153,7 +156,11 @@ export default function MusicPlayer() {
   return (
     <FloatingContainer
       onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseLeave={() => {
+        if (!showLyrics) {
+          setIsHovered(false);
+        }
+      }}
       onClick={() => {
         if (!justFinishedScrubbing) {
           setExpanded(!isExpanded);
@@ -228,6 +235,20 @@ export default function MusicPlayer() {
             <TrackInfo>
               <TrackTitle>{currentTrack.title}</TrackTitle>
               <TrackArtist>{currentTrack.artist}</TrackArtist>
+              {currentTrack.lyrics && (
+                <LyricsButton
+                  size="xs"
+                  borderless
+                  icon={<IconMarkdown />}
+                  onClick={(e: React.MouseEvent) => {
+                    e.stopPropagation();
+                    setShowLyrics(true);
+                  }}
+                  aria-label={t('View lyrics')}
+                >
+                  {t('Lyrics')}
+                </LyricsButton>
+              )}
               <ProgressBarContainer>
                 <ProgressBarRow>
                   <CurrentTime>{formatTime(currentTime)}</CurrentTime>
@@ -321,6 +342,10 @@ export default function MusicPlayer() {
             )}
           </CompactTrackInfo>
         </CompactPlayer>
+      )}
+
+      {showLyrics && currentTrack && (
+        <LyricsModal track={currentTrack} onClose={() => setShowLyrics(false)} />
       )}
     </FloatingContainer>
   );
@@ -469,6 +494,15 @@ const TrackArtist = styled('div')`
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+`;
+
+const LyricsButton = styled(Button)`
+  margin: ${space(0.5)} 0;
+  font-size: ${p => p.theme.fontSize.xs};
+  color: ${p => p.theme.subText};
+  &:hover:not(:disabled) {
+    color: ${p => p.theme.textColor};
+  }
 `;
 
 const ProgressBarContainer = styled('div')`
