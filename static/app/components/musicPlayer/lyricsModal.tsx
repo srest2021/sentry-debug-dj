@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import styled from '@emotion/styled';
 
 import {Button} from 'sentry/components/core/button';
@@ -118,7 +118,7 @@ const CloseButton = styled(Button)`
 const LyricsContent = styled('div')`
   max-height: 200px;
   overflow-y: auto;
-  padding: ${space(2)};
+  padding: 0 ${space(2)} ${space(2)} ${space(2)};
   background: transparent;
   position: relative;
 `;
