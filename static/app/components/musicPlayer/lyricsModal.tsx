@@ -7,127 +7,123 @@ import {IconClose} from 'sentry/icons/iconClose';
 import {t} from 'sentry/locale';
 import {space} from 'sentry/styles/space';
 
-interface LyricsModalProps {
+interface LyricsPanelProps {
   onClose: () => void;
   track: Track;
+  primaryColor?: string;
+  secondaryColor?: string;
 }
 
-export default function LyricsModal({track, onClose}: LyricsModalProps) {
+export default function LyricsPanel({
+  track,
+  onClose,
+  primaryColor,
+  secondaryColor,
+}: LyricsPanelProps) {
   if (!track.lyrics) {
     return null;
   }
 
   return (
-    <ModalOverlay onClick={onClose}>
-      <ModalContent onClick={e => e.stopPropagation()}>
-        <ModalHeader>
-          <ModalTitle>{track.title}</ModalTitle>
-          <ModalSubtitle>{track.artist}</ModalSubtitle>
-          <CloseButton
-            size="xs"
-            borderless
-            icon={<IconClose />}
-            onClick={onClose}
-            aria-label={t('Close lyrics')}
-          />
-        </ModalHeader>
-        <ModalBody>
-          <LyricsText>{track.lyrics}</LyricsText>
-        </ModalBody>
-      </ModalContent>
-    </ModalOverlay>
+    <LyricsContainer primaryColor={primaryColor} secondaryColor={secondaryColor}>
+      <LyricsHeader primaryColor={primaryColor}>
+        <LyricsTitle>{t('Lyrics')}</LyricsTitle>
+        <CloseButton
+          size="xs"
+          borderless
+          icon={<IconClose />}
+          onClick={onClose}
+          aria-label={t('Close lyrics')}
+          primaryColor={primaryColor}
+        />
+      </LyricsHeader>
+      <LyricsContent>
+        <LyricsText>{track.lyrics}</LyricsText>
+      </LyricsContent>
+      <FadeOverlay />
+    </LyricsContainer>
   );
 }
 
-const ModalOverlay = styled('div')`
-  position: fixed;
-  top: 0;
-  left: 0;
+const LyricsContainer = styled('div')<{primaryColor?: string; secondaryColor?: string}>`
+  position: absolute;
+  bottom: 100%;
   right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-  padding: ${space(3)};
-
-  /* Ensure the modal is always visible */
-  @media (max-height: 600px) {
-    align-items: flex-start;
-    padding-top: ${space(2)};
-  }
-`;
-
-const ModalContent = styled('div')`
-  background: ${p => p.theme.backgroundElevated};
-  border: 1px solid ${p => p.theme.border};
+  width: 100%;
+  background: ${p =>
+    p.primaryColor && p.secondaryColor
+      ? `linear-gradient(135deg,
+        color-mix(in srgb, ${p.primaryColor} 20%, ${p.theme.backgroundElevated}),
+        color-mix(in srgb, ${p.secondaryColor} 20%, ${p.theme.backgroundElevated}),
+        ${p.theme.backgroundElevated}
+      )`
+      : p.theme.backgroundElevated};
+  border: 1px solid
+    ${p =>
+      p.primaryColor
+        ? `color-mix(in srgb, ${p.primaryColor} 50%, ${p.theme.border})`
+        : p.theme.border};
   border-radius: ${p => p.theme.borderRadius};
   box-shadow: ${p => p.theme.dropShadowHeavy};
-  max-width: 600px;
-  width: 100%;
-  max-height: 70vh;
-  min-height: 300px;
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
-
-  /* Ensure content doesn't overflow on smaller screens */
-  @media (max-height: 600px) {
-    max-height: calc(100vh - ${space(4)});
-  }
+  z-index: 1001;
+  margin-bottom: ${space(1)};
 `;
 
-const ModalHeader = styled('div')`
-  padding: ${space(3)} ${space(3)} ${space(2)} ${space(3)};
-  border-bottom: 1px solid ${p => p.theme.border};
-  position: relative;
+const LyricsHeader = styled('div')<{primaryColor?: string}>`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: ${space(1.5)} ${space(2)};
 `;
 
-const ModalTitle = styled('h2')`
-  font-size: ${p => p.theme.fontSize.xl};
+const LyricsTitle = styled('h3')`
+  font-size: ${p => p.theme.fontSize.sm};
   font-weight: ${p => p.theme.fontWeight.bold};
   color: ${p => p.theme.textColor};
-  margin: 0 0 ${space(0.5)} 0;
-  line-height: 1.2;
-`;
-
-const ModalSubtitle = styled('div')`
-  font-size: ${p => p.theme.fontSize.md};
-  color: ${p => p.theme.subText};
   margin: 0;
 `;
 
-const CloseButton = styled(Button)`
-  position: absolute;
-  top: ${space(2)};
-  right: ${space(2)};
-  color: ${p => p.theme.subText};
+const CloseButton = styled(Button)<{primaryColor?: string}>`
+  color: ${p => p.primaryColor || p.theme.subText};
   &:hover {
-    color: ${p => p.theme.textColor};
+    color: ${p => p.primaryColor || p.theme.textColor};
   }
 `;
 
-const ModalBody = styled('div')`
-  padding: ${space(3)};
+const LyricsContent = styled('div')`
+  max-height: 200px;
   overflow-y: auto;
-  flex: 1;
-  min-height: 0;
+  padding: ${space(2)};
+  background: transparent;
+  position: relative;
+`;
+
+const FadeOverlay = styled('div')`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: linear-gradient(transparent, ${p => p.theme.backgroundElevated});
+  pointer-events: none;
+  z-index: 1;
 `;
 
 const LyricsText = styled('pre')`
   font-family: ${p => p.theme.text.familyMono};
-  font-size: ${p => p.theme.fontSize.sm};
-  line-height: 1.6;
+  font-size: ${p => p.theme.fontSize.xs};
+  line-height: 1.5;
   color: ${p => p.theme.textColor};
   white-space: pre-wrap;
   word-wrap: break-word;
   margin: 0;
   padding: 0;
+  background: transparent;
 
   /* Ensure proper spacing between sections */
   & > * {
-    margin-bottom: ${space(1)};
+    margin-bottom: ${space(0.5)};
   }
 
   & > *:last-child {
@@ -136,17 +132,17 @@ const LyricsText = styled('pre')`
 
   /* Custom scrollbar styling */
   &::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
   }
 
   &::-webkit-scrollbar-track {
-    background: ${p => p.theme.backgroundSecondary};
-    border-radius: 4px;
+    background: transparent;
+    border-radius: 3px;
   }
 
   &::-webkit-scrollbar-thumb {
     background: ${p => p.theme.border};
-    border-radius: 4px;
+    border-radius: 3px;
   }
 
   &::-webkit-scrollbar-thumb:hover {

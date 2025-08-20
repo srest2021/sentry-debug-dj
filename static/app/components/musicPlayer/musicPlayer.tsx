@@ -15,7 +15,7 @@ import {
   THEME_BACKGROUND_OPACITY,
   TIME_DISPLAY_MIN_WIDTH,
 } from 'sentry/components/musicPlayer/constants';
-import LyricsModal from 'sentry/components/musicPlayer/lyricsModal';
+import LyricsPanel from 'sentry/components/musicPlayer/lyricsModal';
 import {useMusicPlayer} from 'sentry/components/musicPlayer/musicPlayerContext';
 import {
   IconChevron,
@@ -345,7 +345,12 @@ export default function MusicPlayer() {
       )}
 
       {showLyrics && currentTrack && (
-        <LyricsModal track={currentTrack} onClose={() => setShowLyrics(false)} />
+        <LyricsPanel
+          track={currentTrack}
+          onClose={() => setShowLyrics(false)}
+          primaryColor={theme?.primaryColor}
+          secondaryColor={theme?.secondaryColor}
+        />
       )}
     </FloatingContainer>
   );
