@@ -92,8 +92,14 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
     {
       id: 'dashboards-1',
       title: 'Chart Topper',
-      artist: 'Data Visualizer',
+      artist: 'Dashboard Diva',
       src: '/_static/dist/sentry/assets/songs/dashboards.mp3',
+    },
+    {
+      id: 'dashboards-2',
+      title: 'Data Love',
+      artist: 'Dashboard Diva',
+      src: '/_static/dist/sentry/assets/songs/data_love.mp3',
     },
   ],
   // projects: [
@@ -124,7 +130,7 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
     {
       id: 'profiling-1',
       title: 'Heartbreak Algorithms',
-      artist: 'Performance Profiler',
+      artist: 'Depressed Developer',
       src: '/_static/dist/sentry/assets/songs/heartbreak_algorithms.mp3',
     },
   ],
@@ -173,9 +179,9 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
   frontend: [
     {
       id: 'frontend-1',
-      title: 'UI Symphony',
-      artist: 'Frontend Maestro',
-      src: '/_static/dist/sentry/assets/songs/insights1.mp3',
+      title: 'Shattered Speed Dreams',
+      artist: 'Depressed Developer',
+      src: '/_static/dist/sentry/assets/songs/shattered_seconds.mp3',
     },
   ],
   backend: [
@@ -183,32 +189,31 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       id: 'backend-1',
       title: 'Server Side Story',
       artist: 'Backend Boss',
-      src: '/_static/dist/sentry/assets/songs/insights1.mp3',
+      src: '/_static/dist/sentry/assets/songs/server_side_story.mp3',
     },
   ],
   mobile: [
     {
       id: 'mobile-1',
-      title: 'Pocket Symphony',
-      artist: 'Mobile Maestro',
-      src: '/_static/dist/sentry/assets/songs/insights1.mp3',
+      title: 'App Ascension',
+      artist: 'Depressed Developer',
+      src: '/_static/dist/sentry/assets/songs/app_ascension.mp3',
     },
   ],
   'ai-agents': [
     {
       id: 'ai-agents-1',
-      title: 'Robot Rock',
-      artist: 'AI Assistant',
-      src: '/_static/dist/sentry/assets/songs/insights1.mp3',
+      title: 'Seer Speeds Ahead',
+      artist: 'Seer',
+      src: '/_static/dist/sentry/assets/songs/seer_speeds_ahead.mp3',
     },
   ],
-  // Note: 'agents' maps to the same as 'ai-agents' in insightsMap
   agents: [
     {
-      id: 'agents-1',
-      title: 'Robot Rock',
-      artist: 'AI Assistant',
-      src: '/_static/dist/sentry/assets/songs/insights1.mp3',
+      id: 'ai-agents-1',
+      title: 'Seer Speeds Ahead',
+      artist: 'Seer',
+      src: '/_static/dist/sentry/assets/songs/seer_speeds_ahead.mp3',
     },
   ],
 };
