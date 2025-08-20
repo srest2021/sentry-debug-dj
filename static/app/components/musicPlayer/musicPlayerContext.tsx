@@ -15,6 +15,7 @@ export type Track = {
   src: string;
   title: string;
   isProductTrack?: boolean; // Optional field to mark tracks from product queue
+  lyrics?: string | undefined;
 };
 
 export type Playlist = {
