@@ -167,6 +167,56 @@ Night turns gray`,
       title: 'Feedback Symphony',
       artist: 'Tired Developer',
       src: '/_static/dist/sentry/assets/songs/feedback_symphony.mp3',
+      lyrics: `[Verse]
+They say it's smooth like butter
+A dance on glass
+But some call it glitchy
+A system crash
+Windows here
+Mac over there
+Different browsers
+A cross-platform affair
+
+[Prechorus]
+Click and type
+They let it spill
+Stars or none
+They've got the will
+
+[Chorus]
+Feedback's rolling in
+The good and the bad
+Breadcrumbs trailing back to the tags we had
+Replay the moment
+Hear what they say
+From the OS world to the browser ballet
+
+[Verse 2]
+Chrome shines bright
+Firefox holds the line
+Safari whispers secrets
+Edge takes its time
+They point to the lag
+Or praise the speed
+Every comment's a puzzle
+A data seed
+
+[Bridge]
+Some shout loud
+"It's a masterpiece"
+Others grumble low
+"Fix this piece"
+Breadcrumb trails of where they've been
+Each word a clue
+Let the solving begin
+
+[Chorus]
+Feedback's rolling in
+The good and the bad
+Breadcrumbs trailing back to the tags we had
+Replay the moment
+Hear what they say
+From the OS world to the browser ballet`,
     },
   ],
   discover: [

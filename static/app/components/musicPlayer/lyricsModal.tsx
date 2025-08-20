@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import styled from '@emotion/styled';
 
 import {Button} from 'sentry/components/core/button';
@@ -20,6 +20,31 @@ export default function LyricsPanel({
   primaryColor,
   secondaryColor,
 }: LyricsPanelProps) {
+  const [showFade, setShowFade] = useState(true);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = useCallback(() => {
+    if (contentRef.current) {
+      const {scrollTop, scrollHeight, clientHeight} = contentRef.current;
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1; // 1px tolerance
+      setShowFade(!isAtBottom);
+    }
+  }, []);
+
+  useEffect(() => {
+    const contentElement = contentRef.current;
+    if (contentElement) {
+      contentElement.addEventListener('scroll', handleScroll);
+      // Check initial state
+      handleScroll();
+
+      return () => {
+        contentElement.removeEventListener('scroll', handleScroll);
+      };
+    }
+    return undefined;
+  }, [handleScroll]);
+
   if (!track.lyrics) {
     return null;
   }
@@ -34,13 +59,12 @@ export default function LyricsPanel({
           icon={<IconClose />}
           onClick={onClose}
           aria-label={t('Close lyrics')}
-          primaryColor={primaryColor}
         />
       </LyricsHeader>
-      <LyricsContent>
+      <LyricsContent ref={contentRef}>
         <LyricsText>{track.lyrics}</LyricsText>
       </LyricsContent>
-      <FadeOverlay />
+      {showFade && <FadeOverlay />}
     </LyricsContainer>
   );
 }
@@ -53,10 +77,10 @@ const LyricsContainer = styled('div')<{primaryColor?: string; secondaryColor?: s
   background: ${p =>
     p.primaryColor && p.secondaryColor
       ? `linear-gradient(135deg,
-        color-mix(in srgb, ${p.primaryColor} 20%, ${p.theme.backgroundElevated}),
-        color-mix(in srgb, ${p.secondaryColor} 20%, ${p.theme.backgroundElevated}),
-        ${p.theme.backgroundElevated}
-      )`
+          color-mix(in srgb, ${p.primaryColor} 10%, ${p.theme.backgroundElevated}),
+          color-mix(in srgb, ${p.secondaryColor} 10%, ${p.theme.backgroundElevated}),
+          ${p.theme.backgroundElevated}
+        )`
       : p.theme.backgroundElevated};
   border: 1px solid
     ${p =>
@@ -84,10 +108,10 @@ const LyricsTitle = styled('h3')`
   margin: 0;
 `;
 
-const CloseButton = styled(Button)<{primaryColor?: string}>`
-  color: ${p => p.primaryColor || p.theme.subText};
+const CloseButton = styled(Button)`
+  color: ${p => p.theme.subText};
   &:hover {
-    color: ${p => p.primaryColor || p.theme.textColor};
+    color: ${p => p.theme.textColor};
   }
 `;
 

@@ -20,7 +20,6 @@ import {useMusicPlayer} from 'sentry/components/musicPlayer/musicPlayerContext';
 import {
   IconChevron,
   IconClose,
-  IconMarkdown,
   IconNext,
   IconPause,
   IconPlay,
@@ -235,20 +234,6 @@ export default function MusicPlayer() {
             <TrackInfo>
               <TrackTitle>{currentTrack.title}</TrackTitle>
               <TrackArtist>{currentTrack.artist}</TrackArtist>
-              {currentTrack.lyrics && (
-                <LyricsButton
-                  size="xs"
-                  borderless
-                  icon={<IconMarkdown />}
-                  onClick={(e: React.MouseEvent) => {
-                    e.stopPropagation();
-                    setShowLyrics(true);
-                  }}
-                  aria-label={t('View lyrics')}
-                >
-                  {t('Lyrics')}
-                </LyricsButton>
-              )}
               <ProgressBarContainer>
                 <ProgressBarRow>
                   <CurrentTime>{formatTime(currentTime)}</CurrentTime>
@@ -279,42 +264,69 @@ export default function MusicPlayer() {
           )}
 
           <Controls>
-            <ControlButton
-              size="sm"
-              borderless
-              icon={<IconPrevious />}
-              onClick={e => {
-                e.stopPropagation();
-                previousTrack();
+            <div
+              style={{
+                flex: '1',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
               }}
-              disabled={!canGoBack}
-              aria-label={t('Previous track')}
-            />
+            >
+              {currentTrack?.lyrics && (
+                <LyricsButton
+                  size="md"
+                  borderless
+                  onClick={e => {
+                    e.stopPropagation();
+                    setShowLyrics(!showLyrics);
+                  }}
+                  aria-label={showLyrics ? t('Hide lyrics') : t('View lyrics')}
+                >
+                  T
+                </LyricsButton>
+              )}
+            </div>
 
-            <PlayPauseButton
-              size="sm"
-              icon={isPlaying ? <IconPause /> : <IconPlay />}
-              onClick={e => {
-                e.stopPropagation();
-                togglePlayPause();
-              }}
-              disabled={isLoading || !currentTrack}
-              aria-label={isPlaying ? t('Pause') : t('Play')}
-              priority="primary"
-              primaryColor={theme?.primaryColor}
-            />
+            <div style={{display: 'flex', alignItems: 'center', gap: space(0.5)}}>
+              <ControlButton
+                size="sm"
+                borderless
+                icon={<IconPrevious />}
+                onClick={e => {
+                  e.stopPropagation();
+                  previousTrack();
+                }}
+                disabled={!canGoBack}
+                aria-label={t('Previous track')}
+              />
 
-            <ControlButton
-              size="sm"
-              borderless
-              icon={<IconNext />}
-              onClick={e => {
-                e.stopPropagation();
-                nextTrack();
-              }}
-              disabled={!currentTrack || !canGoForward}
-              aria-label={t('Next track')}
-            />
+              <PlayPauseButton
+                size="sm"
+                icon={isPlaying ? <IconPause /> : <IconPlay />}
+                disabled={isLoading || !currentTrack}
+                onClick={e => {
+                  e.stopPropagation();
+                  togglePlayPause();
+                }}
+                aria-label={isPlaying ? t('Pause') : t('Play')}
+                priority="primary"
+                primaryColor={theme?.primaryColor}
+              />
+
+              <ControlButton
+                size="sm"
+                borderless
+                icon={<IconNext />}
+                onClick={e => {
+                  e.stopPropagation();
+                  nextTrack();
+                }}
+                disabled={!currentTrack || !canGoForward}
+                aria-label={t('Next track')}
+              />
+            </div>
+
+            <div style={{flex: '1', display: 'flex', alignItems: 'center'}} />
           </Controls>
         </ExpandedPlayer>
       ) : (
@@ -503,8 +515,11 @@ const TrackArtist = styled('div')`
 
 const LyricsButton = styled(Button)`
   margin: ${space(0.5)} 0;
-  font-size: ${p => p.theme.fontSize.xs};
+  font-size: ${p => p.theme.fontSize.lg};
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: bold;
   color: ${p => p.theme.subText};
+  line-height: 1;
   &:hover:not(:disabled) {
     color: ${p => p.theme.textColor};
   }
@@ -601,6 +616,8 @@ const Controls = styled('div')`
 
 const ControlButton = styled(Button)`
   color: ${p => p.theme.subText};
+  height: 36px;
+  min-height: 36px;
   &:hover:not(:disabled) {
     color: ${p => p.theme.textColor};
   }
@@ -610,6 +627,8 @@ const ControlButton = styled(Button)`
 `;
 
 const PlayPauseButton = styled(Button)<{primaryColor?: string}>`
+  height: 36px;
+  min-height: 36px;
   /* Override primary button color with playlist theme */
   ${p => primaryColorButtonStyles(p.primaryColor)}
 `;
