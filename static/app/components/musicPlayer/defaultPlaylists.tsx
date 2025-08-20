@@ -160,6 +160,52 @@ No more pain`,
         title: 'Debugging Zen',
         artist: 'Craft Master',
         src: '/_static/dist/sentry/assets/songs/debugging_zen.mp3',
+        lyrics: `[Verse]
+Lines of code like falling rain
+A maze of thoughts inside my brain
+Error whispers
+Soft and sly
+Where’s the bug
+The reason why?
+
+[Prechorus]
+I breathe
+I sift
+I try to see
+A clearer path to set it free
+
+[Chorus]
+For every dev
+A guiding light
+Sentry catches in the night
+Error trapped
+The logs unfold
+A story written
+Truth retold
+
+[Verse 2]
+Variables hide in shadowed halls
+Functions echo
+Distant calls
+Loops that spin
+A timeless dance
+Debugging's rhythm
+Second chance
+
+[Prechorus]
+The stack unwinds
+The truth appears
+No more silence
+No more fears
+
+[Chorus]
+For every dev
+A guiding light
+Sentry catches in the night
+Error trapped
+The logs unfold
+A story written
+Truth retold`,
       },
       {
         id: 'minecraft-2',
