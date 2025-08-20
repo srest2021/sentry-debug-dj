@@ -161,12 +161,14 @@ Night turns gray`,
       title: 'User Voice from the Depths',
       artist: 'Tired Developer',
       src: '/_static/dist/sentry/assets/songs/feedback1.mp3',
+      sentiment: 'neutral',
     },
     {
       id: 'feedback-2',
       title: 'Feedback Symphony',
       artist: 'Tired Developer',
       src: '/_static/dist/sentry/assets/songs/feedback_symphony.mp3',
+      sentiment: 'neutral',
       lyrics: `[Verse]
 They say it's smooth like butter
 A dance on glass

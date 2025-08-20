@@ -42,7 +42,7 @@ const productMap: Record<string, Product> = {
     },
   },
   feedback: {
-    id: 'issues/feedback',
+    id: 'feedback',
     name: 'User Feedback',
     icon: '💬',
     theme: {

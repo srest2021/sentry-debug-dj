@@ -1,5 +1,4 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {useSearchParams} from 'react-router-dom';
 import styled from '@emotion/styled';
 
 import {Button} from 'sentry/components/core/button';
@@ -63,9 +62,6 @@ export default function MusicPlayer() {
     setEnabled,
     setExpanded,
   } = useMusicPlayer();
-
-  const [searchParams] = useSearchParams();
-  const currentFeedbackSentimentFromUrl = searchParams.get('sentiment');
 
   const [isHovered, setIsHovered] = useState(false);
   const [isScrubbing, setIsScrubbing] = useState(false);
@@ -220,11 +216,6 @@ export default function MusicPlayer() {
                     on {currentProduct.icon} {currentProduct.name}
                   </PlaylistProductLabel>
                 )}
-                {currentFeedbackSentimentFromUrl && (
-                  <PlaylistProductLabel>
-                    💭 {currentFeedbackSentimentFromUrl}
-                  </PlaylistProductLabel>
-                )}
               </PlaylistInfo>
               <CloseButton
                 size="xs"
@@ -360,9 +351,6 @@ export default function MusicPlayer() {
                   {formatTime(currentTime)} / {formatTime(currentTrackDuration)}
                 </CompactTime>
               </React.Fragment>
-            )}
-            {currentFeedbackSentimentFromUrl && (
-              <CompactSentiment>💭 {currentFeedbackSentimentFromUrl}</CompactSentiment>
             )}
           </CompactTrackInfo>
         </CompactPlayer>
@@ -675,12 +663,6 @@ const CompactTitle = styled('div')`
 `;
 
 const CompactTime = styled('div')`
-  font-size: ${p => p.theme.fontSize.xs};
-  color: ${p => p.theme.subText};
-  margin-top: ${space(0.25)};
-`;
-
-const CompactSentiment = styled('div')`
   font-size: ${p => p.theme.fontSize.xs};
   color: ${p => p.theme.subText};
   margin-top: ${space(0.25)};

@@ -33,6 +33,7 @@ export type Playlist = {
 interface MusicPlayerContextProps {
   currentPlaylist: Playlist | null;
   currentProduct: Product | null;
+  currentSentiment: string | null; // Current sentiment for feedback pages
   currentTime: number;
   currentTrack: Track | null;
   currentTrackDuration: number;
@@ -62,6 +63,7 @@ const MusicPlayerContext = createContext<MusicPlayerContextProps>({
   currentTrack: null,
   currentPlaylist: null,
   currentProduct: null,
+  currentSentiment: null,
   isEnabled: true,
   isLoading: false,
   currentTime: 0,
@@ -107,6 +109,7 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
   const [historyPosition, setHistoryPosition] = useState(0); // 0 means we're at the most recent track
   const [regularQueue, setRegularQueue] = useState<Track[]>([]);
   const [productQueue, setProductQueue] = useState<Track[]>([]); // Queue of product-specific tracks
+  const [currentSentiment, setCurrentSentiment] = useState<string | null>(null); // Track current sentiment to avoid unnecessary restarts
 
   // Keep track of playing state for auto-resume
   useEffect(() => {
@@ -129,7 +132,7 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
   // Update productQueue when currentProduct changes
   useEffect(() => {
     if (currentProduct?.id) {
-      if (currentProduct.id === 'issues/feedback') {
+      if (currentProduct.id === 'issues/feedback' || currentProduct.id === 'feedback') {
         return; // This is handled in the below useEffect
       }
 
@@ -153,21 +156,24 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
 
   // Handle sentiment changes
   useEffect(() => {
-    if (currentProduct?.id === 'issues/feedback') {
+    if (currentProduct?.id === 'issues/feedback' || currentProduct?.id === 'feedback') {
       const urlParams = new URLSearchParams(location.search);
       const sentiment = urlParams.get('sentiment') as
         | 'positive'
         | 'negative'
         | 'neutral'
         | null;
-      if (sentiment) {
-        // Should we do something like if the previous sentiment is the same as the new one, don't do anything?
+
+      // Only change music if sentiment has actually changed
+      if (sentiment && sentiment !== currentSentiment) {
+        setCurrentSentiment(sentiment);
+
         // Based on the sentiment, remove everything from the product queue and add the sentiment-specific tracks
-        const sentimentTracks = getTracksForProduct(currentProduct.id).filter(
+        const sentimentTracks = getTracksForProduct('issues/feedback').filter(
           track => track.sentiment === sentiment
         );
         // No sentiment means neutral
-        const genericFeedbackTracks = getTracksForProduct(currentProduct.id).filter(
+        const genericFeedbackTracks = getTracksForProduct('issues/feedback').filter(
           track => !track.sentiment
         );
 
@@ -186,9 +192,11 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
           // Remove the track from the queue since we're playing it now
           setProductQueue(prev => prev.slice(1));
         }
-      }
+      } else if (!sentiment && currentSentiment !== null) {
+        setCurrentSentiment(null);
+      } // Else we should keep playing the current track because the sentiment has not changed
     }
-  }, [currentProduct?.id, location.search, addToListeningHistory]);
+  }, [currentProduct, location.search, addToListeningHistory, currentSentiment]);
 
   // Load track when current track changes
   useEffect(() => {
@@ -514,6 +522,7 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
       setPrefs({isEnabled: enabled});
     },
     setExpanded: setIsExpanded,
+    currentSentiment,
     ...value,
   };
 
