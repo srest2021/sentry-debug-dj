@@ -2,7 +2,6 @@ import type {Track} from 'sentry/components/musicPlayer/musicPlayerContext';
 
 // Map of product IDs to their inspired tracks
 export const PRODUCT_TRACKS: Record<string, Track[]> = {
-  // Main products from productMap
   issues: [
     {
       id: 'issues-1',
@@ -31,14 +30,14 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       src: '/_static/dist/sentry/assets/songs/session_shadows.mp3',
     },
   ],
-  performance: [
-    {
-      id: 'performance-placeholder',
-      title: 'lLightning Fast',
-      artist: 'Speed Optimizer',
-      src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
-    },
-  ],
+  // performance: [
+  //   {
+  //     id: 'performance-placeholder',
+  //     title: 'lLightning Fast',
+  //     artist: 'Speed Optimizer',
+  //     src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
+  //   },
+  // ],
   'issues/feedback': [
     {
       id: 'feedback-1',
@@ -59,6 +58,12 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       title: 'Queries in the Dark',
       artist: 'Query Carrie',
       src: '/_static/dist/sentry/assets/songs/queries_in_the_dark.mp3',
+    },
+    {
+      id: 'discover-2',
+      title: 'Into the Unknown',
+      artist: 'Query Carrie',
+      src: '/_static/dist/sentry/assets/songs/into_the_unknown.mp3',
     },
   ],
   insights: [
@@ -101,36 +106,36 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
   // ],
   traces: [
     {
-      id: 'traces-placeholder',
-      title: 'lFollow the Trail',
+      id: 'traces-1',
+      title: 'Trace Maze',
       artist: 'Trace Detective',
-      src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
+      src: '/_static/dist/sentry/assets/songs/trace_maze.mp3',
     },
   ],
   logs: [
     {
-      id: 'logs-placeholder',
-      title: 'lLog Jam',
-      artist: 'Text Parser',
-      src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
+      id: 'logs-1',
+      title: 'Reading the Lines',
+      artist: 'Country Boy Coder',
+      src: '/_static/dist/sentry/assets/songs/reading_the_lines.mp3',
     },
   ],
   profiles: [
     {
-      id: 'profiling-placeholder',
-      title: 'lProfile Picture',
+      id: 'profiling-1',
+      title: 'Heartbreak Algorithms',
       artist: 'Performance Profiler',
-      src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
+      src: '/_static/dist/sentry/assets/songs/heartbreak_algorithms.mp3',
     },
   ],
-  explore: [
-    {
-      id: 'explore-placeholder',
-      title: 'lAdventure Time',
-      artist: 'Data Explorer',
-      src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
-    },
-  ],
+  // explore: [
+  //   {
+  //     id: 'explore-placeholder',
+  //     title: 'lAdventure Time',
+  //     artist: 'Data Explorer',
+  //     src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
+  //   },
+  // ],
   releases: [
     {
       id: 'releases-1',
@@ -159,10 +164,10 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
   ],
   uptime: [
     {
-      id: 'uptime-placeholder',
-      title: 'lAlways Online',
+      id: 'uptime-1',
+      title: 'Groove Patrol: Uptime Vibes',
       artist: 'Uptime Guardian',
-      src: 'https://www.soundjay.com/free-music/sounds/midnight-ride-01a.mp3',
+      src: '/_static/dist/sentry/assets/songs/groove_patrol_uptime_vibes.mp3',
     },
   ],
   frontend: [
