@@ -16,6 +16,12 @@ const BASE_PLAYLISTS: Playlist[] = [
         artist: 'Sentaur',
         src: '/_static/dist/sentry/assets/songs/error_code_blues.mp3',
       },
+      {
+        id: 'bufo-journey',
+        title: "Bufo's Journey",
+        artist: 'Bufo',
+        src: '/_static/dist/sentry/assets/songs/bufo_journey.mp3',
+      },
     ],
   },
   {
@@ -62,10 +68,9 @@ const BASE_PLAYLISTS: Playlist[] = [
     tracks: [
       {
         id: 'minecraft-1',
-        title:
-          'Block by Block by Block by Block by Block by Block by Block by Block by Block by Block by Block by Block',
+        title: 'Debugging Zen',
         artist: 'Craft Master',
-        src: 'https://www.soundjay.com/free-music/sounds/cautious-path-01.mp3',
+        src: '/_static/dist/sentry/assets/songs/debugging_zen.mp3',
       },
       {
         id: 'minecraft-2',

@@ -269,6 +269,15 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
       setRegularQueue(prev => prev.slice(1));
     } else if (currentPlaylist.tracks.length > 0) {
       const shuffled = shufflePlaylistTracks(currentPlaylist.tracks);
+
+      // Ensure the current track is not the first one in the repopulated queue
+      if (currentTrack && shuffled[0]?.id === currentTrack.id) {
+        const firstTrack = shuffled.shift();
+        if (firstTrack) {
+          shuffled.push(firstTrack);
+        }
+      }
+
       nextTrack_ = shuffled[0]!;
       setRegularQueue(shuffled.slice(1));
     }
@@ -283,6 +292,7 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     listeningHistory,
     productQueue,
     regularQueue,
+    currentTrack,
     addToListeningHistory,
   ]);
 
