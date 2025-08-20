@@ -283,7 +283,7 @@ export default function MusicPlayer() {
             >
               {currentTrack?.lyrics && (
                 <LyricsButton
-                  size="md"
+                  size="sm"
                   borderless
                   onClick={e => {
                     e.stopPropagation();
@@ -526,12 +526,14 @@ const TrackArtist = styled('div')`
 `;
 
 const LyricsButton = styled(Button)`
-  margin: ${space(0.5)} 0;
   font-size: ${p => p.theme.fontSize.lg};
   font-family: Georgia, 'Times New Roman', serif;
   font-weight: bold;
   color: ${p => p.theme.subText};
   line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   &:hover:not(:disabled) {
     color: ${p => p.theme.textColor};
   }
@@ -628,8 +630,6 @@ const Controls = styled('div')`
 
 const ControlButton = styled(Button)`
   color: ${p => p.theme.subText};
-  height: 36px;
-  min-height: 36px;
   &:hover:not(:disabled) {
     color: ${p => p.theme.textColor};
   }
@@ -639,8 +639,6 @@ const ControlButton = styled(Button)`
 `;
 
 const PlayPauseButton = styled(Button)<{primaryColor?: string}>`
-  height: 36px;
-  min-height: 36px;
   /* Override primary button color with playlist theme */
   ${p => primaryColorButtonStyles(p.primaryColor)}
 `;
