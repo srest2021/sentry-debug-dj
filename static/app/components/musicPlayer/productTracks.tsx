@@ -5,16 +5,16 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
   // Main products from productMap
   issues: [
     {
-      id: 'issues-placeholder',
-      title: 'lBug Hunt Blues',
+      id: 'issues-1',
+      title: 'Bug Hunt Blues',
       artist: 'Debug Detective',
       src: '/_static/dist/sentry/assets/songs/issues1.mp3',
     },
   ],
   replays: [
     {
-      id: 'replays-placeholder',
-      title: 'lRewind & Replay',
+      id: 'replays-1',
+      title: 'Rewind & Replay',
       artist: 'Session Detective',
       src: '/_static/dist/sentry/assets/songs/replay1.mp3',
     },
@@ -29,10 +29,16 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
   ],
   'issues/feedback': [
     {
-      id: 'feedback-placeholder',
-      title: 'lUser Voice',
+      id: 'feedback-1',
+      title: 'User Voice',
       artist: 'Feedback Loop',
       src: '/_static/dist/sentry/assets/songs/feedback1.mp3',
+    },
+    {
+      id: 'feedback-2',
+      title: 'Feedback Symphony',
+      artist: 'Tired Developer',
+      src: '/_static/dist/sentry/assets/songs/feedback2.mp3',
     },
   ],
   discover: [
@@ -45,24 +51,24 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
   ],
   insights: [
     {
-      id: 'insights-placeholder',
-      title: 'lMind Reader',
+      id: 'insights-1',
+      title: 'Mind Reader',
       artist: 'Analytics Wizard',
       src: '/_static/dist/sentry/assets/songs/insights1.mp3',
     },
   ],
   alerts: [
     {
-      id: 'alerts-placeholder',
-      title: 'lWake Up Call',
+      id: 'alerts-1',
+      title: 'Wake Up Call',
       artist: 'Alert Manager',
       src: '/_static/dist/sentry/assets/songs/alerts1.mp3',
     },
   ],
   dashboards: [
     {
-      id: 'dashboards-placeholder',
-      title: 'lChart Topper',
+      id: 'dashboards-1',
+      title: 'Chart Topper',
       artist: 'Data Visualizer',
       src: '/_static/dist/sentry/assets/songs/dashboards.mp3',
     },
@@ -109,16 +115,16 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
   ],
   releases: [
     {
-      id: 'releases-placeholder',
-      title: 'lShip It',
+      id: 'releases-1',
+      title: 'Ship It',
       artist: 'Release Captain',
       src: '/_static/dist/sentry/assets/songs/releases1.mp3',
     },
   ],
   settings: [
     {
-      id: 'settings-placeholder',
-      title: 'lConfiguration Station',
+      id: 'settings-1',
+      title: 'Configuration Station',
       artist: 'Settings Master',
       src: '/_static/dist/sentry/assets/songs/settings1.mp3',
     },
@@ -127,8 +133,8 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
   // Insights sub-products from insightsMap
   crons: [
     {
-      id: 'crons-placeholder',
-      title: 'lTick Tock Clock',
+      id: 'crons-1',
+      title: 'Tick Tock Clock',
       artist: 'Cron Commander',
       src: '/_static/dist/sentry/assets/songs/cron1.mp3',
     },
@@ -143,32 +149,32 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
   ],
   frontend: [
     {
-      id: 'frontend-placeholder',
-      title: 'lUI Symphony',
+      id: 'frontend-1',
+      title: 'UI Symphony',
       artist: 'Frontend Maestro',
       src: '/_static/dist/sentry/assets/songs/insights1.mp3',
     },
   ],
   backend: [
     {
-      id: 'backend-placeholder',
-      title: 'lServer Side Story',
+      id: 'backend-1',
+      title: 'Server Side Story',
       artist: 'Backend Boss',
       src: '/_static/dist/sentry/assets/songs/insights1.mp3',
     },
   ],
   mobile: [
     {
-      id: 'mobile-placeholder',
-      title: 'lPocket Symphony',
+      id: 'mobile-1',
+      title: 'Pocket Symphony',
       artist: 'Mobile Maestro',
       src: '/_static/dist/sentry/assets/songs/insights1.mp3',
     },
   ],
   'ai-agents': [
     {
-      id: 'ai-agents-placeholder',
-      title: 'lRobot Rock',
+      id: 'ai-agents-1',
+      title: 'Robot Rock',
       artist: 'AI Assistant',
       src: '/_static/dist/sentry/assets/songs/insights1.mp3',
     },
@@ -176,8 +182,8 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
   // Note: 'agents' maps to the same as 'ai-agents' in insightsMap
   agents: [
     {
-      id: 'agents-placeholder',
-      title: 'lRobot Rock',
+      id: 'agents-1',
+      title: 'Robot Rock',
       artist: 'AI Assistant',
       src: '/_static/dist/sentry/assets/songs/insights1.mp3',
     },
