@@ -218,6 +218,20 @@ Replay the moment
 Hear what they say
 From the OS world to the browser ballet`,
     },
+    {
+      id: 'feedback-3',
+      title: 'Happy users',
+      artist: 'Happy Developer',
+      src: '/_static/dist/sentry/assets/songs/feedback_positive1.mp3',
+      sentiment: 'positive',
+    },
+    {
+      id: 'feedback-4',
+      title: 'Sad users',
+      artist: 'Sad Developer',
+      src: '/_static/dist/sentry/assets/songs/feedback_negative1.mp3',
+      sentiment: 'negative',
+    },
   ],
   discover: [
     {
