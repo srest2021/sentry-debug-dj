@@ -113,7 +113,7 @@ const productMap: Record<string, Product> = {
       secondaryColor: '#14b8a6', // Teal
     },
   },
-  profiling: {
+  profiles: {
     id: 'profiling',
     name: 'Profiling',
     icon: '📊',
@@ -149,10 +149,6 @@ const productMap: Record<string, Product> = {
       secondaryColor: '#9ca3af', // Gray
     },
   },
-};
-
-// Map insights sub-products
-const insightsMap: Record<string, Product> = {
   crons: {
     id: 'crons',
     name: 'Cron Monitors',
@@ -164,7 +160,7 @@ const insightsMap: Record<string, Product> = {
   },
   uptime: {
     id: 'uptime',
-    name: 'Uptime Monitors',
+    name: 'Uptime',
     icon: '📊',
     theme: {
       primaryColor: '#16a34a', // Green
@@ -224,29 +220,33 @@ function getProductFromPathname(pathname: string): Product | null {
     return null;
   }
 
-  // Special case: issues/feedback -> feedback
-  if (pathname.includes('/issues/feedback')) {
-    return productMap.feedback || null;
-  }
-  // All other issues paths are issues
-  if (pathname.includes('/issues/')) {
-    return productMap.issues || null;
-  }
-
-  const insightsMatch = pathname.match(/\/insights\/([^\/]+)/);
-  if (insightsMatch?.[1]) {
-    const insightsProduct = insightsMatch[1];
-    return insightsMap[insightsProduct] || null;
-  }
-
-  // General case: extract product name and look in productMap
-  // Matches: /organizations/{orgSlug}/{product}, /explore/{product}, /{product}
-  const productMatch = pathname.match(
-    /(?:\/organizations\/[^\/]+\/|\/explore\/|^\/)([^\/]+)/
+  // 1. Check for parent/subproduct patterns (with or without organizations)
+  // This handles: /explore/replays, /insights/crons, /issues/replays, /issues/alerts, /organizations/sentry/explore/replays, etc.
+  const parentSubproductMatch = pathname.match(
+    /(?:\/organizations\/[^\/]+\/)?([^\/]+)\/([^\/]+)/
   );
-  if (productMatch?.[1]) {
-    const productName = productMatch[1];
-    return productMap[productName] || null;
+  if (parentSubproductMatch?.[1] && parentSubproductMatch?.[2]) {
+    const parentProduct = parentSubproductMatch[1];
+    const subProduct = parentSubproductMatch[2];
+
+    // First try to find the specific sub-product
+    if (productMap[subProduct]) {
+      return productMap[subProduct];
+    }
+
+    // If sub-product not found, fall back to parent product
+    if (productMap[parentProduct]) {
+      return productMap[parentProduct];
+    }
+  }
+
+  // 2. Check for standalone products (with or without organizations)
+  const standaloneMatch = pathname.match(/(?:\/organizations\/[^\/]+\/)?([^\/]+)/);
+  if (standaloneMatch?.[1]) {
+    const productName = standaloneMatch[1];
+    if (productMap[productName]) {
+      return productMap[productName];
+    }
   }
 
   return null;
