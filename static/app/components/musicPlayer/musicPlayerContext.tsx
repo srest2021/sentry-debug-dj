@@ -8,6 +8,7 @@ import {
   useCurrentProduct,
   type Product,
 } from 'sentry/components/musicPlayer/useCurrentProduct';
+import {useLocation} from 'sentry/utils/useLocation';
 
 export type Track = {
   artist: string;
@@ -15,6 +16,7 @@ export type Track = {
   src: string;
   title: string;
   isProductTrack?: boolean; // Optional field to mark tracks from product queue
+  sentiment?: 'positive' | 'negative' | 'neutral'; // Optional field to mark sentiment of the track, for the user feedback product
 };
 
 export type Playlist = {
@@ -89,6 +91,7 @@ type Props = {
 export function MusicPlayerProvider({children, value = {}}: Props) {
   const [prefs, setPrefs] = useMusicPlayerPrefs();
   const currentProduct = useCurrentProduct();
+  const location = useLocation();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const wasPlayingRef = useRef(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -122,27 +125,96 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     setHistoryPosition(0);
   }, []);
 
-  // Update productQueue when currentProduct changes
+  // Update productQueue when currentProduct changes or sentiment in URL changes
   useEffect(() => {
     if (currentProduct?.id) {
-      // Set productQueue to new product tracks
+      // Get all product tracks
       const productTracks = getTracksForProduct(currentProduct.id);
-      const queueTracks = productTracks.map(track => ({...track, isProductTrack: true}));
-      setProductQueue(shufflePlaylistTracks(queueTracks));
 
-      // Immediately switch to the new product track if we have one
-      if (queueTracks.length > 0) {
-        const newProductTrack = queueTracks[0]!;
-        setCurrentTrack(newProductTrack);
-        addToListeningHistory(newProductTrack);
+      // Check if we're in feedback product and have sentiment in URL
+      if (currentProduct.id === 'issues/feedback') {
+        const urlParams = new URLSearchParams(location.search);
+        const sentiment = urlParams.get('sentiment') as
+          | 'positive'
+          | 'negative'
+          | 'neutral'
+          | null;
 
-        // Remove the track from the queue since we're playing it now
-        setProductQueue(prev => prev.slice(1));
+        if (sentiment) {
+          // Filter tracks based on sentiment
+          const sentimentTracks = productTracks.filter(
+            track => track.sentiment === sentiment
+          );
+          const neutralTracks = productTracks.filter(
+            track => !track.sentiment || track.sentiment === 'neutral'
+          );
+
+          // Put sentiment tracks first, then neutral tracks
+          const prioritizedTracks = [...sentimentTracks, ...neutralTracks];
+          const queueTracksWithFlag = prioritizedTracks.map(track => ({
+            ...track,
+            isProductTrack: true,
+          }));
+
+          setProductQueue(queueTracksWithFlag);
+
+          // If we have sentiment tracks and the current track is different, replace it
+          if (sentimentTracks.length > 0 && currentTrack) {
+            const firstSentimentTrack = queueTracksWithFlag[0]!;
+
+            if (currentTrack.id !== firstSentimentTrack.id) {
+              // Add current track to history
+              addToListeningHistory(currentTrack);
+
+              // Set new track and remove from queue
+              setCurrentTrack(firstSentimentTrack);
+              setProductQueue(prev => prev.slice(1));
+            }
+          } else if (sentimentTracks.length > 0 && !currentTrack) {
+            // Initial load with sentiment
+            const firstSentimentTrack = queueTracksWithFlag[0]!;
+            setCurrentTrack(firstSentimentTrack);
+            addToListeningHistory(firstSentimentTrack);
+            setProductQueue(prev => prev.slice(1));
+          }
+        } else {
+          // No sentiment - use all tracks normally
+          const allTracksWithFlag = productTracks.map(track => ({
+            ...track,
+            isProductTrack: true,
+          }));
+          setProductQueue(shufflePlaylistTracks(allTracksWithFlag));
+
+          // Set initial track if none exists
+          if (allTracksWithFlag.length > 0 && !currentTrack) {
+            const newProductTrack = allTracksWithFlag[0]!;
+            setCurrentTrack(newProductTrack);
+            addToListeningHistory(newProductTrack);
+            setProductQueue(prev => prev.slice(1));
+          }
+        }
+      } else {
+        // For other products, use normal logic
+        const queueTracks = productTracks.map(track => ({
+          ...track,
+          isProductTrack: true,
+        }));
+        setProductQueue(shufflePlaylistTracks(queueTracks));
+
+        // Immediately switch to the new product track if we have one
+        if (queueTracks.length > 0 && !currentTrack) {
+          const newProductTrack = queueTracks[0]!;
+          setCurrentTrack(newProductTrack);
+          addToListeningHistory(newProductTrack);
+
+          // Remove the track from the queue since we're playing it now
+          setProductQueue(prev => prev.slice(1));
+        }
       }
     } else {
       setProductQueue([]);
     }
-  }, [currentProduct?.id, addToListeningHistory]);
+  }, [currentProduct?.id, location.search, addToListeningHistory, currentTrack]);
 
   // Load track when current track changes
   useEffect(() => {

@@ -52,6 +52,20 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       artist: 'Tired Developer',
       src: '/_static/dist/sentry/assets/songs/feedback_symphony.mp3',
     },
+    {
+      id: 'feedback-3',
+      title: 'Happy users',
+      artist: 'Happy Developer',
+      src: '/_static/dist/sentry/assets/songs/feedback_positive1.mp3',
+      sentiment: 'positive',
+    },
+    {
+      id: 'feedback-4',
+      title: 'Sad users',
+      artist: 'Sad Developer',
+      src: '/_static/dist/sentry/assets/songs/feedback_negative1.mp3',
+      sentiment: 'negative',
+    },
   ],
   discover: [
     {

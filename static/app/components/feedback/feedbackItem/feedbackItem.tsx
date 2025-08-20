@@ -67,6 +67,7 @@ export default function FeedbackItem({feedbackItem, eventData}: Props) {
   // Update URL with sentiment when it changes
   useEffect(() => {
     if (sentimentData?.sentiment) {
+      // Update URL with sentiment
       setSearchParams(prev => {
         const newParams = new URLSearchParams(prev);
         newParams.set('sentiment', sentimentData.sentiment);
@@ -81,6 +82,14 @@ export default function FeedbackItem({feedbackItem, eventData}: Props) {
       });
     }
   }, [sentimentData?.sentiment, setSearchParams]);
+
+  // Clear sentiment when feedback item changes or component unmounts
+  useEffect(() => {
+    return () => {
+      // setCurrentSentiment(null); // Removed as per edit hint
+      // updateProductQueueForSentiment(null); // Removed as per edit hint
+    };
+  }, [feedbackItem.id]); // Removed updateProductQueueForSentiment from dependency array
 
   const overflowRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
