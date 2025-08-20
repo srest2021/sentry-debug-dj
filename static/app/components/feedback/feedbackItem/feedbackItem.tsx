@@ -1,4 +1,5 @@
 import {Fragment, useEffect, useMemo, useRef} from 'react';
+import {useSearchParams} from 'react-router-dom';
 import styled from '@emotion/styled';
 
 import AnalyticsArea from 'sentry/components/analyticsArea';
@@ -24,6 +25,7 @@ import type {Event} from 'sentry/types/event';
 import type {Group} from 'sentry/types/group';
 import type {Project} from 'sentry/types/project';
 import type {FeedbackIssue} from 'sentry/utils/feedback/types';
+import {useApiQuery} from 'sentry/utils/queryClient';
 import useOrganization from 'sentry/utils/useOrganization';
 
 interface Props {
@@ -31,9 +33,54 @@ interface Props {
   feedbackItem: FeedbackIssue;
 }
 
+interface FeedbackSentimentResponse {
+  sentiment: 'positive' | 'negative' | 'neutral';
+  success: boolean;
+}
+
 export default function FeedbackItem({feedbackItem, eventData}: Props) {
   const organization = useOrganization();
   const crashReportId = eventData?.contexts?.feedback?.associated_event_id;
+  const [_, setSearchParams] = useSearchParams();
+
+  // Get feedback message and analyze sentiment
+  const feedbackMessage = feedbackItem.metadata.message;
+
+  // Call the sentiment API directly
+  const {data: sentimentData} = useApiQuery<FeedbackSentimentResponse>(
+    [
+      `/organizations/${organization.slug}/feedback-sentiment/`,
+      {
+        method: 'POST',
+        data: {
+          feedback_message: feedbackMessage,
+        },
+      },
+    ],
+    {
+      enabled: Boolean(feedbackMessage),
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      retry: 1,
+    }
+  );
+
+  // Update URL with sentiment when it changes
+  useEffect(() => {
+    if (sentimentData?.sentiment) {
+      setSearchParams(prev => {
+        const newParams = new URLSearchParams(prev);
+        newParams.set('sentiment', sentimentData.sentiment);
+        return newParams;
+      });
+    } else {
+      // Clear sentiment from URL when no sentiment
+      setSearchParams(prev => {
+        const newParams = new URLSearchParams(prev);
+        newParams.delete('sentiment');
+        return newParams;
+      });
+    }
+  }, [sentimentData?.sentiment, setSearchParams]);
 
   const overflowRef = useRef<HTMLDivElement>(null);
   useEffect(() => {

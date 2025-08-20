@@ -1,3 +1,4 @@
+import {FeedbackSentimentProvider} from 'sentry/components/feedback/feedbackSentimentContext';
 import MusicPlayer from 'sentry/components/musicPlayer/musicPlayer';
 import {MusicPlayerProvider} from 'sentry/components/musicPlayer/musicPlayerContext';
 import {LocalStorageMusicPlayerPreferences} from 'sentry/components/musicPlayer/musicPlayerPreferences';
@@ -9,13 +10,15 @@ type Props = {
 
 export default function MusicPlayerWrapper({children}: Props) {
   return (
-    <MusicPlayerPreferencesContextProvider
-      prefsStrategy={LocalStorageMusicPlayerPreferences}
-    >
-      <MusicPlayerProvider>
-        {children && children}
-        <MusicPlayer />
-      </MusicPlayerProvider>
-    </MusicPlayerPreferencesContextProvider>
+    <FeedbackSentimentProvider>
+      <MusicPlayerPreferencesContextProvider
+        prefsStrategy={LocalStorageMusicPlayerPreferences}
+      >
+        <MusicPlayerProvider>
+          {children && children}
+          <MusicPlayer />
+        </MusicPlayerProvider>
+      </MusicPlayerPreferencesContextProvider>
+    </FeedbackSentimentProvider>
   );
 }
