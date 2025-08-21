@@ -8,6 +8,7 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       title: 'Bug Hunt Blues',
       artist: 'Debug Detective',
       src: '/_static/dist/sentry/assets/songs/issues1.mp3',
+      sunoLink: 'https://suno.com/s/E7rVBIi8YCF8f5i7',
       lyrics: `[Verse]
 The logs are screaming loud tonight
 Errors stacking
@@ -134,6 +135,7 @@ And I don't know how to fix this error in my heart.`,
       title: 'Rewind & Replay',
       artist: 'Session Detective',
       src: '/_static/dist/sentry/assets/songs/replay1.mp3',
+      sunoLink: 'https://suno.com/s/c9lAnLqNVa1ZTPr2',
       lyrics: `[Verse 1]
 Dead clicks haunting the screen at night
 Users vanish
@@ -264,6 +266,7 @@ Night turns gray`,
       artist: 'Tired Developer',
       src: '/_static/dist/sentry/assets/songs/feedback1.mp3',
       sentiment: 'neutral',
+      sunoLink: 'https://suno.com/s/4ncQdjcPrius9Wlp',
       lyrics: `[Verse]
 They say it’s smooth like butter
 A dance on glass
@@ -378,6 +381,7 @@ From the OS world to the browser ballet`,
       artist: 'Happy Developer',
       src: '/_static/dist/sentry/assets/songs/feedback_positive1.mp3',
       sentiment: 'positive',
+      sunoLink: 'https://suno.com/s/ACIPjITjQYh8gl6A',
       lyrics: `[Verse 1]
 Got a spark in the code we ignite it bright
 Chasing bugs like stars on a Friday night
@@ -429,6 +433,7 @@ We’re building dreams with your truth`,
       artist: 'Sad Developer',
       src: '/_static/dist/sentry/assets/songs/feedback_negative1.mp3',
       sentiment: 'negative',
+      sunoLink: 'https://suno.com/s/SdFgNNBT1x38IL4Y',
       lyrics: `[Verse 1]
 I screamed into the void nothing screamed back
 Errors piling up like smoke in the cracks
@@ -469,6 +474,7 @@ But you gave me nothing a black hole’s proof`,
       artist: 'Sentiment savant',
       src: '/_static/dist/sentry/assets/songs/feedback_positive0.mp3',
       sentiment: 'positive',
+      sunoLink: 'https://suno.com/s/Z6aqObZaY1ra7ZI1',
       lyrics: `[Verse]
 Click click the words appear
 Fixed that bug it’s crystal clear
@@ -509,6 +515,7 @@ Your happy glow ignites the night`,
       artist: 'Voiddeveloper',
       src: '/_static/dist/sentry/assets/songs/feedback_negative0.mp3',
       sentiment: 'negative',
+      sunoLink: 'https://suno.com/s/ULw1K9EnGlPO1Jzr',
       lyrics: `[Verse]
 Words I typed they fell like lead
 No one listens no one read
@@ -597,6 +604,7 @@ But the truth's tangled in electric dreams`,
       title: 'Mind Reader',
       artist: 'Analytics Wizard',
       src: '/_static/dist/sentry/assets/songs/insights1.mp3',
+      sunoLink: 'https://suno.com/s/XuQjeid4CQHZJDXs',
       lyrics: `[Verse]
 Frontend feels like a crowded room
 Backend whispers in the server’s gloom
@@ -646,6 +654,7 @@ We’ll debug till the code feels right`,
       title: 'Wake Up Call',
       artist: 'Incident Captain',
       src: '/_static/dist/sentry/assets/songs/alerts1.mp3',
+      sunoLink: 'https://suno.com/s/w1YXA2s81Mv1OisE',
       lyrics: `[Verse]
 Ping me once in the dead of night
 Is it signal or just the noise fight
@@ -740,7 +749,8 @@ Break the chain`,
       id: 'dashboards-1',
       title: 'Chart Topper',
       artist: 'Dashboard Diva',
-      src: '/_static/dist/sentry/assets/songs/dashboards.mp3',
+      src: '/_static/dist/sentry/assets/songs/dashboards1.mp3',
+      sunoLink: 'https://suno.com/s/jtxRa1D6IZUtz0Oi',
       lyrics: `[Verse]
 Widgets stacking like a pancake tower
 Charts are blooming like a data flower
@@ -1064,6 +1074,7 @@ This loop we're in feels worse than death`,
       title: 'Ship It!',
       artist: 'Release Captain',
       src: '/_static/dist/sentry/assets/songs/releases1.mp3',
+      sunoLink: 'https://suno.com/s/jjaYZSObn06rWloO',
       lyrics: `[Verse]
 Versions roll out like waves on the shore
 Every commit opens a brand-new door
@@ -1154,6 +1165,7 @@ Raise a cheer let's engineer`,
       title: 'Configuration Station',
       artist: 'Settings Master',
       src: '/_static/dist/sentry/assets/songs/settings1.mp3',
+      sunoLink: 'https://suno.com/s/ti2ADtm1M6MDqwTZ',
       lyrics: `[Verse 1]
 Lights flicker on the settings screen
 Tabs lined up
@@ -1213,6 +1225,7 @@ Feature flags wave as permissions tie`,
       title: 'Tick Tock Clock',
       artist: 'Cron Commander',
       src: '/_static/dist/sentry/assets/songs/cron1.mp3',
+      sunoLink: 'https://suno.com/s/DIvaFxvKXKjels6E',
       lyrics: `[Verse]
 Three a.m. the silence breaks
 A cron job failed
