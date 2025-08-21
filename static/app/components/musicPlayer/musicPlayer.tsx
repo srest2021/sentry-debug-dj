@@ -301,6 +301,7 @@ export default function MusicPlayer() {
                 <LyricsButton
                   size="sm"
                   borderless
+                  isSelected={showLyrics}
                   onClick={e => {
                     e.stopPropagation();
                     setShowLyrics(!showLyrics);
@@ -542,11 +543,12 @@ const TrackArtist = styled('div')`
   white-space: nowrap;
 `;
 
-const LyricsButton = styled(Button)`
+const LyricsButton = styled(Button)<{isSelected?: boolean}>`
   font-size: ${p => p.theme.fontSize.lg};
   font-family: Georgia, 'Times New Roman', serif;
   font-weight: bold;
   color: ${p => p.theme.subText};
+  background-color: ${p => (p.isSelected ? p.theme.translucentGray100 : 'transparent')};
   line-height: 1;
   display: flex;
   align-items: center;
