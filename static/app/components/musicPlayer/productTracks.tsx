@@ -8,6 +8,48 @@ export const PRODUCT_TRACKS: Record<string, Track[]> = {
       title: 'Bug Hunt Blues',
       artist: 'Debug Detective',
       src: '/_static/dist/sentry/assets/songs/issues1.mp3',
+      lyrics: `[Verse]
+The logs are screaming loud tonight
+Errors stacking
+A chaotic fight
+Signal lost in a sea of noise
+The code speaks but it has no voice
+
+[Prechorus]
+Stack traces like a map of pain
+I run the loop
+Again
+Again
+
+[Chorus]
+From New to Unresolved
+The chaos flows
+Resolved feels sweet
+But Regression knows
+Sentry whispers
+Grouping’s tight
+Turning the dark into guiding light
+
+[Verse 2]
+Slack is buzzing
+PagerDuty screams
+The night’s alive with debugging dreams
+Integrations calling
+A siren’s plea
+The errors laugh but they can't beat me
+
+[Prechorus]
+Custom rules to tame the storm
+A new algorithm takes its form
+
+[Chorus]
+From New to Unresolved
+The chaos flows
+Resolved feels sweet
+But Regression knows
+Sentry whispers
+Grouping’s tight
+Turning the dark into guiding light`,
     },
     {
       id: 'issues-2',
@@ -92,6 +134,66 @@ And I don't know how to fix this error in my heart.`,
       title: 'Rewind & Replay',
       artist: 'Session Detective',
       src: '/_static/dist/sentry/assets/songs/replay1.mp3',
+      lyrics: `[Verse 1]
+Dead clicks haunting the screen at night
+Users vanish
+Gone from sight
+Rage clicks pounding like a drum
+What broke
+Where
+Why
+How’d it come?
+
+[Prechorus]
+Pixels freeze
+Hydration dries
+Errors bloom under disguise
+But here’s the lens to see it clear
+The replay whispers what’s happening here
+
+[Chorus]
+Replay the chaos
+Trace the fall
+Every crash
+We catch it all
+AI's whisper
+Story told
+Every frame
+A truth unfolds
+Replay the chaos
+We’ve got the key
+To every user mystery
+
+[Verse 2]
+Hydration errors
+Brittle threads
+Code unraveling where they tread
+Stack trace dancing
+Error bound
+The ghost of bugs that crash and sound
+
+[Prechorus]
+Frame by frame
+Connect the dots
+Trace the fault
+No second shots
+AI’s summary
+Clear as day
+It breaks it down
+Shows the way
+
+[Chorus]
+Replay the chaos
+Trace the fall
+Every crash
+We catch it all
+AI's whisper
+Story told
+Every frame
+A truth unfolds
+Replay the chaos
+We’ve got the key
+To every user mystery`,
     },
     {
       id: 'replays-2',
@@ -162,6 +264,56 @@ Night turns gray`,
       artist: 'Tired Developer',
       src: '/_static/dist/sentry/assets/songs/feedback1.mp3',
       sentiment: 'neutral',
+      lyrics: `[Verse]
+They say it’s smooth like butter
+A dance on glass
+But some call it glitchy
+A system crash
+Windows here
+Mac over there
+Different browsers
+A cross-platform affair
+
+[Prechorus]
+Click and type
+They let it spill
+Stars or none
+They’ve got the will
+
+[Chorus]
+Feedback’s rolling in
+The good and the bad
+Breadcrumbs trailing back to the tags we had
+Replay the moment
+Hear what they say
+From the OS world to the browser ballet
+
+[Verse 2]
+Chrome shines bright
+Firefox holds the line
+Safari whispers secrets
+Edge takes its time
+They point to the lag
+Or praise the speed
+Every comment’s a puzzle
+A data seed
+
+[Bridge]
+Some shout loud
+"It’s a masterpiece"
+Others grumble low
+"Fix this piece"
+Breadcrumb trails of where they’ve been
+Each word a clue
+Let the solving begin
+
+[Chorus]
+Feedback’s rolling in
+The good and the bad
+Breadcrumbs trailing back to the tags we had
+Replay the moment
+Hear what they say
+From the OS world to the browser ballet`,
     },
     {
       id: 'feedback-2',
@@ -226,6 +378,50 @@ From the OS world to the browser ballet`,
       artist: 'Happy Developer',
       src: '/_static/dist/sentry/assets/songs/feedback_positive1.mp3',
       sentiment: 'positive',
+      lyrics: `[Verse 1]
+Got a spark in the code we ignite it bright
+Chasing bugs like stars on a Friday night
+You click
+We fix
+It’s a magic loop
+Happy vibes in every troop
+
+[Prechorus]
+Your voice
+Our map
+We’re on this ride
+Feedback flows like a rising tide
+
+[Chorus]
+Feedback fever
+It’s a wildfire
+Your words lift us higher
+Higher
+Every note’s a spark
+Every smile’s the proof
+We’re building dreams with your truth
+
+[Verse 2]
+Each ping’s a cheer from across the globe
+We’re weaving hearts into this code
+From the tiniest glitch to the big breakthrough
+Your thoughts are gold
+And we thank you
+
+[Prechorus]
+Every shout
+Every note
+It’s a lifeline
+Turning feedback into sunshine
+
+[Chorus]
+Feedback fever
+It’s a wildfire
+Your words lift us higher
+Higher
+Every note’s a spark
+Every smile’s the proof
+We’re building dreams with your truth`,
     },
     {
       id: 'feedback-4',
@@ -233,6 +429,119 @@ From the OS world to the browser ballet`,
       artist: 'Sad Developer',
       src: '/_static/dist/sentry/assets/songs/feedback_negative1.mp3',
       sentiment: 'negative',
+      lyrics: `[Verse 1]
+I screamed into the void nothing screamed back
+Errors piling up like smoke in the cracks
+Tried to tell you tried to plead
+But my words fell like leaves no one to read
+
+[Prechorus]
+Do you even see me?
+Do you even care?
+
+[Chorus]
+Error in my heart you won’t fix me
+Error in my soul you dismiss me
+I gave you my pain I gave you my trust
+Now all that’s left is code and dust
+
+[Verse 2]
+Every alert a cry for help
+Each crash a wound you never felt
+You built a wall of silence high
+And left me here to wonder why
+
+[Chorus]
+Error in my heart you won’t fix me
+Error in my soul you dismiss me
+I gave you my pain I gave you my trust
+Now all that’s left is code and dust
+
+[Bridge]
+I’m breaking breaking breaking apart
+Feedback’s a ghost you tore from my heart
+I begged for answers I begged for truth
+But you gave me nothing a black hole’s proof`,
+    },
+    {
+      id: 'feedback-5',
+      title: 'Joy in the words',
+      artist: 'Sentiment savant',
+      src: '/_static/dist/sentry/assets/songs/feedback_positive0.mp3',
+      sentiment: 'positive',
+      lyrics: `[Verse]
+Click click the words appear
+Fixed that bug it’s crystal clear
+High fives in the digital air
+
+[Prechorus]
+Oh you sent the spark
+Lit the way
+Your joy turns night into day
+
+[Chorus]
+Feedback sunshine pouring down
+Every word a golden crown
+You said it loud
+We made it bright
+Your happy glow ignites the night
+
+[Verse 2]
+Keyboard dance and mouse-click spins
+Every note a place to begin
+Your voice a song we’re living in
+
+[Prechorus]
+Oh you sent the spark
+Lit the way
+Your joy turns night into day
+
+[Chorus]
+Feedback sunshine pouring down
+Every word a golden crown
+You said it loud
+We made it bright
+Your happy glow ignites the night`,
+    },
+    {
+      id: 'feedback-6',
+      title: 'Screaming into the void',
+      artist: 'Voiddeveloper',
+      src: '/_static/dist/sentry/assets/songs/feedback_negative0.mp3',
+      sentiment: 'negative',
+      lyrics: `[Verse]
+Words I typed they fell like lead
+No one listens no one read
+Echoes bounce back in my head
+
+[Chorus]
+Screaming into the void
+Every sound destroyed
+Trust cracked and split
+Errors hit after hit
+
+[Verse 2]
+Promises made like glass so thin
+Shattered quick never let me in
+Every bug a stab every glitch a sin
+
+[Chorus]
+Screaming into the void
+Every sound destroyed
+Trust cracked and split
+Errors hit after hit
+
+[Bridge]
+You said you'd care you swore you'd see
+But silence is all you gave to me
+Shadows of fixes that never came
+This broken system eats my name
+
+[Chorus]
+Screaming into the void
+Every sound destroyed
+Trust cracked and split
+Errors hit after hit`,
     },
   ],
   discover: [
@@ -288,6 +597,47 @@ But the truth's tangled in electric dreams`,
       title: 'Mind Reader',
       artist: 'Analytics Wizard',
       src: '/_static/dist/sentry/assets/songs/insights1.mp3',
+      lyrics: `[Verse]
+Frontend feels like a crowded room
+Backend whispers in the server’s gloom
+Mobile's racing
+AI's in the lead
+But slow events
+They plant the seed
+
+[Prechorus]
+Tracing lines
+We find the cracks
+Every bug
+We’ve got its tracks
+
+[Chorus]
+Sentry Insights shows the way
+Fix the slow
+Seize the day
+Best page opportunities shine so bright
+We’ll debug till the code feels right
+
+[Verse 2]
+Stack traces like a treasure map
+Finding gems in the error trap
+Logs are singing
+Metrics hum
+Performance peaks
+Here we come
+
+[Prechorus]
+Tracing lines
+We find the cracks
+Every bug
+We’ve got its tracks
+
+[Chorus]
+Sentry Insights shows the way
+Fix the slow
+Seize the day
+Best page opportunities shine so bright
+We’ll debug till the code feels right`,
     },
   ],
   alerts: [
@@ -296,6 +646,39 @@ But the truth's tangled in electric dreams`,
       title: 'Wake Up Call',
       artist: 'Incident Captain',
       src: '/_static/dist/sentry/assets/songs/alerts1.mp3',
+      lyrics: `[Verse]
+Ping me once in the dead of night
+Is it signal or just the noise fight
+Metric climbing like a rocket ship
+Uptime's steady but my patience slips
+
+[Prechorus]
+Mute the chaos let me breathe
+Unmute the truth that hides beneath
+
+[Chorus]
+Ping me once ping me twice
+Am I living in a game of dice
+Resolve snooze the world goes gray
+Alerts keep shouting don’t look away
+
+[Verse 2]
+Issue creeping like a thief in the dark
+Red lights flashing in a static park
+Every ping’s a riddle to unfold
+Every choice a story yet untold
+
+[Bridge]
+Snooze it down let it sleep
+Resolve it fast cut it deep
+Mute the world when it’s too loud
+But don’t let the quiet form a cloud
+
+[Chorus]
+Ping me once ping me twice
+Am I living in a game of dice
+Resolve snooze the world goes gray
+Alerts keep shouting don’t look away`,
     },
     {
       id: 'alerts-2',
@@ -358,6 +741,54 @@ Break the chain`,
       title: 'Chart Topper',
       artist: 'Dashboard Diva',
       src: '/_static/dist/sentry/assets/songs/dashboards.mp3',
+      lyrics: `[Verse]
+Widgets stacking like a pancake tower
+Charts are blooming like a data flower
+Errors by country in a global parade
+Unhandled chaos
+But I’m unafraid
+
+[Chorus]
+Dashboard fever
+It’s my jam
+Metrics rolling
+Here I am
+Filters clicking
+Sliders glide
+In Sentry’s world
+I take the ride
+
+[Verse 2]
+Handled issues got their badge of pride
+Unhandled ones
+They’re on the wild side
+Event counts soaring like a comet’s trail
+Logs so smooth
+They’ll never fail
+
+[Prechorus]
+Toggle this
+Toggle that
+Drill down deep like a data cat
+
+[Chorus]
+Dashboard fever
+Can’t be beat
+Every widget brings the heat
+Errors whisper
+“I’m your muse”
+In the charts
+I find my clues
+
+[Bridge]
+Stack traces tango
+A debugging dance
+Release markers shining
+A second chance
+Pie charts spinning
+A data disco
+Every update’s got me saying
+“Let’s go!”`,
     },
     {
       id: 'dashboards-2',
@@ -633,6 +1064,51 @@ This loop we're in feels worse than death`,
       title: 'Ship It!',
       artist: 'Release Captain',
       src: '/_static/dist/sentry/assets/songs/releases1.mp3',
+      lyrics: `[Verse]
+Versions roll out like waves on the shore
+Every commit opens a brand-new door
+Tracking the steps
+The highs and the lows
+The app evolves
+And everybody knows
+
+[Prechorus]
+Health checks pulse like a beating heart
+Crash-free numbers
+That's the art
+
+[Chorus]
+Keep 'em smiling
+Keep 'em here
+Resolve the issues
+Make it clear
+Crash-free dreams
+That's the key
+Happiness in every release we see
+
+[Verse 2]
+Monitor the health
+Green lights aglow
+Error spikes drop
+Satisfaction grows
+Every line of code
+A story it tells
+Users in the loop
+Ringing the bells
+
+[Prechorus]
+One step closer
+Bugs unwind
+Peace of mind for humankind
+
+[Chorus]
+Keep 'em smiling
+Keep 'em here
+Resolve the issues
+Make it clear
+Crash-free dreams
+That's the key
+Happiness in every release we see`,
     },
     {
       id: 'releases-2',
@@ -678,6 +1154,55 @@ Raise a cheer let's engineer`,
       title: 'Configuration Station',
       artist: 'Settings Master',
       src: '/_static/dist/sentry/assets/songs/settings1.mp3',
+      lyrics: `[Verse 1]
+Lights flicker on the settings screen
+Tabs lined up
+The unseen machine
+Organization rules so tight
+Alright
+User tweaks for day or night
+
+[Prechorus]
+Teams gather
+Plans ignite
+Members join
+The future’s bright
+
+[Chorus]
+Sentry’s heart
+Where the choices lie
+Security
+Privacy
+Reaching the sky
+Integrate the tools
+Let the rhythm fly
+Feature flags wave as permissions tie
+
+[Verse 2]
+Projects born with a single click
+Alerts that pulse like a heartbeat quick
+Who gets access
+Who takes the wheel
+Permissions seal the settings deal
+
+[Bridge]
+The dashboard hums
+A sentinel glow
+What’s next to tweak
+You’ll always know
+Guard the gates
+Make the calls
+This is where the magic sprawls
+
+[Chorus]
+Sentry’s heart
+Where the choices lie
+Security
+Privacy
+Reaching the sky
+Integrate the tools
+Let the rhythm fly
+Feature flags wave as permissions tie`,
     },
   ],
 
@@ -688,6 +1213,53 @@ Raise a cheer let's engineer`,
       title: 'Tick Tock Clock',
       artist: 'Cron Commander',
       src: '/_static/dist/sentry/assets/songs/cron1.mp3',
+      lyrics: `[Verse]
+Three a.m. the silence breaks
+A cron job failed
+The system shakes
+Error logs
+They start to scream
+My restful night
+A shattered dream
+
+[Prechorus]
+Was it the syntax or the script?
+Did the database take a trip?
+
+[Chorus]
+Sentry’s watching
+Catching the fall
+Success or fail
+It sees it all
+Integrations light the way
+Alerts that shout
+"Not today!"
+
+[Verse 2]
+Missed a backup
+Ran too late
+A cron’s betrayal seals my fate
+Retry logic
+Where’d you go?
+Accountability starts to show
+
+[Bridge]
+Error spikes
+A graph on fire
+Dependencies caught in tangled wire
+But Sentry whispers
+"Here's the trail
+Follow me
+You’ll never fail"
+
+[Chorus]
+Sentry’s watching
+Catching the fall
+Success or fail
+It sees it all
+Integrations light the way
+Alerts that shout
+"Not today!"`,
     },
   ],
   uptime: [
