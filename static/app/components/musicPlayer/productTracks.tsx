@@ -27,15 +27,15 @@ The chaos flows
 Resolved feels sweet
 But Regression knows
 Sentry whispers
-Grouping’s tight
+Grouping's tight
 Turning the dark into guiding light
 
 [Verse 2]
 Slack is buzzing
 PagerDuty screams
-The night’s alive with debugging dreams
+The night's alive with debugging dreams
 Integrations calling
-A siren’s plea
+A siren's plea
 The errors laugh but they can't beat me
 
 [Prechorus]
@@ -48,7 +48,7 @@ The chaos flows
 Resolved feels sweet
 But Regression knows
 Sentry whispers
-Grouping’s tight
+Grouping's tight
 Turning the dark into guiding light`,
     },
     {
@@ -56,6 +56,7 @@ Turning the dark into guiding light`,
       title: 'Error Stack Hype',
       artist: 'Debug Detective',
       src: '/_static/dist/sentry/assets/songs/error_stack_hype.mp3',
+      sunoLink: 'https://suno.com/s/9GNmsJpVG1qpkgXY',
       lyrics: `[Verse]
 Code crash, brain mash, numbers in a car crash,
 Stack trace runnin' laps, my debugger do the dash,
@@ -95,6 +96,7 @@ Transaction complete, yeah, the future lookin' bright.`,
       title: 'Error in My Heart',
       artist: 'Debug Detective',
       src: '/_static/dist/sentry/assets/songs/error_in_my_heart.mp3',
+      sunoLink: 'https://suno.com/s/eIYDDXzcguIEerQp',
       lyrics: `[Verse 1]
 I typed out the words, but they came out wrong,
 Your love was the code I couldn't belong.
@@ -142,14 +144,14 @@ Rage clicks pounding like a drum
 What broke
 Where
 Why
-How’d it come?
+How'd it come?
 
 [Prechorus]
 Pixels freeze
 Hydration dries
 Errors bloom under disguise
-But here’s the lens to see it clear
-The replay whispers what’s happening here
+But here's the lens to see it clear
+The replay whispers what's happening here
 
 [Chorus]
 Replay the chaos
@@ -161,7 +163,7 @@ Story told
 Every frame
 A truth unfolds
 Replay the chaos
-We’ve got the key
+We've got the key
 To every user mystery
 
 [Verse 2]
@@ -177,7 +179,7 @@ Frame by frame
 Connect the dots
 Trace the fault
 No second shots
-AI’s summary
+AI's summary
 Clear as day
 It breaks it down
 Shows the way
@@ -192,7 +194,7 @@ Story told
 Every frame
 A truth unfolds
 Replay the chaos
-We’ve got the key
+We've got the key
 To every user mystery`,
     },
     {
@@ -200,6 +202,7 @@ To every user mystery`,
       title: 'Agatha Christie Mystery',
       artist: 'Session Detective',
       src: '/_static/dist/sentry/assets/songs/session_shadows.mp3',
+      sunoLink: 'https://suno.com/s/Oy90qMSvHHAU6u3o',
       lyrics: `[Verse]
 Fingers dance on phantom keys
 A trail of whispers through the breeze
@@ -265,7 +268,7 @@ Night turns gray`,
       src: '/_static/dist/sentry/assets/songs/feedback1.mp3',
       sentiment: 'neutral',
       lyrics: `[Verse]
-They say it’s smooth like butter
+They say it's smooth like butter
 A dance on glass
 But some call it glitchy
 A system crash
@@ -278,10 +281,10 @@ A cross-platform affair
 Click and type
 They let it spill
 Stars or none
-They’ve got the will
+They've got the will
 
 [Chorus]
-Feedback’s rolling in
+Feedback's rolling in
 The good and the bad
 Breadcrumbs trailing back to the tags we had
 Replay the moment
@@ -295,20 +298,20 @@ Safari whispers secrets
 Edge takes its time
 They point to the lag
 Or praise the speed
-Every comment’s a puzzle
+Every comment's a puzzle
 A data seed
 
 [Bridge]
 Some shout loud
-"It’s a masterpiece"
+"It's a masterpiece"
 Others grumble low
 "Fix this piece"
-Breadcrumb trails of where they’ve been
+Breadcrumb trails of where they've been
 Each word a clue
 Let the solving begin
 
 [Chorus]
-Feedback’s rolling in
+Feedback's rolling in
 The good and the bad
 Breadcrumbs trailing back to the tags we had
 Replay the moment
@@ -383,27 +386,27 @@ Got a spark in the code we ignite it bright
 Chasing bugs like stars on a Friday night
 You click
 We fix
-It’s a magic loop
+It's a magic loop
 Happy vibes in every troop
 
 [Prechorus]
 Your voice
 Our map
-We’re on this ride
+We're on this ride
 Feedback flows like a rising tide
 
 [Chorus]
 Feedback fever
-It’s a wildfire
+It's a wildfire
 Your words lift us higher
 Higher
-Every note’s a spark
-Every smile’s the proof
-We’re building dreams with your truth
+Every note's a spark
+Every smile's the proof
+We're building dreams with your truth
 
 [Verse 2]
-Each ping’s a cheer from across the globe
-We’re weaving hearts into this code
+Each ping's a cheer from across the globe
+We're weaving hearts into this code
 From the tiniest glitch to the big breakthrough
 Your thoughts are gold
 And we thank you
@@ -411,17 +414,17 @@ And we thank you
 [Prechorus]
 Every shout
 Every note
-It’s a lifeline
+It's a lifeline
 Turning feedback into sunshine
 
 [Chorus]
 Feedback fever
-It’s a wildfire
+It's a wildfire
 Your words lift us higher
 Higher
-Every note’s a spark
-Every smile’s the proof
-We’re building dreams with your truth`,
+Every note's a spark
+Every smile's the proof
+We're building dreams with your truth`,
     },
     {
       id: 'feedback-4',
@@ -440,10 +443,10 @@ Do you even see me?
 Do you even care?
 
 [Chorus]
-Error in my heart you won’t fix me
+Error in my heart you won't fix me
 Error in my soul you dismiss me
 I gave you my pain I gave you my trust
-Now all that’s left is code and dust
+Now all that's left is code and dust
 
 [Verse 2]
 Every alert a cry for help
@@ -452,26 +455,26 @@ You built a wall of silence high
 And left me here to wonder why
 
 [Chorus]
-Error in my heart you won’t fix me
+Error in my heart you won't fix me
 Error in my soul you dismiss me
 I gave you my pain I gave you my trust
-Now all that’s left is code and dust
+Now all that's left is code and dust
 
 [Bridge]
-I’m breaking breaking breaking apart
-Feedback’s a ghost you tore from my heart
+I'm breaking breaking breaking apart
+Feedback's a ghost you tore from my heart
 I begged for answers I begged for truth
-But you gave me nothing a black hole’s proof`,
+But you gave me nothing a black hole's proof`,
     },
     {
       id: 'feedback-5',
-      title: 'Joy in the words',
-      artist: 'Sentiment savant',
+      title: 'Joy in the Words',
+      artist: 'Sentiment Savant',
       src: '/_static/dist/sentry/assets/songs/feedback_positive0.mp3',
       sentiment: 'positive',
       lyrics: `[Verse]
 Click click the words appear
-Fixed that bug it’s crystal clear
+Fixed that bug it's crystal clear
 High fives in the digital air
 
 [Prechorus]
@@ -489,7 +492,7 @@ Your happy glow ignites the night
 [Verse 2]
 Keyboard dance and mouse-click spins
 Every note a place to begin
-Your voice a song we’re living in
+Your voice a song we're living in
 
 [Prechorus]
 Oh you sent the spark
@@ -505,8 +508,8 @@ Your happy glow ignites the night`,
     },
     {
       id: 'feedback-6',
-      title: 'Screaming into the void',
-      artist: 'Voiddeveloper',
+      title: 'Screaming into the Void',
+      artist: 'Void Developer',
       src: '/_static/dist/sentry/assets/songs/feedback_negative0.mp3',
       sentiment: 'negative',
       lyrics: `[Verse]
@@ -550,6 +553,7 @@ Errors hit after hit`,
       title: 'Queries in the Dark',
       artist: 'Query Carrie',
       src: '/_static/dist/sentry/assets/songs/queries_in_the_dark.mp3',
+      sunoLink: 'https://suno.com/s/cTqiWXft3Hl0PoB9',
       lyrics: `[Verse]
 Lines of code like maps to stars
 Fingers trace the scars of old wars
@@ -589,6 +593,7 @@ But the truth's tangled in electric dreams`,
       title: 'Into the Unknown',
       artist: 'Query Carrie',
       src: '/_static/dist/sentry/assets/songs/into_the_unknown.mp3',
+      sunoLink: 'https://suno.com/s/L1C6VJPkxNTb7PSF',
     },
   ],
   insights: [
@@ -599,7 +604,7 @@ But the truth's tangled in electric dreams`,
       src: '/_static/dist/sentry/assets/songs/insights1.mp3',
       lyrics: `[Verse]
 Frontend feels like a crowded room
-Backend whispers in the server’s gloom
+Backend whispers in the server's gloom
 Mobile's racing
 AI's in the lead
 But slow events
@@ -609,14 +614,14 @@ They plant the seed
 Tracing lines
 We find the cracks
 Every bug
-We’ve got its tracks
+We've got its tracks
 
 [Chorus]
 Sentry Insights shows the way
 Fix the slow
 Seize the day
 Best page opportunities shine so bright
-We’ll debug till the code feels right
+We'll debug till the code feels right
 
 [Verse 2]
 Stack traces like a treasure map
@@ -630,14 +635,14 @@ Here we come
 Tracing lines
 We find the cracks
 Every bug
-We’ve got its tracks
+We've got its tracks
 
 [Chorus]
 Sentry Insights shows the way
 Fix the slow
 Seize the day
 Best page opportunities shine so bright
-We’ll debug till the code feels right`,
+We'll debug till the code feels right`,
     },
   ],
   alerts: [
@@ -660,31 +665,32 @@ Unmute the truth that hides beneath
 Ping me once ping me twice
 Am I living in a game of dice
 Resolve snooze the world goes gray
-Alerts keep shouting don’t look away
+Alerts keep shouting don't look away
 
 [Verse 2]
 Issue creeping like a thief in the dark
 Red lights flashing in a static park
-Every ping’s a riddle to unfold
+Every ping's a riddle to unfold
 Every choice a story yet untold
 
 [Bridge]
 Snooze it down let it sleep
 Resolve it fast cut it deep
-Mute the world when it’s too loud
-But don’t let the quiet form a cloud
+Mute the world when it's too loud
+But don't let the quiet form a cloud
 
 [Chorus]
 Ping me once ping me twice
 Am I living in a game of dice
 Resolve snooze the world goes gray
-Alerts keep shouting don’t look away`,
+Alerts keep shouting don't look away`,
     },
     {
       id: 'alerts-2',
       title: 'Replay Count Failure',
       artist: 'Incident Captain',
       src: '/_static/dist/sentry/assets/songs/replay_count_failure.mp3',
+      sunoLink: 'https://suno.com/s/rM0ToAtEix9tlgVg',
       lyrics: `[Verse]
 Red lights flash
 Alarms arise
@@ -746,25 +752,25 @@ Widgets stacking like a pancake tower
 Charts are blooming like a data flower
 Errors by country in a global parade
 Unhandled chaos
-But I’m unafraid
+But I'm unafraid
 
 [Chorus]
 Dashboard fever
-It’s my jam
+It's my jam
 Metrics rolling
 Here I am
 Filters clicking
 Sliders glide
-In Sentry’s world
+In Sentry's world
 I take the ride
 
 [Verse 2]
 Handled issues got their badge of pride
 Unhandled ones
-They’re on the wild side
-Event counts soaring like a comet’s trail
+They're on the wild side
+Event counts soaring like a comet's trail
 Logs so smooth
-They’ll never fail
+They'll never fail
 
 [Prechorus]
 Toggle this
@@ -773,10 +779,10 @@ Drill down deep like a data cat
 
 [Chorus]
 Dashboard fever
-Can’t be beat
+Can't be beat
 Every widget brings the heat
 Errors whisper
-“I’m your muse”
+“I'm your muse”
 In the charts
 I find my clues
 
@@ -787,14 +793,15 @@ Release markers shining
 A second chance
 Pie charts spinning
 A data disco
-Every update’s got me saying
-“Let’s go!”`,
+Every update's got me saying
+“Let's go!”`,
     },
     {
       id: 'dashboards-2',
       title: 'Data Love',
       artist: 'Dashboard Diva',
       src: '/_static/dist/sentry/assets/songs/data_love.mp3',
+      sunoLink: 'https://suno.com/s/wWDjMNbinyDEHObj',
       lyrics: `[Verse 1]
 I see the numbers they glow at night
 A little spark a guiding light
@@ -842,6 +849,7 @@ Tells a story of our dance`,
       title: 'Trace Maze',
       artist: 'Trace Detective',
       src: '/_static/dist/sentry/assets/songs/trace_maze.mp3',
+      sunoLink: 'https://suno.com/s/aJZ9mq3JlJMdVWmt',
       lyrics: `[Verse]
 Dusty trails in the code unwind
 Lines and loops they twist and bind
@@ -881,6 +889,7 @@ I'm reading a trace`,
       id: 'logs-1',
       title: 'Reading the Lines',
       artist: 'Country Boy Coder',
+      sunoLink: 'https://suno.com/s/NSoMUQg0mNGQ63go',
       src: '/_static/dist/sentry/assets/songs/reading_the_lines.mp3',
       lyrics: `[Verse 1]
 Out in the shed with a coffee in hand,
@@ -921,6 +930,7 @@ To the heart of the problem, the answers in view.`,
       title: 'Logs in the Rearview',
       artist: 'Country Boy Coder',
       src: '/_static/dist/sentry/assets/songs/logs_in_the_rearview.mp3',
+      sunoLink: 'https://suno.com/s/yuxSugSBbE9qt2qz',
       lyrics: `[Verse 1]
 Stacked like hay bales, lines on the screen,
 Errors and warnings, a coder's routine.
@@ -959,6 +969,7 @@ Victory's my anthem, and I'm king today.`,
       id: 'profiles-1',
       title: 'Heartbreak Algorithms',
       artist: 'Depressed Developer',
+      sunoLink: 'https://suno.com/s/p8kXHwhrigqK2oiq',
       src: '/_static/dist/sentry/assets/songs/heartbreak_algorithms.mp3',
       lyrics: `[Verse]
 I scrolled your life in a data stream
@@ -1006,6 +1017,7 @@ Left with too much`,
       id: 'profiles-2',
       title: 'Profiled and Regressed',
       artist: 'Panic! at the Profiler',
+      sunoLink: 'https://suno.com/s/jker1GAXiooTUcG4',
       src: '/_static/dist/sentry/assets/songs/profiled_and_regressed.mp3',
       lyrics: `[Verse]
 We built it up with logic and fire
@@ -1115,6 +1127,7 @@ Happiness in every release we see`,
       title: 'Backend Beat',
       artist: 'Release Captain',
       src: '/_static/dist/sentry/assets/songs/backend_beat.mp3',
+      sunoLink: 'https://suno.com/s/ZvDKF9JbqVOo8Ysp',
       lyrics: `[Verse]
 Code is clean now ship it fast
 Push the limits make it last
@@ -1166,10 +1179,10 @@ User tweaks for day or night
 Teams gather
 Plans ignite
 Members join
-The future’s bright
+The future's bright
 
 [Chorus]
-Sentry’s heart
+Sentry's heart
 Where the choices lie
 Security
 Privacy
@@ -1188,14 +1201,14 @@ Permissions seal the settings deal
 [Bridge]
 The dashboard hums
 A sentinel glow
-What’s next to tweak
-You’ll always know
+What's next to tweak
+You'll always know
 Guard the gates
 Make the calls
 This is where the magic sprawls
 
 [Chorus]
-Sentry’s heart
+Sentry's heart
 Where the choices lie
 Security
 Privacy
@@ -1227,7 +1240,7 @@ Was it the syntax or the script?
 Did the database take a trip?
 
 [Chorus]
-Sentry’s watching
+Sentry's watching
 Catching the fall
 Success or fail
 It sees it all
@@ -1238,9 +1251,9 @@ Alerts that shout
 [Verse 2]
 Missed a backup
 Ran too late
-A cron’s betrayal seals my fate
+A cron's betrayal seals my fate
 Retry logic
-Where’d you go?
+Where'd you go?
 Accountability starts to show
 
 [Bridge]
@@ -1250,10 +1263,10 @@ Dependencies caught in tangled wire
 But Sentry whispers
 "Here's the trail
 Follow me
-You’ll never fail"
+You'll never fail"
 
 [Chorus]
-Sentry’s watching
+Sentry's watching
 Catching the fall
 Success or fail
 It sees it all
@@ -1268,6 +1281,7 @@ Alerts that shout
       title: 'Groove Patrol: Uptime Vibes',
       artist: 'Uptime Guardian',
       src: '/_static/dist/sentry/assets/songs/groove_patrol_uptime_vibes.mp3',
+      sunoLink: 'https://suno.com/s/7OI1jeojukNAmylM',
       lyrics: `[Verse]
 Tick-tock
 It's uptime o'clock (oo-yeah!)
@@ -1341,6 +1355,7 @@ We're groovin' on into the night!`,
       title: 'Shattered Speed Dreams',
       artist: 'Depressed Developer',
       src: '/_static/dist/sentry/assets/songs/shattered_seconds.mp3',
+      sunoLink: 'https://suno.com/s/vIUzivwF510Jl85n',
       lyrics: `[Verse]
 Pixels crawling slow like molasses in rain
 I chase the flicker but it hides again
@@ -1380,6 +1395,7 @@ Frontend whispers burning bright`,
       title: 'Server Side Story',
       artist: 'Backend Boss',
       src: '/_static/dist/sentry/assets/songs/server_side_story.mp3',
+      sunoLink: 'https://suno.com/s/cbhVR94O7LQ6hI8l',
       lyrics: `[Verse]
 Code runs deep like a hidden stream
 Functions stack
@@ -1439,6 +1455,7 @@ Never lose the track`,
       title: 'App Ascension',
       artist: 'Depressed Developer',
       src: '/_static/dist/sentry/assets/songs/app_ascension.mp3',
+      sunoLink: 'https://suno.com/s/UQ6EYoJDsI9tT9sa',
       lyrics: `[Verse]
 Swiping up through the peaks and the lows
 A mountain of numbers nobody knows
@@ -1506,6 +1523,7 @@ Performance is crueler than it seems`,
       title: 'Seer Speeds Ahead',
       artist: 'Seer',
       src: '/_static/dist/sentry/assets/songs/seer_speeds_ahead.mp3',
+      sunoLink: 'https://suno.com/s/CNBk3zeZkDTJvMKU',
       lyrics: `[Verse]
 Out of the circuits
 Out of the blue
@@ -1562,6 +1580,7 @@ Here comes Seer`,
       title: 'Seer Speeds Ahead',
       artist: 'Seer',
       src: '/_static/dist/sentry/assets/songs/seer_speeds_ahead.mp3',
+      sunoLink: 'https://suno.com/s/CNBk3zeZkDTJvMKU',
       lyrics: `[Verse]
 Out of the circuits
 Out of the blue

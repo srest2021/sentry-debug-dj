@@ -11,6 +11,7 @@ const BASE_PLAYLISTS: Playlist[] = [
         title: 'Error Code Blues',
         artist: 'Sentaur',
         src: '/_static/dist/sentry/assets/songs/error_code_blues.mp3',
+        sunoLink: 'https://suno.com/s/wIFM6RP0NZ6smzt2',
         lyrics: `[Verse]
 The chart won't load it's stuck in time
 Fetch_metric_issue ain't doing fine
@@ -50,6 +51,7 @@ This API don't work no more`,
         title: "Bufo's Journey",
         artist: 'Bufo',
         src: '/_static/dist/sentry/assets/songs/bufo_journey.mp3',
+        sunoLink: 'https://suno.com/s/pBARTlRKjNAgfzEK',
         lyrics: `[Verse]
 Bufo hopped out at the crack of dawn
 Pixels shimmered on the forest lawn
@@ -87,6 +89,7 @@ Value people every day`,
         title: 'Error Slayer',
         artist: 'Sentaur',
         src: '/_static/dist/sentry/assets/songs/error_slayer.mp3',
+        sunoLink: 'https://suno.com/s/QgvAsq0k9brTZZ8L',
         lyrics: `[Verse]
 Lines of code like a web in the night
 Caught in the trap but I'm ready to fight
@@ -152,6 +155,7 @@ No more pain`,
         title: 'Debugging Zen',
         artist: 'Craft Master',
         src: '/_static/dist/sentry/assets/songs/debugging_zen.mp3',
+        sunoLink: 'https://suno.com/s/fKj5DmL8QUtOeQrr',
         lyrics: `[Verse]
 Lines of code like falling rain
 A maze of thoughts inside my brain
@@ -204,6 +208,7 @@ Truth retold`,
         title: 'Redstone Circuit',
         artist: 'Pixel Builder',
         src: '/_static/dist/sentry/assets/songs/redstone_circuit.mp3',
+        sunoLink: 'https://suno.com/s/4rgQ2EQCJs50WTR5',
       },
     ],
   },
