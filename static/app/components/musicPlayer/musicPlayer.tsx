@@ -165,9 +165,21 @@ export default function MusicPlayer() {
     historyPosition > 0 ||
     (currentPlaylist?.tracks.length || 0) > 0;
 
-  // Use product theme if available, otherwise fall back to playlist theme
-  // Handle cases where currentProduct might be null due to router context issues
-  const theme = currentProduct?.theme || currentPlaylist?.theme;
+  // New theme logic: use product theme for product tracks, default purple for non-product tracks
+  const getTheme = () => {
+    // If we have a current product and the current track is a product track, use product theme
+    if (currentProduct?.theme && currentTrack?.isProductTrack) {
+      return currentProduct.theme;
+    }
+
+    // For non-product tracks, use default purple theme
+    return {
+      primaryColor: '#6366f1',
+      secondaryColor: '#8b5cf6',
+    };
+  };
+
+  const theme = getTheme();
 
   return (
     <FloatingContainer
@@ -228,7 +240,7 @@ export default function MusicPlayer() {
                     </PlaylistButton>
                   )}
                 />
-                {currentProduct?.name && (
+                {currentProduct?.name && currentTrack?.isProductTrack && (
                   <PlaylistProductLabel>
                     on {currentProduct.icon} {currentProduct.name}
                   </PlaylistProductLabel>

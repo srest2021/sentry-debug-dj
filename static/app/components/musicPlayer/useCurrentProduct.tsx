@@ -28,8 +28,8 @@ const productMap: Record<string, Product> = {
     name: 'Replays',
     icon: '🎬',
     theme: {
-      primaryColor: '#6366f1', // Indigo
-      secondaryColor: '#8b5cf6', // Purple
+      primaryColor: '#0891b2', // Cyan
+      secondaryColor: '#0ea5e9', // Sky
     },
   },
   performance: {
@@ -46,8 +46,8 @@ const productMap: Record<string, Product> = {
     name: 'User Feedback',
     icon: '💬',
     theme: {
-      primaryColor: '#0891b2', // Cyan
-      secondaryColor: '#0ea5e9', // Sky
+      primaryColor: '#7c2d12', // Brown
+      secondaryColor: '#92400e', // Brown
     },
   },
   discover: {
@@ -64,8 +64,8 @@ const productMap: Record<string, Product> = {
     name: 'Insights',
     icon: '🧠',
     theme: {
-      primaryColor: '#7c2d12', // Brown
-      secondaryColor: '#92400e', // Brown
+      primaryColor: '#16a34a', // Green
+      secondaryColor: '#22c55e', // Green
     },
   },
   alerts: {
@@ -73,8 +73,8 @@ const productMap: Record<string, Product> = {
     name: 'Alerts',
     icon: '🚨',
     theme: {
-      primaryColor: '#dc2626', // Red
-      secondaryColor: '#ef4444', // Red
+      primaryColor: '#be185d', // Pink
+      secondaryColor: '#ec4899', // Pink
     },
   },
   dashboards: {
@@ -82,8 +82,8 @@ const productMap: Record<string, Product> = {
     name: 'Dashboards',
     icon: '📈',
     theme: {
-      primaryColor: '#7c3aed', // Violet
-      secondaryColor: '#a855f7', // Purple
+      primaryColor: '#0891b2', // Cyan
+      secondaryColor: '#0ea5e9', // Sky
     },
   },
   projects: {
@@ -100,8 +100,8 @@ const productMap: Record<string, Product> = {
     name: 'Traces',
     icon: '🔍',
     theme: {
-      primaryColor: '#9333ea', // Purple
-      secondaryColor: '#a855f7', // Purple
+      primaryColor: '#059669', // Emerald
+      secondaryColor: '#10b981', // Emerald
     },
   },
   logs: {
@@ -109,8 +109,8 @@ const productMap: Record<string, Product> = {
     name: 'Logs',
     icon: '📝',
     theme: {
-      primaryColor: '#0d9488', // Teal
-      secondaryColor: '#14b8a6', // Teal
+      primaryColor: '#f59e0b', // Amber
+      secondaryColor: '#fbbf24', // Yellow
     },
   },
   profiles: {
@@ -118,8 +118,8 @@ const productMap: Record<string, Product> = {
     name: 'Profiling',
     icon: '📊',
     theme: {
-      primaryColor: '#0d9488', // Teal
-      secondaryColor: '#14b8a6', // Teal
+      primaryColor: '#7c3aed', // Violet
+      secondaryColor: '#a855f7', // Purple
     },
   },
   explore: {
@@ -145,8 +145,8 @@ const productMap: Record<string, Product> = {
     name: 'Settings',
     icon: '⚙️',
     theme: {
-      primaryColor: '#6b7280', // Gray
-      secondaryColor: '#9ca3af', // Gray
+      primaryColor: '#be185d', // Pink
+      secondaryColor: '#ec4899', // Pink
     },
   },
   crons: {
@@ -154,8 +154,8 @@ const productMap: Record<string, Product> = {
     name: 'Cron Monitors',
     icon: '⏰',
     theme: {
-      primaryColor: '#f59e0b', // Amber
-      secondaryColor: '#fbbf24', // Yellow
+      primaryColor: '#0d9488', // Teal
+      secondaryColor: '#14b8a6', // Teal
     },
   },
   uptime: {
@@ -163,8 +163,8 @@ const productMap: Record<string, Product> = {
     name: 'Uptime',
     icon: '📊',
     theme: {
-      primaryColor: '#16a34a', // Green
-      secondaryColor: '#22c55e', // Green
+      primaryColor: '#9333ea', // Purple
+      secondaryColor: '#a855f7', // Lighter purple
     },
   },
   frontend: {
@@ -181,8 +181,8 @@ const productMap: Record<string, Product> = {
     name: 'Backend Insights',
     icon: '⚙️',
     theme: {
-      primaryColor: '#0d9488', // Teal
-      secondaryColor: '#14b8a6', // Teal
+      primaryColor: '#16a34a', // Green
+      secondaryColor: '#22c55e', // Green
     },
   },
   mobile: {
@@ -190,8 +190,8 @@ const productMap: Record<string, Product> = {
     name: 'Mobile Insights',
     icon: '📱',
     theme: {
-      primaryColor: '#8b5cf6', // Purple
-      secondaryColor: '#a855f7', // Purple
+      primaryColor: '#f59e0b', // Amber
+      secondaryColor: '#fbbf24', // Yellow
     },
   },
   'ai-agents': {
