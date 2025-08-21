@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import styled from '@emotion/styled';
 
@@ -63,22 +62,6 @@ export default function MusicPlayer() {
     setEnabled,
     setExpanded,
   } = useMusicPlayer();
-
-  // Debug logging for state tracking
-  console.log('🎵 MusicPlayer render state:', {
-    isPlaying,
-    currentTrack: currentTrack?.title,
-    historyPosition,
-    listeningHistoryLength: listeningHistory.length,
-    productQueueLength: productQueue.length,
-    regularQueueLength: regularQueue.length,
-    canGoBack: historyPosition + 1 < listeningHistory.length,
-    canGoForward:
-      productQueue.length > 0 ||
-      regularQueue.length > 0 ||
-      historyPosition > 0 ||
-      (currentPlaylist?.tracks.length || 0) > 0,
-  });
 
   const [isHovered, setIsHovered] = useState(false);
   const [isScrubbing, setIsScrubbing] = useState(false);
