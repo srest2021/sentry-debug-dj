@@ -18,7 +18,7 @@ export type Track = {
   isProductTrack?: boolean; // Optional field to mark tracks from product queue
   lyrics?: string | undefined;
   sentiment?: 'positive' | 'negative' | 'neutral'; // Optional field to mark sentiment of the track, for the user feedback product
-  sunoLink?: string; // Optional field to mark the link to the track on Suno
+  sunoLink?: string; // Optional field for direct link to the song on Suno
 };
 
 export type Playlist = {

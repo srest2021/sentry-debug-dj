@@ -289,6 +289,19 @@ export default function MusicPlayer() {
                   <TotalTime>{formatTime(currentTrackDuration)}</TotalTime>
                 </ProgressBarRow>
               </ProgressBarContainer>
+
+              {/* Suno AI Music Link */}
+              {currentTrack.sunoLink && (
+                <SunoLink
+                  href={currentTrack.sunoLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={e => e.stopPropagation()}
+                  primaryColor={theme?.primaryColor}
+                >
+                  🎵 Like this song? Upvote it! →
+                </SunoLink>
+              )}
             </TrackInfo>
           )}
 
@@ -699,4 +712,20 @@ const CompactTime = styled('div')`
   font-size: ${p => p.theme.fontSize.xs};
   color: ${p => p.theme.subText};
   margin-top: ${space(0.25)};
+`;
+
+const SunoLink = styled('a')<{primaryColor?: string}>`
+  font-size: ${p => p.theme.fontSize.xs};
+  color: ${p => p.theme.subText};
+  margin-top: ${space(0.5)};
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: ${space(0.25)};
+  cursor: pointer;
+
+  &:hover {
+    color: ${p => p.primaryColor || p.theme.textColor};
+    text-decoration: underline;
+  }
 `;
