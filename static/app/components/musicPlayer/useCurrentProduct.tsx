@@ -46,8 +46,8 @@ const productMap: Record<string, Product> = {
     name: 'User Feedback',
     icon: '💬',
     theme: {
-      primaryColor: '#7c2d12', // Brown
-      secondaryColor: '#92400e', // Brown
+      primaryColor: '#7c3aed', // Violet
+      secondaryColor: '#a855f7', // Purple
     },
   },
   discover: {
@@ -118,8 +118,8 @@ const productMap: Record<string, Product> = {
     name: 'Profiling',
     icon: '📊',
     theme: {
-      primaryColor: '#7c3aed', // Violet
-      secondaryColor: '#a855f7', // Purple
+      primaryColor: '#7c2d12', // Brown
+      secondaryColor: '#92400e', // Brown
     },
   },
   explore: {
@@ -169,7 +169,7 @@ const productMap: Record<string, Product> = {
   },
   frontend: {
     id: 'frontend',
-    name: 'Frontend Insights',
+    name: 'Frontend',
     icon: '🎨',
     theme: {
       primaryColor: '#ec4899', // Pink
@@ -178,7 +178,7 @@ const productMap: Record<string, Product> = {
   },
   backend: {
     id: 'backend',
-    name: 'Backend Insights',
+    name: 'Backend',
     icon: '⚙️',
     theme: {
       primaryColor: '#16a34a', // Green
@@ -187,7 +187,7 @@ const productMap: Record<string, Product> = {
   },
   mobile: {
     id: 'mobile',
-    name: 'Mobile Insights',
+    name: 'Mobile',
     icon: '📱',
     theme: {
       primaryColor: '#f59e0b', // Amber
