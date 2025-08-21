@@ -141,6 +141,9 @@ const LyricsText = styled('pre')`
   color: ${p => p.theme.textColor};
   white-space: pre-wrap;
   word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
   margin: 0;
   padding: 0;
   background: transparent;

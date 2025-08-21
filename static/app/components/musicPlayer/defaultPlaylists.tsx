@@ -5,10 +5,6 @@ const BASE_PLAYLISTS: Playlist[] = [
     // Sentry-themed playlist
     id: 'sentaur-setlist',
     name: 'Sentaur Setlist',
-    theme: {
-      primaryColor: '#6366f1',
-      secondaryColor: '#8b5cf6',
-    },
     tracks: [
       {
         id: 'error-code-blues',
@@ -150,10 +146,6 @@ No more pain`,
   {
     id: 'minecraft-vibes',
     name: 'Minecraft Vibes',
-    theme: {
-      primaryColor: '#22c55e',
-      secondaryColor: '#84cc16',
-    },
     tracks: [
       {
         id: 'minecraft-1',

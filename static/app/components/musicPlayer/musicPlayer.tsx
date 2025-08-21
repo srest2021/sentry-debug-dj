@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import styled from '@emotion/styled';
 
@@ -62,6 +63,22 @@ export default function MusicPlayer() {
     setEnabled,
     setExpanded,
   } = useMusicPlayer();
+
+  // Debug logging for state tracking
+  console.log('🎵 MusicPlayer render state:', {
+    isPlaying,
+    currentTrack: currentTrack?.title,
+    historyPosition,
+    listeningHistoryLength: listeningHistory.length,
+    productQueueLength: productQueue.length,
+    regularQueueLength: regularQueue.length,
+    canGoBack: historyPosition + 1 < listeningHistory.length,
+    canGoForward:
+      productQueue.length > 0 ||
+      regularQueue.length > 0 ||
+      historyPosition > 0 ||
+      (currentPlaylist?.tracks.length || 0) > 0,
+  });
 
   const [isHovered, setIsHovered] = useState(false);
   const [isScrubbing, setIsScrubbing] = useState(false);
@@ -148,9 +165,21 @@ export default function MusicPlayer() {
     historyPosition > 0 ||
     (currentPlaylist?.tracks.length || 0) > 0;
 
-  // Use product theme if available, otherwise fall back to playlist theme
-  // Handle cases where currentProduct might be null due to router context issues
-  const theme = currentProduct?.theme || currentPlaylist?.theme;
+  // New theme logic: use product theme for product tracks, default purple for non-product tracks
+  const getTheme = () => {
+    // If we have a current product and the current track is a product track, use product theme
+    if (currentProduct?.theme && currentTrack?.isProductTrack) {
+      return currentProduct.theme;
+    }
+
+    // For non-product tracks, use default purple theme
+    return {
+      primaryColor: '#6366f1',
+      secondaryColor: '#8b5cf6',
+    };
+  };
+
+  const theme = getTheme();
 
   return (
     <FloatingContainer
@@ -211,7 +240,7 @@ export default function MusicPlayer() {
                     </PlaylistButton>
                   )}
                 />
-                {currentProduct?.name && (
+                {currentProduct?.name && currentTrack?.isProductTrack && (
                   <PlaylistProductLabel>
                     on {currentProduct.icon} {currentProduct.name}
                   </PlaylistProductLabel>
@@ -316,10 +345,12 @@ export default function MusicPlayer() {
               <PlayPauseButton
                 size="sm"
                 icon={isPlaying ? <IconPause /> : <IconPlay />}
-                disabled={isLoading || !currentTrack}
                 onClick={e => {
                   e.stopPropagation();
-                  togglePlayPause();
+                  // Only allow clicking if not loading and we have a track
+                  if (!isLoading && currentTrack) {
+                    togglePlayPause();
+                  }
                 }}
                 aria-label={isPlaying ? t('Pause') : t('Play')}
                 priority="primary"
@@ -349,9 +380,11 @@ export default function MusicPlayer() {
             icon={isPlaying ? <IconPause /> : <IconPlay />}
             onClick={e => {
               e.stopPropagation();
-              togglePlayPause();
+              // Only allow clicking if not loading and we have a track
+              if (!isLoading && currentTrack) {
+                togglePlayPause();
+              }
             }}
-            disabled={isLoading || !currentTrack}
             aria-label={isPlaying ? t('Pause') : t('Play')}
             priority="primary"
             primaryColor={theme?.primaryColor}

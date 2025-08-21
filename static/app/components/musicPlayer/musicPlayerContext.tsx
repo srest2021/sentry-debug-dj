@@ -25,10 +25,6 @@ export type Playlist = {
   id: string;
   name: string;
   tracks: Track[];
-  theme?: {
-    primaryColor: string;
-    secondaryColor: string;
-  };
 };
 
 interface MusicPlayerContextProps {
@@ -139,7 +135,6 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
 
       const productTracks = getTracksForProduct(currentProduct.id);
       const queueTracks = productTracks.map(track => ({...track, isProductTrack: true}));
-      setProductQueue(shufflePlaylistTracks(queueTracks));
 
       // Immediately switch to the new product track if we have one
       if (queueTracks.length > 0) {
@@ -147,8 +142,10 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
         setCurrentTrack(newProductTrack);
         addToListeningHistory(newProductTrack);
 
-        // Remove the track from the queue since we're playing it now
-        setProductQueue(prev => prev.slice(1));
+        // Set the queue to the remaining tracks (excluding the first one we're playing)
+        setProductQueue(queueTracks.slice(1));
+      } else {
+        setProductQueue([]);
       }
     } else {
       setProductQueue([]);
@@ -190,8 +187,8 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
           setCurrentTrack(newProductTrack);
           addToListeningHistory(newProductTrack);
 
-          // Remove the track from the queue since we're playing it now
-          setProductQueue(prev => prev.slice(1));
+          // Set the queue to the remaining tracks (excluding the first one we're playing)
+          setProductQueue(tracksToAdd.slice(1));
         }
       } else if (!sentiment && currentSentiment !== null) {
         setCurrentSentiment(null);
@@ -249,12 +246,12 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
       // Check product queue first
       if (productQueue.length > 0) {
         initialTrack = productQueue[0]!;
-        setProductQueue(prev => prev.slice(1));
+        setProductQueue(productQueue.slice(1));
       }
       // Then check regular queue
       else if (regularQueue.length > 0) {
         initialTrack = regularQueue[0]!;
-        setRegularQueue(prev => prev.slice(1));
+        setRegularQueue(regularQueue.slice(1));
       }
       // Finally, populate from current playlist
       else {
@@ -299,19 +296,20 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     // 1. Check productQueue
     if (productQueue.length > 0) {
       nextTrack_ = productQueue[0]!;
-      setProductQueue(prev => prev.slice(1));
+
+      // Skip if this track is already playing
+      if (currentTrack?.id === nextTrack_.id) {
+        setProductQueue(productQueue.slice(1));
+        // Recursively call nextTrack to get the next available track
+        setTimeout(() => nextTrack(), 0);
+        return;
+      }
+
+      setProductQueue(productQueue.slice(1));
       setCurrentTrack(nextTrack_);
 
       // Insert product track into history at current position
-      // Skip inserting if it's the same as the track at the current position
       setListeningHistory(prev => {
-        // Don't insert if the track is the same as the one at the current position
-        if (
-          prev.length > historyPosition &&
-          prev[historyPosition]?.id === nextTrack_!.id
-        ) {
-          return prev;
-        }
         const newHistory = [...prev];
         newHistory.splice(historyPosition, 0, nextTrack_!);
         return newHistory.slice(0, MAX_LISTENING_HISTORY_LENGTH);
@@ -331,7 +329,7 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
     // 3. We're at the top of history, so check regularQueue and playlist
     if (regularQueue.length > 0) {
       nextTrack_ = regularQueue[0]!;
-      setRegularQueue(prev => prev.slice(1));
+      setRegularQueue(regularQueue.slice(1));
     } else if (currentPlaylist.tracks.length > 0) {
       const shuffled = shufflePlaylistTracks(currentPlaylist.tracks);
 
@@ -411,17 +409,23 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
       }
 
       let startTrack: Track | null = null;
+      let newProductQueue: Track[] = [];
 
       // Check product queue first
       if (productQueue.length > 0) {
         startTrack = productQueue[0]!;
-        setProductQueue(prev => prev.slice(1));
+        newProductQueue = productQueue.slice(1);
       }
       // Use new playlist directly (ignore any stale regular queue)
       else if (playlist.tracks && playlist.tracks.length > 0) {
         const shuffled = shufflePlaylistTracks(playlist.tracks);
         startTrack = shuffled[0]!;
         setRegularQueue(shuffled.slice(1));
+      }
+
+      // Update product queue if we modified it
+      if (newProductQueue.length !== productQueue.length) {
+        setProductQueue(newProductQueue);
       }
 
       if (startTrack) {
