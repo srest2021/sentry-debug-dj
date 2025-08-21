@@ -9,6 +9,20 @@
   </p>
 </p>
 
+# 🎵 Debug DJ: Music that matches your mood
+
+### Hack Week project by Sofia Rest, Vishnu Satish, and Andrew Liu
+
+A smart DJ with playlists that adapt to your browsing context--happy songs for positive feedback, epic tracks for complex bugs. Choose from fun Sentry-themed hits or Minecraft classics, with lyrics display and a compact, themed player that won't get in your way.
+
+<p align="center">
+  <img src="https://github.com/getsentry/sentry/raw/master/.github/screenshots/dj-default.png" width="270" />
+  <img src="https://github.com/getsentry/sentry/raw/master/.github/screenshots/dj-issues.png" width="270" />
+  <img src="https://github.com/getsentry/sentry/raw/master/.github/screenshots/dj-happy.png" width="270" />
+  <img src="https://github.com/getsentry/sentry/raw/master/.github/screenshots/dj-sad.png" width="270" />
+  <img src="https://github.com/getsentry/sentry/raw/master/.github/screenshots/dj-uptime.png" width="270" />
+</p>
+
 # What's Sentry?
 
 Sentry is the debugging platform that helps every developer detect, trace, and fix issues. Code breaks, fix it faster.

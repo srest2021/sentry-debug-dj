@@ -37,8 +37,8 @@ const productMap: Record<string, Product> = {
     name: 'Performance',
     icon: '⚡',
     theme: {
-      primaryColor: '#059669', // Emerald
-      secondaryColor: '#0d9488', // Teal
+      primaryColor: '#7c3aed', // Violet
+      secondaryColor: '#a855f7', // Purple
     },
   },
   feedback: {
@@ -46,8 +46,8 @@ const productMap: Record<string, Product> = {
     name: 'User Feedback',
     icon: '💬',
     theme: {
-      primaryColor: '#7c3aed', // Violet
-      secondaryColor: '#a855f7', // Purple
+      primaryColor: '#059669', // Emerald
+      secondaryColor: '#0d9488', // Teal
     },
   },
   discover: {
