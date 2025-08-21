@@ -723,6 +723,7 @@ const SunoLink = styled('a')<{primaryColor?: string}>`
   align-items: center;
   gap: ${space(0.25)};
   cursor: pointer;
+  font-style: italic;
 
   &:hover {
     color: ${p => p.primaryColor || p.theme.textColor};

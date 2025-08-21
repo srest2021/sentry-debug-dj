@@ -184,11 +184,15 @@ export function MusicPlayerProvider({children, value = {}}: Props) {
 
         if (tracksToAdd.length > 0) {
           const newProductTrack = tracksToAdd[0]!;
-          setCurrentTrack(newProductTrack);
-          addToListeningHistory(newProductTrack);
+          const trackWithProductFlag = {...newProductTrack, isProductTrack: true};
+          setCurrentTrack(trackWithProductFlag);
+          addToListeningHistory(trackWithProductFlag);
 
           // Set the queue to the remaining tracks (excluding the first one we're playing)
-          setProductQueue(tracksToAdd.slice(1));
+          const remainingTracks = tracksToAdd
+            .slice(1)
+            .map(track => ({...track, isProductTrack: true}));
+          setProductQueue(remainingTracks);
         }
       } else if (!sentiment && currentSentiment !== null) {
         setCurrentSentiment(null);
