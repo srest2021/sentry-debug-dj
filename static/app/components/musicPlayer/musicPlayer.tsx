@@ -323,7 +323,6 @@ export default function MusicPlayer() {
                 icon={<IconPrevious />}
                 onClick={e => {
                   e.stopPropagation();
-                  console.log('🎵 Previous button clicked');
                   previousTrack();
                 }}
                 disabled={!canGoBack}
@@ -333,11 +332,12 @@ export default function MusicPlayer() {
               <PlayPauseButton
                 size="sm"
                 icon={isPlaying ? <IconPause /> : <IconPlay />}
-                disabled={isLoading || !currentTrack}
                 onClick={e => {
                   e.stopPropagation();
-                  console.log('🎵 Play/Pause button clicked, current state:', isPlaying);
-                  togglePlayPause();
+                  // Only allow clicking if not loading and we have a track
+                  if (!isLoading && currentTrack) {
+                    togglePlayPause();
+                  }
                 }}
                 aria-label={isPlaying ? t('Pause') : t('Play')}
                 priority="primary"
@@ -350,7 +350,6 @@ export default function MusicPlayer() {
                 icon={<IconNext />}
                 onClick={e => {
                   e.stopPropagation();
-                  console.log('🎵 Next button clicked');
                   nextTrack();
                 }}
                 disabled={!currentTrack || !canGoForward}
@@ -368,9 +367,11 @@ export default function MusicPlayer() {
             icon={isPlaying ? <IconPause /> : <IconPlay />}
             onClick={e => {
               e.stopPropagation();
-              togglePlayPause();
+              // Only allow clicking if not loading and we have a track
+              if (!isLoading && currentTrack) {
+                togglePlayPause();
+              }
             }}
-            disabled={isLoading || !currentTrack}
             aria-label={isPlaying ? t('Pause') : t('Play')}
             priority="primary"
             primaryColor={theme?.primaryColor}
